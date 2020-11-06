@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface ApplicationBuilder {
 
+	String getApplicationVersion();
+
 	Icon getApplicationIcon();
 
 	String getApplicationName();
