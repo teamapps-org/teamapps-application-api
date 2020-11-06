@@ -1,0 +1,169 @@
+::standard operations
+Add
+Add record
+Edit
+Create
+Read
+Update
+Revert
+Refresh
+Revert changes
+Remove
+Remove selection
+Remove all filters
+Delete
+Delete record
+Execute
+Print
+Custom
+Save
+Save changes
+Save & close
+Save and close window
+Cancel
+Cancel & close
+Cancel and close window
+Close
+Select
+Select area
+Select records
+Select rows
+Unselect
+Help
+Upload
+Download
+Error
+
+::options
+OK
+Yes
+No
+Back
+Search
+Search...
+
+::user data
+Salutation
+Name
+First name
+Last name
+Street
+City
+Postal code
+Federal state
+Country
+Phone number
+Mobile number
+E-Mail
+Language
+All languages
+My main language
+All my languages
+
+::login
+Login
+Logout
+User name
+User ID
+Password
+Retype password
+Reset password
+Wrong password
+Wrong user name or password
+Error: the passwords must be identical
+Register
+Create account
+Keep me logged in (this PC is secure)
+Other user
+Registration error
+Unknown e-mail address
+Error: incorrect username or password
+Error resetting the password
+Session Terminated
+Session Expired
+Your session has expired.\n\nPlease refresh this page. If you click cancel, the application will remain unresponsive until you refresh the page.
+A server-side error has occurred.\n\nPlease refresh this page. If you click cancel, the application will remain unresponsive until you refresh the page.
+Your session has been terminated.\\n\\nPlease refresh this page. If you click cancel, the application will remain unresponsive until you refresh the page.
+The password was changed successfully - you can now log in.
+Your account was created successfully - you can now log in.
+
+::record data
+Creation date
+Modification date
+Deletion date
+Restore date
+Created by
+Modified by
+Deleted by
+Restored by
+This field is required.
+This field must not be empty
+Field value must not be empty
+Record successfully saved.
+Record successfully deleted.
+The file you selected is too large. The maximum allowed file size is {0}.
+File too large! Max size: {0}.
+An error has occurred while uploading the file.
+Error while uploading!
+The data was saved successfully
+The changes were saved successfully
+Error when saving
+Error nothing to delete
+The data was successfully deleted
+The record was successfully created
+Do you really want to delete the record?
+Confirm deletion
+Do you really want to delete all data?
+
+::calendar
+Year
+Years
+Month
+Months
+Week
+Weeks
+Day
+Days
+Hour
+Hours
+Minute
+Minutes
+Second
+Seconds
+Today
+Now
+Previous
+Next
+
+::grouping
+Group
+Grouping
+By full value
+By words
+By years
+By quarters
+By months
+By weeks
+By days
+Values
+Count
+Filter
+Empty
+
+::base system
+Launch application
+Allows a user to launch the application
+
+::other
+Rotate
+Rotate picture
+Crop image
+No running tasks
+Error: unknown link
+Applications
+Home
+Administration
+Preferences
+Optional
+
+
