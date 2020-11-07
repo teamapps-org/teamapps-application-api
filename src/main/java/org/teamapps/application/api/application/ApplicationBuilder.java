@@ -33,6 +33,8 @@ public interface ApplicationBuilder {
 
 	void bootstrapApplicationBuilder();
 
+	boolean isApplicationAccessible(ApplicationInstanceData applicationInstanceData);
+
 	Application build(ApplicationInstanceData applicationInstanceData);
 
 }

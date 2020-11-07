@@ -13,6 +13,8 @@ public interface PerspectiveBuilder {
 
 	String getDescriptionKey();
 
+	boolean isPerspectiveAccessible(ApplicationInstanceData applicationInstanceData);
+
 	ApplicationPerspective build(ApplicationInstanceData applicationInstanceData, MutableValue<String> perspectiveInfoBadgeValue);
 
 }
