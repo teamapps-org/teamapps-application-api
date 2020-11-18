@@ -10,6 +10,7 @@ import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 
 	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits) {
 		this.applicationBuilder = applicationBuilder;
-		localizationMap = applicationBuilder.getLocalizationData().createLocalizationMap();
+		this.localizationMap = applicationBuilder.getLocalizationData() != null ? applicationBuilder.getLocalizationData().createLocalizationMap() : new HashMap<>();
 		this.orgUnits = orgUnits;
 		dictionaryMap = LocalizationData.createDictionaryData().createLocalizationMap();
 	}

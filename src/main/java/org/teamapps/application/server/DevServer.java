@@ -4,6 +4,7 @@ import org.teamapps.application.api.application.ApplicationPerspectiveBuilder;
 import org.teamapps.application.api.organization.OrgUnit;
 import org.teamapps.server.undertow.embedded.TeamAppsUndertowEmbeddedServer;
 import org.teamapps.universaldb.UniversalDB;
+import org.teamapps.universaldb.schema.SchemaInfoProvider;
 import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
@@ -45,7 +46,10 @@ public class DevServer {
 	public void start() {
 		try {
 			path.mkdir();
-			UniversalDB.createStandalone(path, applicationBuilder.getDatabaseModel());
+			SchemaInfoProvider databaseModel = applicationBuilder.getDatabaseModel();
+			if (databaseModel != null) {
+				UniversalDB.createStandalone(path, databaseModel);
+			}
 			WebController webController = sessionContext -> {
 				SessionContext context = SessionContext.current();
 				RootPanel rootPanel = context.addRootPanel();
