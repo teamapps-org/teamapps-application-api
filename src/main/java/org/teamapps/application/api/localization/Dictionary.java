@@ -1,10 +1,6 @@
 package org.teamapps.application.api.localization;
 
 public class Dictionary {
-	//base system
-	public static final String LAUNCH_APPLICATION = "org.teamapps.dictionary.launchApplication";
-	public static final String ALLOWS_AUSER_TO_LAUNCH_THE_APPLICATION = "org.teamapps.dictionary.allowsAUserToLaunchTheApplication";
-
 	//standard operations
 	public static final String ADD = "org.teamapps.dictionary.add";
 	public static final String ADD_RECORD = "org.teamapps.dictionary.addRecord";
@@ -74,7 +70,7 @@ public class Dictionary {
 	public static final String RESET_PASSWORD = "org.teamapps.dictionary.resetPassword";
 	public static final String WRONG_PASSWORD = "org.teamapps.dictionary.wrongPassword";
 	public static final String WRONG_USER_NAME_OR_PASSWORD = "org.teamapps.dictionary.wrongUserNameOrPassword";
-	public static final String ERROR_THE_PASSWORDS_MUST_BE_IDENTICAL = "org.teamapps.dictionary.errorThePasswordsMustBeIdentical";
+	public static final String SENTENCE_ERROR_THE_PASSWORDS_MUST_BE_ID__ = "org.teamapps.dictionary.errorThePasswordsMustBeIdentical";
 	public static final String REGISTER = "org.teamapps.dictionary.register";
 	public static final String CREATE_ACCOUNT = "org.teamapps.dictionary.createAccount";
 	public static final String KEEP_ME_LOGGED_INTHIS_PC_IS_SECURE = "org.teamapps.dictionary.keepMeLoggedInthisPCIsSecure";
@@ -85,11 +81,11 @@ public class Dictionary {
 	public static final String ERROR_RESETTING_THE_PASSWORD = "org.teamapps.dictionary.errorResettingThePassword";
 	public static final String SESSION_TERMINATED = "org.teamapps.dictionary.sessionTerminated";
 	public static final String SESSION_EXPIRED = "org.teamapps.dictionary.sessionExpired";
-	public static final String YOUR_SESSION_HAS_EXPIREDNN_PLEASE_REFRESH_THIS_PAGE_IF_YOU_CLICK_CANCEL_THE_APPLICATION_WILL_REMAIN_UNRESPONSIVE_UNTIL_YOU_REFRESH_THE_PAGE = "org.teamapps.dictionary.yourSessionHasExpirednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
-	public static final String A_SERVERSIDE_ERROR_HAS_OCCURREDNN_PLEASE_REFRESH_THIS_PAGE_IF_YOU_CLICK_CANCEL_THE_APPLICATION_WILL_REMAIN_UNRESPONSIVE_UNTIL_YOU_REFRESH_THE_PAGE = "org.teamapps.dictionary.aServersideErrorHasOccurrednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
-	public static final String YOUR_SESSION_HAS_BEEN_TERMINATEDNN_PLEASE_REFRESH_THIS_PAGE_IF_YOU_CLICK_CANCEL_THE_APPLICATION_WILL_REMAIN_UNRESPONSIVE_UNTIL_YOU_REFRESH_THE_PAGE = "org.teamapps.dictionary.yourSessionHasBeenTerminatednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
-	public static final String THE_PASSWORD_WAS_CHANGED_SUCCESSFULLY_YOU_CAN_NOW_LOG_IN = "org.teamapps.dictionary.thePasswordWasChangedSuccessfullyYouCanNowLogIn";
-	public static final String YOUR_ACCOUNT_WAS_CREATED_SUCCESSFULLY_YOU_CAN_NOW_LOG_IN = "org.teamapps.dictionary.yourAccountWasCreatedSuccessfullyYouCanNowLogIn";
+	public static final String SENTENCE_YOUR_SESSION_HAS_EXPIREDNN_PLE__ = "org.teamapps.dictionary.yourSessionHasExpirednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
+	public static final String SENTENCE_A_SERVERSIDE_ERROR_HAS_OCCURRE__ = "org.teamapps.dictionary.aServersideErrorHasOccurrednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
+	public static final String SENTENCE_YOUR_SESSION_HAS_BEEN_TERMINAT__ = "org.teamapps.dictionary.yourSessionHasBeenTerminatednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
+	public static final String SENTENCE_THE_PASSWORD_WAS_CHANGED_SUCCE__ = "org.teamapps.dictionary.thePasswordWasChangedSuccessfullyYouCanNowLogIn";
+	public static final String SENTENCE_YOUR_ACCOUNT_WAS_CREATED_SUCCE__ = "org.teamapps.dictionary.yourAccountWasCreatedSuccessfullyYouCanNowLogIn";
 	//record data
 	public static final String CREATION_DATE = "org.teamapps.dictionary.creationDate";
 	public static final String MODIFICATION_DATE = "org.teamapps.dictionary.modificationDate";
@@ -104,9 +100,9 @@ public class Dictionary {
 	public static final String FIELD_VALUE_MUST_NOT_BE_EMPTY = "org.teamapps.dictionary.fieldValueMustNotBeEmpty";
 	public static final String RECORD_SUCCESSFULLY_SAVED = "org.teamapps.dictionary.recordSuccessfullySaved";
 	public static final String RECORD_SUCCESSFULLY_DELETED = "org.teamapps.dictionary.recordSuccessfullyDeleted";
-	public static final String THE_FILE_YOU_SELECTED_IS_TOO_LARGE_THE_MAXIMUM_ALLOWED_FILE_SIZE_IS0 = "org.teamapps.dictionary.theFileYouSelectedIsTooLargeTheMaximumAllowedFileSizeIs0";
+	public static final String SENTENCE_THE_FILE_YOU_SELECTED_IS_TOO_L__ = "org.teamapps.dictionary.theFileYouSelectedIsTooLargeTheMaximumAllowedFileSizeIs0";
 	public static final String FILE_TOO_LARGE_MAX_SIZE0 = "org.teamapps.dictionary.fileTooLargeMaxSize0";
-	public static final String AN_ERROR_HAS_OCCURRED_WHILE_UPLOADING_THE_FILE = "org.teamapps.dictionary.anErrorHasOccurredWhileUploadingTheFile";
+	public static final String SENTENCE_AN_ERROR_HAS_OCCURRED_WHILE_UP__ = "org.teamapps.dictionary.anErrorHasOccurredWhileUploadingTheFile";
 	public static final String ERROR_WHILE_UPLOADING = "org.teamapps.dictionary.errorWhileUploading";
 	public static final String THE_DATA_WAS_SAVED_SUCCESSFULLY = "org.teamapps.dictionary.theDataWasSavedSuccessfully";
 	public static final String THE_CHANGES_WERE_SAVED_SUCCESSFULLY = "org.teamapps.dictionary.theChangesWereSavedSuccessfully";
@@ -114,9 +110,9 @@ public class Dictionary {
 	public static final String ERROR_NOTHING_TO_DELETE = "org.teamapps.dictionary.errorNothingToDelete";
 	public static final String THE_DATA_WAS_SUCCESSFULLY_DELETED = "org.teamapps.dictionary.theDataWasSuccessfullyDeleted";
 	public static final String THE_RECORD_WAS_SUCCESSFULLY_CREATED = "org.teamapps.dictionary.theRecordWasSuccessfullyCreated";
-	public static final String DO_YOU_REALLY_WANT_TO_DELETE_THE_RECORD = "org.teamapps.dictionary.doYouReallyWantToDeleteTheRecord";
+	public static final String SENTENCE_DO_YOU_REALLY_WANT_TO_DELETE_T__ = "org.teamapps.dictionary.doYouReallyWantToDeleteTheRecord";
 	public static final String CONFIRM_DELETION = "org.teamapps.dictionary.confirmDeletion";
-	public static final String DO_YOU_REALLY_WANT_TO_DELETE_ALL_DATA = "org.teamapps.dictionary.doYouReallyWantToDeleteAllData";
+	public static final String SENTENCE_DO_YOU_REALLY_WANT_TO_DELETE_A__ = "org.teamapps.dictionary.doYouReallyWantToDeleteAllData";
 	//calendar
 	public static final String YEAR = "org.teamapps.dictionary.year";
 	public static final String YEARS = "org.teamapps.dictionary.years";
@@ -150,6 +146,9 @@ public class Dictionary {
 	public static final String COUNT = "org.teamapps.dictionary.count";
 	public static final String FILTER = "org.teamapps.dictionary.filter";
 	public static final String EMPTY = "org.teamapps.dictionary.empty";
+	//base system
+	public static final String LAUNCH_APPLICATION = "org.teamapps.dictionary.launchApplication";
+	public static final String SENTENCE_ALLOWS_AUSER_TO_LAUNCH_THE_APP__ = "org.teamapps.dictionary.allowsAUserToLaunchTheApplication";
 	//other
 	public static final String ROTATE = "org.teamapps.dictionary.rotate";
 	public static final String ROTATE_PICTURE = "org.teamapps.dictionary.rotatePicture";

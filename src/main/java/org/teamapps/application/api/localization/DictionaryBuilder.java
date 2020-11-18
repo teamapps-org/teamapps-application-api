@@ -18,8 +18,6 @@ public class DictionaryBuilder {
 	public static void main(String[] args) throws IOException {
 		List<String> values = readData().stream()
 				.filter(s -> s != null && !s.isBlank())
-				//.filter(s -> !s.startsWith("::"))
-				//.sorted()
 				.collect(Collectors.toList());;
 		List<String> resourceLines = new ArrayList<>();
 		List<String> codeLines = new ArrayList<>();
@@ -54,7 +52,11 @@ public class DictionaryBuilder {
 
 	private static String createConstant(String value) {
 		value = cleanValue(value);
-		return value.replaceAll("(.)(\\p{Upper})", "$1_$2").toUpperCase();
+		value = value.replaceAll("(.)(\\p{Upper})", "$1_$2").toUpperCase();
+		if (value.length() > 36) {
+			value = "SENTENCE_" + value.substring(0, 35) + "__";
+		}
+		return value;
 	}
 
 	public static String removeNonAnsi(String s) {
