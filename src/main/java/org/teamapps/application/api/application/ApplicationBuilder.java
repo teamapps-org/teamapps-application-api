@@ -4,14 +4,15 @@ import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.localization.LocalizationData;
 import org.teamapps.application.api.privilege.ApplicationRole;
 import org.teamapps.application.api.privilege.PrivilegeGroup;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.application.api.versioning.ApplicationVersion;
+import org.teamapps.icons.Icon;
 import org.teamapps.universaldb.schema.SchemaInfoProvider;
 
 import java.util.List;
 
 public interface ApplicationBuilder {
 
-	String getApplicationVersion();
+	ApplicationVersion getApplicationVersion();
 
 	Icon getApplicationIcon();
 

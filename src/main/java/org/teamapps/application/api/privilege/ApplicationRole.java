@@ -1,6 +1,6 @@
 package org.teamapps.application.api.privilege;
 
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 import java.util.Arrays;
 import java.util.List;

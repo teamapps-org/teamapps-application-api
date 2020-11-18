@@ -1,7 +1,7 @@
 package org.teamapps.application.api.privilege;
 
 import org.teamapps.application.api.localization.Dictionary;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 public interface Privilege {
 

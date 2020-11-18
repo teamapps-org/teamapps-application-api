@@ -3,7 +3,7 @@ package org.teamapps.application.api.application;
 import org.teamapps.application.api.organization.OrgUnit;
 import org.teamapps.application.api.privilege.*;
 import org.teamapps.databinding.MutableValue;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 
 import java.util.List;
 
@@ -17,14 +17,6 @@ public abstract class AbstractApplication implements Application {
 
 	public ApplicationInstanceData getApplicationInstanceData() {
 		return applicationInstanceData;
-	}
-
-	public Icon getStyledIcon(Icon icon) {
-		return applicationInstanceData.getStyledIcon(icon);
-	}
-
-	public Icon getStyledIcon(Icon icon, Icon subIcon) {
-		return applicationInstanceData.getStyledIcon(subIcon);
 	}
 
 	public String getLocalized(String key, Object... parameters) {

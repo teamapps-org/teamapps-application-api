@@ -12,9 +12,9 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <teamapps-version>0.9.78</teamapps-version>
+        <teamapps-version>0.9.82</teamapps-version>
         <universal-db-version>0.4.14</universal-db-version>
-        <teamapps-universal-db-integration-version>0.7</teamapps-universal-db-integration-version>
+        <teamapps-universal-db-integration-version>0.8</teamapps-universal-db-integration-version>
     </properties>
 
     <dependencies>
@@ -22,42 +22,39 @@
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-ux</artifactId>
             <version>${teamapps-version}</version>
-<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-server-undertow-embedded</artifactId>
             <version>${teamapps-version}</version>
-            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-server-jetty-embedded</artifactId>
+            <version>${teamapps-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>universal-db</artifactId>
             <version>${universal-db-version}</version>
-<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-universal-db-integration</artifactId>
             <version>${teamapps-universal-db-integration-version}</version>
-            <scope>provided</scope>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-flags-icon-provider</artifactId>
-            <version>0.9.8</version>
-        </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-icons</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
+
 
         <dependency>
             <groupId>com.ibm.icu</groupId>

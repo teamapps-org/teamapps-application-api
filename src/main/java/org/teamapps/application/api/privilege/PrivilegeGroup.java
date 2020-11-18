@@ -1,15 +1,15 @@
 package org.teamapps.application.api.privilege;
 
 import org.teamapps.application.api.localization.Dictionary;
-import org.teamapps.application.api.theme.ApplicationIcons;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icon.standard.StandardIcon;
+import org.teamapps.icons.Icon;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 public interface PrivilegeGroup {
 
-	static SimplePrivilege LAUNCH_APPLICATION = createSimplePrivilege("org.teamapps.privilege.launchApplication", ApplicationIcons.GEARWHEEL, Dictionary.LAUNCH_APPLICATION, Dictionary.ALLOWS_AUSER_TO_LAUNCH_THE_APPLICATION);
+	SimplePrivilege LAUNCH_APPLICATION = createSimplePrivilege("org.teamapps.privilege.launchApplication", StandardIcon.GEARWHEEL, Dictionary.LAUNCH_APPLICATION, Dictionary.SENTENCE_ALLOWS_AUSER_TO_LAUNCH_THE_APP__);
 
 	static SimplePrivilege createSimplePrivilege(String name, Icon icon, String titleKey, String descriptionKey) {
 		return new SimplePrivilegeImpl(name, icon, titleKey, descriptionKey);

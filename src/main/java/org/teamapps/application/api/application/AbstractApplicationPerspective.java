@@ -3,7 +3,7 @@ package org.teamapps.application.api.application;
 import org.teamapps.application.api.organization.OrgUnit;
 import org.teamapps.application.api.privilege.*;
 import org.teamapps.databinding.MutableValue;
-import org.teamapps.icons.api.Icon;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.Component;
 
@@ -50,14 +50,6 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 
 	public MutableValue<String> getPerspectiveInfoBadgeValue() {
 		return perspectiveInfoBadgeValue;
-	}
-
-	public Icon getStyledIcon(Icon icon) {
-		return applicationInstanceData.getStyledIcon(icon);
-	}
-
-	public Icon getStyledIcon(Icon icon, Icon subIcon) {
-		return applicationInstanceData.getStyledIcon(subIcon);
 	}
 
 	public String getLocalized(String key, Object... parameters) {
