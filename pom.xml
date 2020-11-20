@@ -6,16 +6,56 @@
 
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps-application-api</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <teamapps-version>0.9.82</teamapps-version>
+        <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
+        <teamapps-version>0.9.83</teamapps-version>
         <universal-db-version>0.4.14</universal-db-version>
         <teamapps-universal-db-integration-version>0.8</teamapps-universal-db-integration-version>
     </properties>
+
+    <name>TeamApps Application API</name>
+    <description>API for the TeamApps Application Server</description>
+    <url>https://github.com/teamapps-org/teamapps-application-api</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Matthias Bernstein</name>
+            <email>matthias.bernstein@teamapps.org</email>
+            <id>matthias-bernstein</id>
+        </developer>
+    </developers>
+
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <url>https://github.com/teamapps-org/teamapps-application-api</url>
+        <connection>scm:git:git@github.com:teamapps-org/teamapps-application-api.git</connection>
+        <developerConnection>scm:git:git@github.com:teamapps-org/teamapps-application-api.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
 
     <dependencies>
         <dependency>
@@ -47,14 +87,6 @@
             <artifactId>teamapps-universal-db-integration</artifactId>
             <version>${teamapps-universal-db-integration-version}</version>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-icons</artifactId>
-            <version>1.2</version>
-        </dependency>
-
 
         <dependency>
             <groupId>com.ibm.icu</groupId>

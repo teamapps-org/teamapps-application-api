@@ -7,7 +7,7 @@ import org.teamapps.application.api.application.PerspectiveBuilder;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.organization.OrgUnit;
 import org.teamapps.common.format.Color;
-import org.teamapps.icon.standard.StandardIcon;
+import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.layout.StandardLayout;
 import org.teamapps.ux.application.view.View;
@@ -41,7 +41,7 @@ public class DevApplication {
 	private void createUi() {
 		application = ResponsiveApplication.createApplication();
 
-		View applicationMenu = View.createView(StandardLayout.LEFT, StandardIcon.WINDOW, applicationData.getLocalized(Dictionary.APPLICATIONS), null);
+		View applicationMenu = View.createView(StandardLayout.LEFT, ApplicationIcons.WINDOW, applicationData.getLocalized(Dictionary.APPLICATIONS), null);
 		application.addApplicationView(applicationMenu);
 
 		applicationMenu.getPanel().setBodyBackgroundColor(Color.WHITE.withAlpha(0.94f));
@@ -52,7 +52,7 @@ public class DevApplication {
 		Toolbar toolbar = new Toolbar();
 		ToolbarButtonGroup buttonGroup = toolbar.addButtonGroup(new ToolbarButtonGroup());
 		buttonGroup.setShowGroupSeparator(false);
-		ToolbarButton backButton = ToolbarButton.createSmall(StandardIcon.NAV_LEFT, applicationData.getLocalized(Dictionary.BACK));
+		ToolbarButton backButton = ToolbarButton.createSmall(ApplicationIcons.NAV_LEFT, applicationData.getLocalized(Dictionary.BACK));
 		backButton.setVisible(false);
 		buttonGroup.addButton(backButton);
 		verticalLayout.addComponent(toolbar);
