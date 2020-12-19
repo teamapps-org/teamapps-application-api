@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 
 public interface PrivilegeGroup {
 
-	SimplePrivilege LAUNCH_APPLICATION = createSimplePrivilege("org.teamapps.privilege.launchApplication", ApplicationIcons.GEARWHEEL, Dictionary.LAUNCH_APPLICATION, Dictionary.SENTENCE_ALLOWS_AUSER_TO_LAUNCH_THE_APP__);
 
 	static SimplePrivilege createSimplePrivilege(String name, Icon icon, String titleKey, String descriptionKey) {
 		return new SimplePrivilegeImpl(name, icon, titleKey, descriptionKey);
