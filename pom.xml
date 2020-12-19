@@ -11,8 +11,8 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
-        <teamapps-version>0.9.83</teamapps-version>
-        <universal-db-version>0.4.14</universal-db-version>
+        <teamapps-version>0.9.85</teamapps-version>
+        <universal-db-version>0.4.16</universal-db-version>
         <teamapps-universal-db-integration-version>0.8</teamapps-universal-db-integration-version>
     </properties>
 
@@ -64,6 +64,12 @@
 
         <dependency>
             <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-application-management</artifactId>
+            <version>${teamapps-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.teamapps</groupId>
             <artifactId>teamapps-server-undertow-embedded</artifactId>
             <version>${teamapps-version}</version>
         </dependency>
@@ -84,6 +90,36 @@
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-universal-db-integration</artifactId>
             <version>${teamapps-universal-db-integration-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-reporting</artifactId>
+            <version>1.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-material-icon-provider</artifactId>
+            <version>${teamapps-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-flags-icon-provider</artifactId>
+            <version>0.9.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-fontawesome-icon-provider</artifactId>
+            <version>0.9.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.teamapps</groupId>
+            <artifactId>teamapps-antu-icon-provider</artifactId>
+            <version>1.1.1</version>
         </dependency>
 
         <dependency>
