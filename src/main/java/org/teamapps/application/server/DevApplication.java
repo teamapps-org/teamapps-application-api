@@ -27,6 +27,7 @@ import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.organization.OrgUnit;
 import org.teamapps.common.format.Color;
 import org.teamapps.application.api.theme.ApplicationIcons;
+import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.layout.StandardLayout;
 import org.teamapps.ux.application.view.View;
@@ -51,9 +52,9 @@ public class DevApplication {
 	private final DevApplicationData applicationData;
 	private ResponsiveApplication application;
 
-	public DevApplication(ApplicationPerspectiveBuilder applicationBuilder, List<OrgUnit> orgUnits) {
+	public DevApplication(ApplicationPerspectiveBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter) {
 		this.applicationBuilder = applicationBuilder;
-		applicationData = new DevApplicationData(applicationBuilder, orgUnits);
+		applicationData = new DevApplicationData(applicationBuilder, orgUnits, documentConverter);
 		createUi();
 	}
 

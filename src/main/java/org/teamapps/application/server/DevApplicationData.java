@@ -28,6 +28,7 @@ import org.teamapps.application.api.organization.OrgUnit;
 import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
+import org.teamapps.reporting.convert.DocumentConverter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,13 +38,15 @@ public class DevApplicationData implements ApplicationInstanceData {
 
 	private final ApplicationBuilder applicationBuilder;
 	private final List<OrgUnit> orgUnits;
+	private final DocumentConverter documentConverter;
 	private final Map<String, Map<String, String>> localizationMap;
 	private final Map<String, Map<String, String>> dictionaryMap;
 
-	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits) {
+	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter) {
 		this.applicationBuilder = applicationBuilder;
 		this.localizationMap = applicationBuilder.getLocalizationData() != null ? applicationBuilder.getLocalizationData().createLocalizationMap() : new HashMap<>();
 		this.orgUnits = orgUnits;
+		this.documentConverter = documentConverter;
 		dictionaryMap = LocalizationData.createDictionaryData().createLocalizationMap();
 	}
 
@@ -55,6 +58,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	@Override
 	public OrgField getOrganizationField() {
 		return null;
+	}
+
+	@Override
+	public DocumentConverter getDocumentConverter() {
+		return documentConverter;
 	}
 
 	@Override

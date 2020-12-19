@@ -25,12 +25,15 @@ import org.teamapps.application.api.organization.OrgField;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
+import org.teamapps.reporting.convert.DocumentConverter;
 
 public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, ApplicationLocalizationProvider {
 
 	SessionUser getUser();
 
 	OrgField getOrganizationField();
+
+	DocumentConverter getDocumentConverter();
 
 	ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable);
 }
