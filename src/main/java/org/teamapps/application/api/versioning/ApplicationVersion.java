@@ -69,7 +69,7 @@ public class ApplicationVersion implements Comparable<ApplicationVersion> {
 	}
 
 	public String getVersion() {
-		return tag + "-" + major + "." + minor + "." + patch;
+		return major + "." + minor + "." + patch + "-" + tag;
 	}
 
 
