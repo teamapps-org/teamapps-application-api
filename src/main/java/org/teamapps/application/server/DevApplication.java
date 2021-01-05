@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps Application API
  * ---
- * Copyright (C) 2020 TeamApps.org
+ * Copyright (C) 2020 - 2021 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,12 +54,12 @@ public class DevApplication {
 
 	public DevApplication(ApplicationPerspectiveBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter) {
 		this.applicationBuilder = applicationBuilder;
-		applicationData = new DevApplicationData(applicationBuilder, orgUnits, documentConverter);
+		application = ResponsiveApplication.createApplication();
+		applicationData = new DevApplicationData(applicationBuilder, orgUnits, documentConverter, application.getMultiProgressDisplay());
 		createUi();
 	}
 
 	private void createUi() {
-		application = ResponsiveApplication.createApplication();
 
 		View applicationMenu = View.createView(StandardLayout.LEFT, ApplicationIcons.WINDOW, applicationData.getLocalized(Dictionary.APPLICATIONS), null);
 		application.addApplicationView(applicationMenu);

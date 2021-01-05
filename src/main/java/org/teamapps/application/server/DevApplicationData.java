@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps Application API
  * ---
- * Copyright (C) 2020 TeamApps.org
+ * Copyright (C) 2020 - 2021 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
 import org.teamapps.reporting.convert.DocumentConverter;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,14 +40,16 @@ public class DevApplicationData implements ApplicationInstanceData {
 	private final ApplicationBuilder applicationBuilder;
 	private final List<OrgUnit> orgUnits;
 	private final DocumentConverter documentConverter;
+	private final MultiProgressDisplay multiProgressDisplay;
 	private final Map<String, Map<String, String>> localizationMap;
 	private final Map<String, Map<String, String>> dictionaryMap;
 
-	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter) {
+	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter, MultiProgressDisplay multiProgressDisplay) {
 		this.applicationBuilder = applicationBuilder;
 		this.localizationMap = applicationBuilder.getLocalizationData() != null ? applicationBuilder.getLocalizationData().createLocalizationMap() : new HashMap<>();
 		this.orgUnits = orgUnits;
 		this.documentConverter = documentConverter;
+		this.multiProgressDisplay = multiProgressDisplay;
 		dictionaryMap = LocalizationData.createDictionaryData().createLocalizationMap();
 	}
 
@@ -63,6 +66,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	@Override
 	public DocumentConverter getDocumentConverter() {
 		return documentConverter;
+	}
+
+	@Override
+	public MultiProgressDisplay getMultiProgressDisplay() {
+		return multiProgressDisplay;
 	}
 
 	@Override
