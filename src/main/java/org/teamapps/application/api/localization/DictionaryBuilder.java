@@ -32,9 +32,15 @@ import java.util.stream.Collectors;
 
 public class DictionaryBuilder {
 
+	private static final String DICTIONARY_PREFIX = "org.teamapps.dictionary.";
 	private static Transliterator TRANSLITERATOR = Transliterator.getInstance("Any-Latin; nfd; [:nonspacing mark:] remove; nfc");
 
 	public static void main(String[] args) throws IOException {
+		//createCountryAndLanguageLines();
+		buildDictionaryData();
+	}
+
+	private static void buildDictionaryData() throws IOException {
 		List<String> values = readData().stream()
 				.filter(s -> s != null && !s.isBlank())
 				.collect(Collectors.toList());;
@@ -44,6 +50,13 @@ public class DictionaryBuilder {
 			if (value.startsWith("::")) {
 				codeLines.add("//" + value.substring(2));
 				resourceLines.add("# " + value.substring(2));
+			} else if (value.contains("=")) {
+				int pos = value.indexOf('=');
+				String k = value.substring(0, pos);
+				String v = value.substring(pos + 1);
+				String key = DICTIONARY_PREFIX + k;
+				resourceLines.add(key + "=" + v);
+				codeLines.add("public static final String " + k.toUpperCase().replaceAll("\\.", "_") + " = \"" + key + "\";");
 			} else {
 				resourceLines.add(createKey(value) + "=" + value);
 				codeLines.add("public static final String " + createConstant(value) + " = \"" + createKey(value) + "\";");
@@ -53,6 +66,15 @@ public class DictionaryBuilder {
 		resourceLines.forEach(System.out::println);
 		System.out.println("------");
 		codeLines.forEach(System.out::println);
+	}
+
+	private static void createCountryAndLanguageLines() {
+		for (Country value : Country.values()) {
+			System.out.println("country." + value.name() + "=" + value.getValue());
+		}
+		for (Language value : Language.values()) {
+			System.out.println("language." + value.name() + "=" + value.getValue());
+		}
 	}
 
 	private static String cleanValue(String value) {
@@ -66,7 +88,7 @@ public class DictionaryBuilder {
 	}
 
 	private static String createKey(String value) {
-		return "org.teamapps.dictionary." + cleanValue(value);
+		return DICTIONARY_PREFIX + cleanValue(value);
 	}
 
 	private static String createConstant(String value) {

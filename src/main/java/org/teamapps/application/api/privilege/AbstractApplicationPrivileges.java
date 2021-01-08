@@ -31,7 +31,7 @@ public class AbstractApplicationPrivileges {
 
 	private static List<PrivilegeGroup> privilegeGroups = new ArrayList<>();
 
-	public static SimplePrivilege LAUNCH_APPLICATION = addSimplePrivilege("org.teamapps.privilege.launchApplication", ApplicationIcons.WINDOW, Dictionary.LAUNCH_APPLICATION, Dictionary.SENTENCE_ALLOWS_AUSER_TO_LAUNCH_THE_APP__);
+	public static SimplePrivilege LAUNCH_APPLICATION = addSimplePrivilege("org.teamapps.privilege.launchApplication", ApplicationIcons.WINDOW, Dictionary.LAUNCH_APPLICATION, Dictionary.SENTENCE_ALLOWS_AUSER_TO_LAUNCH_THE_APPLICAT__);
 
 	protected static SimplePrivilege addSimplePrivilege(String name, Icon icon, String titleKey, String descriptionKey) {
 		SimplePrivilege privilegeGroup = PrivilegeGroup.createSimplePrivilege(name, icon, titleKey, descriptionKey);
