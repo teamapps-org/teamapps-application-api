@@ -20,10 +20,13 @@
 package org.teamapps.application.api.localization;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.icon.flags.FlagIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.combobox.ComboBox;
+import org.teamapps.ux.component.field.combobox.TagComboBox;
 import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -272,39 +275,6 @@ public enum Language {
 		}
 	}
 
-	public static ComboBox<Language> createComboBox(ApplicationInstanceData applicationInstanceData) {
-		return createComboBox(new HashSet<>(Arrays.asList(Language.values())), applicationInstanceData);
-	}
-
-	public static ComboBox<Language> createComboBox(Set<Language> allowedLanguages, ApplicationInstanceData applicationInstanceData) {
-		ComboBox<Language> comboBox = new ComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
-		comboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
-		comboBox.setPropertyExtractor((language, s) -> {
-			switch (s) {
-				case BaseTemplate.PROPERTY_ICON: return language.getIcon();
-				case BaseTemplate.PROPERTY_CAPTION: return language.getLanguageLocalized(applicationInstanceData);
-				case BaseTemplate.PROPERTY_DESCRIPTION: return language.getIsoCode();
-			}
-			return null;
-		});
-		List<Language> languages = Arrays.stream(Language.values())
-				.filter(allowedLanguages::contains)
-				.collect(Collectors.toList());
-		comboBox.setModel(s -> {
-			if (s == null || s.isBlank()) {
-				return languages;
-			} else {
-				final String query = s.toLowerCase();
-				return languages.stream()
-						.filter(language -> language.matchLanguage(query, applicationInstanceData))
-						.collect(Collectors.toList());
-			}
-		});
-		comboBox.setRecordToStringFunction(language -> language.getLanguageLocalized(applicationInstanceData));
-		return comboBox;
-	}
-
-
 	public static String getLocalizedLanguageNameByIsoCode(String isoCode, ApplicationInstanceData applicationInstanceData) {
 		Language entry = entryByLanguage.get(isoCode);
 		if (entry != null) {
@@ -313,5 +283,66 @@ public enum Language {
 			return isoCode;
 		}
 	}
+
+	public static PropertyExtractor<Language> getPropertyExtractor(ApplicationInstanceData applicationInstanceData) {
+		return (language, s) -> {
+			switch (s) {
+				case BaseTemplate.PROPERTY_ICON:
+					return language.getIcon();
+				case BaseTemplate.PROPERTY_CAPTION:
+					return language.getLanguageLocalized(applicationInstanceData);
+				case BaseTemplate.PROPERTY_DESCRIPTION:
+					return language.getIsoCode();
+			}
+			return null;
+		};
+	}
+
+	public static ComboBox<Language> createComboBox(ApplicationInstanceData applicationInstanceData) {
+		return createComboBox(applicationInstanceData, null);
+	}
+
+	public static ComboBox<Language> createComboBox(ApplicationInstanceData applicationInstanceData, Set<Language> allowedLanguages) {
+		ComboBox<Language> comboBox = new ComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+		comboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
+		comboBox.setPropertyExtractor(getPropertyExtractor(applicationInstanceData));
+		List<Language> languages = Arrays.stream(Language.values())
+				.filter(language -> allowedLanguages == null || allowedLanguages.contains(language))
+				.collect(Collectors.toList());
+		comboBox.setModel(getComboBoxModel(applicationInstanceData, languages));
+		comboBox.setRecordToStringFunction(language -> language.getLanguageLocalized(applicationInstanceData));
+		return comboBox;
+	}
+
+	public static TagComboBox<Language> createTagComboBox(ApplicationInstanceData applicationInstanceData) {
+		return createTagComboBox(applicationInstanceData, null);
+	}
+
+	public static TagComboBox<Language> createTagComboBox(ApplicationInstanceData applicationInstanceData, Set<Language> allowedLanguages) {
+		TagComboBox<Language> tagComboBox = new TagComboBox<>();
+		tagComboBox.setTemplate(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+		tagComboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
+		List<Language> languages = Arrays.stream(Language.values())
+				.filter(language -> allowedLanguages == null || allowedLanguages.contains(language))
+				.collect(Collectors.toList());
+		tagComboBox.setModel(getComboBoxModel(applicationInstanceData, languages));
+		tagComboBox.setPropertyExtractor(getPropertyExtractor(applicationInstanceData));
+		tagComboBox.setRecordToStringFunction(language -> language.getLanguageLocalized(applicationInstanceData));
+		return tagComboBox;
+	}
+
+	private static ComboBoxModel<Language> getComboBoxModel(ApplicationInstanceData applicationInstanceData, List<Language> languages) {
+				return s -> {
+			if (s == null || s.isBlank()) {
+				return languages;
+			} else {
+				final String query = s.toLowerCase();
+				return languages.stream()
+						.filter(language -> language.matchLanguage(query, applicationInstanceData))
+						.collect(Collectors.toList());
+			}
+		};
+	}
+
 
 }

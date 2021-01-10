@@ -20,10 +20,13 @@
 package org.teamapps.application.api.localization;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.data.extract.PropertyExtractor;
 import org.teamapps.icon.flags.FlagIcon;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.combobox.ComboBox;
+import org.teamapps.ux.component.field.combobox.TagComboBox;
 import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -336,11 +339,8 @@ public enum Country {
 		}
 	}
 
-	public static ComboBox<Country> createComboBox(ApplicationInstanceData applicationInstanceData) {
-		ComboBox<Country> comboBox = new ComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
-		comboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
-
-		comboBox.setPropertyExtractor((country, s) -> {
+	public static PropertyExtractor<Country> getPropertyExtractor(ApplicationInstanceData applicationInstanceData) {
+		return (country, s) -> {
 			switch (s) {
 				case BaseTemplate.PROPERTY_ICON:
 					return country.getIcon();
@@ -350,9 +350,32 @@ public enum Country {
 					return country.getIsoCode();
 			}
 			return null;
-		});
+		};
+	}
+
+	public static ComboBox<Country> createComboBox(ApplicationInstanceData applicationInstanceData) {
+		ComboBox<Country> comboBox = new ComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+		comboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
 		List<Country> countries = Arrays.asList(Country.values());
-		comboBox.setModel(s -> {
+		comboBox.setModel(getCountryComboBoxModel(applicationInstanceData, countries));
+		comboBox.setPropertyExtractor(getPropertyExtractor(applicationInstanceData));
+		comboBox.setRecordToStringFunction(country -> country.getLocalized(applicationInstanceData));
+		return comboBox;
+	}
+
+	public static TagComboBox<Country> createTagComboBox(ApplicationInstanceData applicationInstanceData) {
+		TagComboBox<Country> tagComboBox = new TagComboBox<>();
+		tagComboBox.setTemplate(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+		tagComboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
+		List<Country> countries = Arrays.asList(Country.values());
+		tagComboBox.setModel(getCountryComboBoxModel(applicationInstanceData, countries));
+		tagComboBox.setPropertyExtractor(getPropertyExtractor(applicationInstanceData));
+		tagComboBox.setRecordToStringFunction(country -> country.getLocalized(applicationInstanceData));
+		return tagComboBox;
+	}
+
+	private static ComboBoxModel<Country> getCountryComboBoxModel(ApplicationInstanceData applicationInstanceData, List<Country> countries) {
+		return s -> {
 			if (s == null || s.isBlank()) {
 				return countries;
 			} else {
@@ -361,9 +384,7 @@ public enum Country {
 						.filter(language -> language.matchCountry(query, applicationInstanceData))
 						.collect(Collectors.toList());
 			}
-		});
-		comboBox.setRecordToStringFunction(country -> country.getLocalized(applicationInstanceData));
-		return comboBox;
+		};
 	}
 
 }
