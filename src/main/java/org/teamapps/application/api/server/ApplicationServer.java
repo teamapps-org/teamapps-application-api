@@ -1,0 +1,153 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps Application API
+ * ---
+ * Copyright (C) 2020 - 2021 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+package org.teamapps.application.api.server;
+
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfoList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teamapps.config.TeamAppsConfiguration;
+import org.teamapps.model.SchemaInfo;
+import org.teamapps.model.system.SystemStarts;
+import org.teamapps.model.system.Type;
+import org.teamapps.server.ServletRegistration;
+import org.teamapps.server.undertow.embedded.TeamAppsUndertowEmbeddedServer;
+import org.teamapps.universaldb.UniversalDB;
+import org.teamapps.ux.resource.ClassPathResourceProvider;
+import org.teamapps.ux.resource.ResourceProviderServlet;
+import org.teamapps.ux.session.SessionContext;
+import org.teamapps.webcontroller.WebController;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.io.File;
+import java.lang.invoke.MethodHandles;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class ApplicationServer implements WebController, SessionManager {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+	private final File basePath;
+	private TeamAppsConfiguration teamAppsConfiguration;
+	private int port;
+	private UniversalDB universalDb;
+
+	private List<ServletRegistration> servletRegistrations = new ArrayList<>();
+	private SessionHandler sessionHandler;
+
+
+	public ApplicationServer(File basePath) {
+		this(basePath, new TeamAppsConfiguration(), 8080);
+	}
+
+	public ApplicationServer(File basePath, TeamAppsConfiguration teamAppsConfiguration, int port) {
+		this.basePath = basePath;
+		this.teamAppsConfiguration = teamAppsConfiguration;
+		this.port = port;
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			SystemStarts.create().setTimestamp(Instant.now()).setType(Type.STOP).save();
+		}));
+	}
+
+	public void setSessionHandlerJar(File jarFile) throws Exception {
+		URLClassLoader classLoader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()}) {
+			@Override
+			protected Class<?> findClass(String name) throws ClassNotFoundException {
+				return super.findClass(name);
+			}
+		};
+		sessionHandler = loadSessionHandler(classLoader);
+	}
+
+	private SessionHandler loadSessionHandler(URLClassLoader classLoader) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
+		ClassGraph classGraph = new ClassGraph();
+		if (classLoader != null) {
+			classGraph.overrideClassLoaders(classLoader);
+		}
+		ClassInfoList classInfos = classGraph
+				.enableAllInfo()
+				.scan()
+				.getClassesImplementing(SessionHandler.class.getName())
+				.getStandardClasses();
+		Class<?> builder = classInfos.get(0).loadClass();
+		return (SessionHandler) builder.getDeclaredConstructor().newInstance();
+	}
+
+	public void setSessionHandler(SessionHandler sessionHandler) {
+		this.sessionHandler = sessionHandler;
+	}
+
+	@Override
+	public void onSessionStart(SessionContext context) {
+		sessionHandler.handleSessionStart(context);
+	}
+
+	@Override
+	public void updateSessionHandler(SessionHandler sessionHandler) {
+		this.sessionHandler = sessionHandler;
+	}
+
+	public void start() throws Exception {
+		File dbPath = new File(basePath, "db");
+		dbPath.mkdir();
+		universalDb = UniversalDB.createStandalone(dbPath, new SchemaInfo());
+
+		if (sessionHandler == null) {
+			sessionHandler = loadSessionHandler(null);
+		}
+		sessionHandler.init(this, universalDb);
+
+		TeamAppsUndertowEmbeddedServer server = new TeamAppsUndertowEmbeddedServer(this, teamAppsConfiguration, port);
+		for (ServletRegistration servletRegistration : servletRegistrations) {
+			for (String mapping : servletRegistration.getMappings()) {
+				LOGGER.info("Registering servlet on url path: " + mapping);
+				server.addServletContextListener(new ServletContextListener() {
+					@Override
+					public void contextInitialized(ServletContextEvent sce) {
+						javax.servlet.ServletRegistration.Dynamic dynamic = sce.getServletContext().addServlet("teamapps-registered-" + servletRegistration.getServlet().getClass().getSimpleName() + UUID.randomUUID().toString(), servletRegistration.getServlet());
+						dynamic.setAsyncSupported(servletRegistration.isAsyncSupported());
+						dynamic.addMapping(mapping);
+					}
+				});
+			}
+		}
+		server.start();
+		SystemStarts.create().setTimestamp(Instant.now()).setType(Type.START).save();
+	}
+
+	public void addClassPathResourceProvider(String basePackage, String prefix) {
+		if (!prefix.endsWith("/")) {
+			prefix += "/";
+		}
+		addServletRegistration(new ServletRegistration(new ResourceProviderServlet(new ClassPathResourceProvider(basePackage)), prefix + "*"));
+	}
+
+	public void addServletRegistration(ServletRegistration servletRegistration) {
+		this.servletRegistrations.add(servletRegistration);
+	}
+
+
+}

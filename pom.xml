@@ -136,6 +136,30 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.teamapps</groupId>
+                <artifactId>universal-db-maven-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-model</goal>
+                        </goals>
+                        <configuration>
+                            <modelSourceDirectory>${project.basedir}/src/main/model</modelSourceDirectory>
+                            <modelClasses>
+                                <modelClass>Model</modelClass>
+                            </modelClasses>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
             <id>release</id>
