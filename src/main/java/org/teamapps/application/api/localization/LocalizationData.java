@@ -55,7 +55,20 @@ public interface LocalizationData {
 		return false;
 	}
 
-	default Map<String, Map<String, String>> createLocalizationMap() {
+	default Map<String, Map<String, String>> createLocalizationMapByKey() {
+		Map<String, Map<String, String>> localizationMap = new HashMap<>();
+		for (LocalizationEntrySet entrySet : getLocalizationEntrySets()) {
+			String language = entrySet.getLanguage();
+			for (LocalizationEntry entry : entrySet.getEntries()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+				localizationMap.computeIfAbsent(key, k -> new HashMap<>()).put(language, value);
+			}
+		}
+		return localizationMap;
+	}
+
+	default Map<String, Map<String, String>> createLocalizationMapByLanguage() {
 		Map<String, Map<String, String>> localizationMap = new HashMap<>();
 		for (LocalizationEntrySet entrySet : getLocalizationEntrySets()) {
 			Map<String, String> map = localizationMap.computeIfAbsent(entrySet.getLanguage(), s -> new HashMap<>());

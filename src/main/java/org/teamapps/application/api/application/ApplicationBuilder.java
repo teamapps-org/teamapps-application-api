@@ -33,6 +33,10 @@ public interface ApplicationBuilder {
 
 	ApplicationVersion getApplicationVersion();
 
+	default String getReleaseNotes() {
+		return null;
+	}
+
 	Icon getApplicationIcon();
 
 	String getApplicationName();

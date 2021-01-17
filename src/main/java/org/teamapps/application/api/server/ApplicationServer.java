@@ -42,9 +42,7 @@ import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ApplicationServer implements WebController, SessionManager {
 
@@ -58,6 +56,7 @@ public class ApplicationServer implements WebController, SessionManager {
 	private List<ServletRegistration> servletRegistrations = new ArrayList<>();
 	private SessionHandler sessionHandler;
 
+	private WeakHashMap<SessionHandler, Long> weakStartDateBySessionHandler = new WeakHashMap<>();
 
 	public ApplicationServer(File basePath) {
 		this(basePath, new TeamAppsConfiguration(), 8080);
@@ -72,14 +71,23 @@ public class ApplicationServer implements WebController, SessionManager {
 		}));
 	}
 
-	public void setSessionHandlerJar(File jarFile) throws Exception {
-		URLClassLoader classLoader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()}) {
-			@Override
-			protected Class<?> findClass(String name) throws ClassNotFoundException {
-				return super.findClass(name);
-			}
-		};
-		sessionHandler = loadSessionHandler(classLoader);
+	public void updateSessionHandler(File jarFile) throws Exception {
+		LOGGER.info("Loading new session handler:" + jarFile.getPath());
+		URLClassLoader classLoader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
+		SessionHandler newSessionHandler = loadSessionHandler(classLoader);
+		newSessionHandler.init(this, universalDb);
+		weakStartDateBySessionHandler.put(newSessionHandler, System.currentTimeMillis());
+		this.sessionHandler = newSessionHandler;
+		System.gc();
+		LOGGER.info("Updated session handler:" + sessionHandler);
+	}
+
+	@Override
+	public void updateSessionHandler(SessionHandler sessionHandler) {
+		sessionHandler.init(this, universalDb);
+		weakStartDateBySessionHandler.put(sessionHandler, System.currentTimeMillis());
+		this.sessionHandler = sessionHandler;
+		LOGGER.info("Updated fixed session handler:" + sessionHandler);
 	}
 
 	private SessionHandler loadSessionHandler(URLClassLoader classLoader) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
@@ -106,20 +114,15 @@ public class ApplicationServer implements WebController, SessionManager {
 	}
 
 	@Override
-	public void updateSessionHandler(SessionHandler sessionHandler) {
-		this.sessionHandler = sessionHandler;
+	public Collection<Long> getBootstrappedSystems() {
+		return weakStartDateBySessionHandler.values();
 	}
 
 	public void start() throws Exception {
 		File dbPath = new File(basePath, "db");
 		dbPath.mkdir();
 		universalDb = UniversalDB.createStandalone(dbPath, new SchemaInfo());
-
-		if (sessionHandler == null) {
-			sessionHandler = loadSessionHandler(null);
-		}
 		sessionHandler.init(this, universalDb);
-
 		TeamAppsUndertowEmbeddedServer server = new TeamAppsUndertowEmbeddedServer(this, teamAppsConfiguration, port);
 		for (ServletRegistration servletRegistration : servletRegistrations) {
 			for (String mapping : servletRegistration.getMappings()) {

@@ -24,28 +24,27 @@ import java.util.Objects;
 public class ApplicationVersion implements Comparable<ApplicationVersion> {
 
 	public static ApplicationVersion create(int major, int minor) {
-		return new ApplicationVersion(null, major, minor, 0);
+		return new ApplicationVersion(major, minor, 0, null);
 	}
 
-	public static ApplicationVersion create(String tag, int major, int minor, int patch) {
-		return new ApplicationVersion(tag, major, minor, patch);
+	public static ApplicationVersion create(int major, int minor, int patch, String tag) {
+		return new ApplicationVersion(major, minor, patch, tag);
 	}
 
-	public static ApplicationVersion create(String tag, int major, int minor) {
-		return new ApplicationVersion(tag, major, minor, 0);
+	public static ApplicationVersion create(int major, int minor, String tag) {
+		return new ApplicationVersion(major, minor, 0, tag);
 	}
 
 	public static ApplicationVersion create(int major, int minor, int patch) {
-		return new ApplicationVersion(null, major, minor, patch);
+		return new ApplicationVersion(major, minor, patch, null);
 	}
-
-	private final String tag;
 
 	private final int major;
 	private final int minor;
 	private final int patch;
+	private final String tag;
 
-	public ApplicationVersion(String tag, int major, int minor, int patch) {
+	public ApplicationVersion(int major, int minor, int patch, String tag) {
 		this.tag = tag == null ? "V" : tag;
 		this.major = major;
 		this.minor = minor;

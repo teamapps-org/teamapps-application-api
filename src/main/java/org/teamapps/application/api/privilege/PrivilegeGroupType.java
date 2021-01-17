@@ -31,5 +31,4 @@ public enum PrivilegeGroupType {
 	CUSTOM_OBJECT_PRIVILEGE_GROUP,
 
 
-
 }

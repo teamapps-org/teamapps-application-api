@@ -19,7 +19,14 @@
  */
 package org.teamapps.application.api.server;
 
+import java.io.File;
+import java.util.Collection;
+
 public interface SessionManager {
 
+	Collection<Long> getBootstrappedSystems();
+
 	void updateSessionHandler(SessionHandler sessionHandler);
+
+	void updateSessionHandler(File jarFile) throws Exception;
 }

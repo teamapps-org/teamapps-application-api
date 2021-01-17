@@ -46,11 +46,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 
 	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter, MultiProgressDisplay multiProgressDisplay) {
 		this.applicationBuilder = applicationBuilder;
-		this.localizationMap = applicationBuilder.getLocalizationData() != null ? applicationBuilder.getLocalizationData().createLocalizationMap() : new HashMap<>();
+		this.localizationMap = applicationBuilder.getLocalizationData() != null ? applicationBuilder.getLocalizationData().createLocalizationMapByLanguage() : new HashMap<>();
 		this.orgUnits = orgUnits;
 		this.documentConverter = documentConverter;
 		this.multiProgressDisplay = multiProgressDisplay;
-		dictionaryMap = LocalizationData.createDictionaryData().createLocalizationMap();
+		dictionaryMap = LocalizationData.createDictionaryData().createLocalizationMapByLanguage();
 	}
 
 	@Override
