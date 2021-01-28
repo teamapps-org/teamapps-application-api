@@ -29,6 +29,10 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class ApplicationConfigXml<CONFIG> {
 
@@ -37,9 +41,21 @@ public class ApplicationConfigXml<CONFIG> {
 		return (CONFIG) xstream.fromXML(xml);
 	}
 
+	public CONFIG readConfigFile(File xml) {
+		XStream xstream = createXStream();
+		return (CONFIG) xstream.fromXML(xml);
+	}
+
 	public String getConfigXml(CONFIG config) {
 		XStream xStream = createXStream();
 		return xStream.toXML(config);
+	}
+
+	public void writeConfig(CONFIG config, File file) throws IOException {
+		String xml = getConfigXml(config);
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+		bos.write(xml.getBytes(StandardCharsets.UTF_8));
+		bos.close();
 	}
 
 	private static XStream createXStream() {

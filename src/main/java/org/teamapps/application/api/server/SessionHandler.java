@@ -23,9 +23,11 @@ package org.teamapps.application.api.server;
 import org.teamapps.universaldb.UniversalDB;
 import org.teamapps.ux.session.SessionContext;
 
+import java.io.File;
+
 public interface SessionHandler {
 
-	void init(SessionManager sessionManager, UniversalDB universalDb);
+	void init(SessionManager sessionManager, UniversalDB universalDb, File configPath);
 
 	void handleSessionStart(SessionContext context);
 

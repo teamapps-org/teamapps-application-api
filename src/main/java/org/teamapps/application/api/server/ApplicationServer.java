@@ -49,6 +49,7 @@ public class ApplicationServer implements WebController, SessionManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final File basePath;
+	private final File configPath;
 	private TeamAppsConfiguration teamAppsConfiguration;
 	private int port;
 	private UniversalDB universalDb;
@@ -59,13 +60,15 @@ public class ApplicationServer implements WebController, SessionManager {
 	private WeakHashMap<SessionHandler, Long> weakStartDateBySessionHandler = new WeakHashMap<>();
 
 	public ApplicationServer(File basePath) {
-		this(basePath, new TeamAppsConfiguration(), 8080);
+		this(basePath, new File(basePath, "config.xml"), new TeamAppsConfiguration(), 8080);
 	}
 
-	public ApplicationServer(File basePath, TeamAppsConfiguration teamAppsConfiguration, int port) {
+	public ApplicationServer(File basePath, File configPath, TeamAppsConfiguration teamAppsConfiguration, int port) {
 		this.basePath = basePath;
+		this.configPath = configPath;
 		this.teamAppsConfiguration = teamAppsConfiguration;
 		this.port = port;
+		configPath.mkdir();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			SystemStarts.create().setTimestamp(Instant.now()).setType(Type.STOP).save();
 		}));
@@ -75,7 +78,7 @@ public class ApplicationServer implements WebController, SessionManager {
 		LOGGER.info("Loading new session handler:" + jarFile.getPath());
 		URLClassLoader classLoader = new URLClassLoader(new URL[]{jarFile.toURI().toURL()});
 		SessionHandler newSessionHandler = loadSessionHandler(classLoader);
-		newSessionHandler.init(this, universalDb);
+		newSessionHandler.init(this, universalDb, configPath);
 		weakStartDateBySessionHandler.put(newSessionHandler, System.currentTimeMillis());
 		this.sessionHandler = newSessionHandler;
 		System.gc();
@@ -84,7 +87,7 @@ public class ApplicationServer implements WebController, SessionManager {
 
 	@Override
 	public void updateSessionHandler(SessionHandler sessionHandler) {
-		sessionHandler.init(this, universalDb);
+		sessionHandler.init(this, universalDb, configPath);
 		weakStartDateBySessionHandler.put(sessionHandler, System.currentTimeMillis());
 		this.sessionHandler = sessionHandler;
 		LOGGER.info("Updated fixed session handler:" + sessionHandler);
@@ -122,7 +125,7 @@ public class ApplicationServer implements WebController, SessionManager {
 		File dbPath = new File(basePath, "db");
 		dbPath.mkdir();
 		universalDb = UniversalDB.createStandalone(dbPath, new SchemaInfo());
-		sessionHandler.init(this, universalDb);
+		sessionHandler.init(this, universalDb, configPath);
 		TeamAppsUndertowEmbeddedServer server = new TeamAppsUndertowEmbeddedServer(this, teamAppsConfiguration, port);
 		for (ServletRegistration servletRegistration : servletRegistrations) {
 			for (String mapping : servletRegistration.getMappings()) {
