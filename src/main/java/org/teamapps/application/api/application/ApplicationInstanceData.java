@@ -54,4 +54,8 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	}
 
 	ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable);
+
+	void writeActivityEvent(String eventTitle, String eventData);
+
+	void writeException(String title, Throwable throwable);
 }

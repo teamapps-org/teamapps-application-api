@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.server;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.teamapps.application.api.application.ApplicationBuilder;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
@@ -77,6 +78,16 @@ public class DevApplicationData implements ApplicationInstanceData {
 	public ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable) {
 		//todo
 		return null;
+	}
+
+	@Override
+	public void writeActivityEvent(String eventTitle, String eventData) {
+		System.out.println("User activity: " + eventTitle + ", " + eventData);
+	}
+
+	@Override
+	public void writeException(String title, Throwable throwable) {
+		System.out.println("Exception: " + title + ", " + throwable.getMessage());
 	}
 
 	@Override
