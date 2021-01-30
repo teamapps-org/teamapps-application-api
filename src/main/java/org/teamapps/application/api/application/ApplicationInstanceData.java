@@ -26,6 +26,7 @@ import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
 import org.teamapps.reporting.convert.DocumentConverter;
+import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.session.SessionContext;
 
@@ -53,9 +54,11 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 		});
 	}
 
+	void showPerspective(Perspective perspective);
+
 	ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable);
 
-	void writeActivityEvent(String eventTitle, String eventData);
+	void writeActivityLog(String title, String data);
 
-	void writeException(String title, Throwable throwable);
+	void writeExceptionLog(String title, Throwable throwable);
 }

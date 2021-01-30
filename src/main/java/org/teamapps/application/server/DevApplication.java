@@ -55,7 +55,7 @@ public class DevApplication {
 	public DevApplication(ApplicationPerspectiveBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter) {
 		this.applicationBuilder = applicationBuilder;
 		application = ResponsiveApplication.createApplication();
-		applicationData = new DevApplicationData(applicationBuilder, orgUnits, documentConverter, application.getMultiProgressDisplay());
+		applicationData = new DevApplicationData(applicationBuilder, orgUnits, documentConverter, application);
 		createUi();
 	}
 

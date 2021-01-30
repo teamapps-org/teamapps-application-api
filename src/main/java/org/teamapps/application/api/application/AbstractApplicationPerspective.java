@@ -63,6 +63,19 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 		return perspective;
 	}
 
+	public void showPerspective(Perspective perspective) {
+		applicationInstanceData.showPerspective(perspective);
+	}
+
+	public void writeActivityLog(String title, String data) {
+		getApplicationInstanceData().writeActivityLog(title, data);
+	}
+
+	public void writeExceptionLog(String title, Throwable throwable) {
+		getApplicationInstanceData().writeExceptionLog(title, throwable);
+	}
+
+
 	public ApplicationInstanceData getApplicationInstanceData() {
 		return applicationInstanceData;
 	}

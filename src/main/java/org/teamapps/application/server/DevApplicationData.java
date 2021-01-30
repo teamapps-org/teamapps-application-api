@@ -19,7 +19,6 @@
  */
 package org.teamapps.application.server;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.teamapps.application.api.application.ApplicationBuilder;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
@@ -30,6 +29,8 @@ import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
 import org.teamapps.reporting.convert.DocumentConverter;
+import org.teamapps.ux.application.ResponsiveApplication;
+import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 
 import java.util.HashMap;
@@ -41,16 +42,16 @@ public class DevApplicationData implements ApplicationInstanceData {
 	private final ApplicationBuilder applicationBuilder;
 	private final List<OrgUnit> orgUnits;
 	private final DocumentConverter documentConverter;
-	private final MultiProgressDisplay multiProgressDisplay;
+	private final ResponsiveApplication responsiveApplication;
 	private final Map<String, Map<String, String>> localizationMap;
 	private final Map<String, Map<String, String>> dictionaryMap;
 
-	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter, MultiProgressDisplay multiProgressDisplay) {
+	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter, ResponsiveApplication responsiveApplication) {
 		this.applicationBuilder = applicationBuilder;
 		this.localizationMap = applicationBuilder.getLocalizationData() != null ? applicationBuilder.getLocalizationData().createLocalizationMapByLanguage() : new HashMap<>();
 		this.orgUnits = orgUnits;
 		this.documentConverter = documentConverter;
-		this.multiProgressDisplay = multiProgressDisplay;
+		this.responsiveApplication = responsiveApplication;
 		dictionaryMap = LocalizationData.createDictionaryData().createLocalizationMapByLanguage();
 	}
 
@@ -71,7 +72,12 @@ public class DevApplicationData implements ApplicationInstanceData {
 
 	@Override
 	public MultiProgressDisplay getMultiProgressDisplay() {
-		return multiProgressDisplay;
+		return responsiveApplication.getMultiProgressDisplay();
+	}
+
+	@Override
+	public void showPerspective(Perspective perspective) {
+		responsiveApplication.showPerspective(perspective);
 	}
 
 	@Override
@@ -81,12 +87,12 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
-	public void writeActivityEvent(String eventTitle, String eventData) {
+	public void writeActivityLog(String eventTitle, String eventData) {
 		System.out.println("User activity: " + eventTitle + ", " + eventData);
 	}
 
 	@Override
-	public void writeException(String title, Throwable throwable) {
+	public void writeExceptionLog(String title, Throwable throwable) {
 		System.out.println("Exception: " + title + ", " + throwable.getMessage());
 	}
 
