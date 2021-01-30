@@ -30,6 +30,7 @@ import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,7 +85,8 @@ public class DevServer {
 				context.registerBackgroundImage("default", defaultBackground, defaultBackground);
 				context.setBackgroundImage("default", 0);
 			};
-			TeamAppsUndertowEmbeddedServer server = new TeamAppsUndertowEmbeddedServer(webController, port);
+			File webAppDirectory = Files.createTempDirectory("teamapps").toRealPath().toFile();
+			TeamAppsUndertowEmbeddedServer server = new TeamAppsUndertowEmbeddedServer(webController, webAppDirectory, port);
 			server.start();
 		} catch (Throwable e) {
 			e.printStackTrace();
