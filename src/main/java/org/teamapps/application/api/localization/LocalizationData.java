@@ -81,12 +81,12 @@ public interface LocalizationData {
 		return create(locale -> resourceBundle, language);
 	}
 
-	static LocalizationData createFromPropertyFiles(String baseName, Locale... translations) {
-		return createFromPropertyFiles(baseName, "properties", translations);
+	static LocalizationData createFromPropertyFiles(String baseName, ClassLoader classLoader, Locale... translations) {
+		return createFromPropertyFiles(baseName, "properties", classLoader, translations);
 	}
 
-	static LocalizationData createFromPropertyFiles(String baseName, String resourceFileSuffix, Locale... translations) {
-		Function<Locale, ResourceBundle> resourceBundleByLocaleFunction = locale -> ResourceBundle.getBundle(baseName, locale, new TeamAppsResourceBundleControl(resourceFileSuffix, Locale.ENGLISH));
+	static LocalizationData createFromPropertyFiles(String baseName, String resourceFileSuffix, ClassLoader classLoader, Locale... translations) {
+		Function<Locale, ResourceBundle> resourceBundleByLocaleFunction = locale -> ResourceBundle.getBundle(baseName, locale, classLoader, new TeamAppsResourceBundleControl(resourceFileSuffix, Locale.ENGLISH));
 		return create(resourceBundleByLocaleFunction, translations);
 	}
 
@@ -99,8 +99,8 @@ public interface LocalizationData {
 		return () -> entrySets;
 	}
 
-	static LocalizationData createDictionaryData() {
-		return createFromPropertyFiles("org.teamapps.application.api.localization.dictionary", Locale.ENGLISH);
+	static LocalizationData createDictionaryData(ClassLoader classLoader) {
+		return createFromPropertyFiles("org.teamapps.application.api.localization.dictionary", classLoader, Locale.ENGLISH);
 	}
 
 	static LocalizationEntrySet createEntrySet(ResourceBundle bundle, Locale translation) {

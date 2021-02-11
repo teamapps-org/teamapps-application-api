@@ -52,7 +52,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 		this.orgUnits = orgUnits;
 		this.documentConverter = documentConverter;
 		this.responsiveApplication = responsiveApplication;
-		dictionaryMap = LocalizationData.createDictionaryData().createLocalizationMapByLanguage();
+		dictionaryMap = LocalizationData.createDictionaryData(getClass().getClassLoader()).createLocalizationMapByLanguage();
 	}
 
 	@Override

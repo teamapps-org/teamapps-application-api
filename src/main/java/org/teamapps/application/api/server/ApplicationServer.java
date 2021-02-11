@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,14 +30,14 @@ import org.teamapps.model.system.Type;
 import org.teamapps.server.ServletRegistration;
 import org.teamapps.server.undertow.embedded.TeamAppsUndertowEmbeddedServer;
 import org.teamapps.universaldb.UniversalDB;
-import org.teamapps.ux.resource.ClassPathResourceProvider;
-import org.teamapps.ux.resource.ResourceProviderServlet;
+import org.teamapps.ux.resource.*;
 import org.teamapps.ux.session.SessionContext;
 import org.teamapps.webcontroller.WebController;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -60,7 +60,7 @@ public class ApplicationServer implements WebController, SessionManager {
 	private WeakHashMap<SessionHandler, Long> weakStartDateBySessionHandler = new WeakHashMap<>();
 
 	public ApplicationServer(File basePath) {
-		this(basePath, new File(basePath, "config.xml"), new TeamAppsConfiguration(), 8080);
+		this(basePath, new File(basePath, "config"), new TeamAppsConfiguration(), 8080);
 	}
 
 	public ApplicationServer(File basePath, File configPath, TeamAppsConfiguration teamAppsConfiguration, int port) {
@@ -127,6 +127,21 @@ public class ApplicationServer implements WebController, SessionManager {
 		universalDb = UniversalDB.createStandalone(dbPath, new SchemaInfo());
 		sessionHandler.init(this, universalDb, configPath);
 		TeamAppsUndertowEmbeddedServer server = new TeamAppsUndertowEmbeddedServer(this, teamAppsConfiguration, port);
+
+		File staticResourcesPath = new File(basePath, "static");
+		staticResourcesPath.mkdir();
+		addServletRegistration(new ServletRegistration(new ResourceProviderServlet((servletPath, relativeResourcePath, httpSessionId) -> {
+			try {
+				File file = new File(staticResourcesPath, relativeResourcePath);
+				if (file.exists() && !file.isDirectory() && file.toPath().toRealPath().startsWith(staticResourcesPath.getPath())) {
+					return new FileResource(file);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}), "/static/*"));
+
 		for (ServletRegistration servletRegistration : servletRegistrations) {
 			for (String mapping : servletRegistration.getMappings()) {
 				LOGGER.info("Registering servlet on url path: " + mapping);
@@ -154,6 +169,5 @@ public class ApplicationServer implements WebController, SessionManager {
 	public void addServletRegistration(ServletRegistration servletRegistration) {
 		this.servletRegistrations.add(servletRegistration);
 	}
-
 
 }

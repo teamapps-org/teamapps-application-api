@@ -29,6 +29,10 @@ Select area
 Select records
 Select rows
 Unselect
+Play
+Pause
+Stop
+Record
 Help
 Upload
 Download
@@ -41,6 +45,19 @@ No
 Back
 Search
 Search...
+View
+Views
+Menu
+Tree
+Table
+List
+Form
+Timeline
+Media
+Map
+Calendar
+Network
+
 
 ::user data
 Salutation
@@ -153,6 +170,10 @@ Empty
 ::base system
 Launch application
 Allows a user to launch the application
+Application launcher
+Open new application
+Application menu
+Select application perspective
 
 ::other
 Rotate
