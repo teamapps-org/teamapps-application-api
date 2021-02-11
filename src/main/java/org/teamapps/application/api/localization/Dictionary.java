@@ -51,6 +51,10 @@ public class Dictionary {
 	public static final String SELECT_RECORDS = "org.teamapps.dictionary.selectRecords";
 	public static final String SELECT_ROWS = "org.teamapps.dictionary.selectRows";
 	public static final String UNSELECT = "org.teamapps.dictionary.unselect";
+	public static final String PLAY = "org.teamapps.dictionary.play";
+	public static final String PAUSE = "org.teamapps.dictionary.pause";
+	public static final String STOP = "org.teamapps.dictionary.stop";
+	public static final String RECORD = "org.teamapps.dictionary.record";
 	public static final String HELP = "org.teamapps.dictionary.help";
 	public static final String UPLOAD = "org.teamapps.dictionary.upload";
 	public static final String DOWNLOAD = "org.teamapps.dictionary.download";
@@ -62,6 +66,18 @@ public class Dictionary {
 	public static final String BACK = "org.teamapps.dictionary.back";
 	public static final String SEARCH = "org.teamapps.dictionary.search";
 	public static final String SEARCH___ = "org.teamapps.dictionary.search___";
+	public static final String VIEW = "org.teamapps.dictionary.view";
+	public static final String VIEWS = "org.teamapps.dictionary.views";
+	public static final String MENU = "org.teamapps.dictionary.menu";
+	public static final String TREE = "org.teamapps.dictionary.tree";
+	public static final String TABLE = "org.teamapps.dictionary.table";
+	public static final String LIST = "org.teamapps.dictionary.list";
+	public static final String FORM = "org.teamapps.dictionary.form";
+	public static final String TIMELINE = "org.teamapps.dictionary.timeline";
+	public static final String MEDIA = "org.teamapps.dictionary.media";
+	public static final String MAP = "org.teamapps.dictionary.map";
+	public static final String CALENDAR = "org.teamapps.dictionary.calendar";
+	public static final String NETWORK = "org.teamapps.dictionary.network";
 	//user data
 	public static final String SALUTATION = "org.teamapps.dictionary.salutation";
 	public static final String NAME = "org.teamapps.dictionary.name";
@@ -168,6 +184,10 @@ public class Dictionary {
 	//base system
 	public static final String LAUNCH_APPLICATION = "org.teamapps.dictionary.launchApplication";
 	public static final String SENTENCE_ALLOWS_AUSER_TO_LAUNCH_THE_APPLICAT__ = "org.teamapps.dictionary.allowsAUserToLaunchTheApplication";
+	public static final String APPLICATION_LAUNCHER = "org.teamapps.dictionary.applicationLauncher";
+	public static final String OPEN_NEW_APPLICATION = "org.teamapps.dictionary.openNewApplication";
+	public static final String APPLICATION_MENU = "org.teamapps.dictionary.applicationMenu";
+	public static final String SELECT_APPLICATION_PERSPECTIVE = "org.teamapps.dictionary.selectApplicationPerspective";
 	//other
 	public static final String ROTATE = "org.teamapps.dictionary.rotate";
 	public static final String ROTATE_PICTURE = "org.teamapps.dictionary.rotatePicture";
@@ -605,6 +625,7 @@ public class Dictionary {
 	public static final String LANGUAGE_ZH_CHINESE = "org.teamapps.dictionary.language.ZH_CHINESE";
 	public static final String LANGUAGE_ZU_ZULU = "org.teamapps.dictionary.language.ZU_ZULU";
 	public static final String LANGUAGE_PAP_PAPIAMENTO = "org.teamapps.dictionary.language.PAP_PAPIAMENTO";
+
 
 
 
