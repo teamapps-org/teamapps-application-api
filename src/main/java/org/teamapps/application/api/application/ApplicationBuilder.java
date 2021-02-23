@@ -21,11 +21,13 @@ package org.teamapps.application.api.application;
 
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.localization.LocalizationData;
+import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.privilege.ApplicationRole;
 import org.teamapps.application.api.privilege.PrivilegeGroup;
 import org.teamapps.application.api.versioning.ApplicationVersion;
 import org.teamapps.icons.Icon;
 import org.teamapps.universaldb.schema.SchemaInfoProvider;
+import org.teamapps.ux.application.ResponsiveApplication;
 
 import java.util.List;
 
@@ -57,8 +59,8 @@ public interface ApplicationBuilder {
 
 	void bootstrapApplicationBuilder();
 
-	boolean isApplicationAccessible(ApplicationInstanceData applicationInstanceData);
+	boolean isApplicationAccessible(ApplicationPrivilegeProvider privilegeProvider);
 
-	Application build(ApplicationInstanceData applicationInstanceData);
+	void build(ResponsiveApplication application, ApplicationInstanceData applicationInstanceData);
 
 }

@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.application;
 
+import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.databinding.MutableValue;
 import org.teamapps.icons.Icon;
 
@@ -32,7 +33,7 @@ public interface PerspectiveBuilder {
 
 	String getDescriptionKey();
 
-	boolean isPerspectiveAccessible(ApplicationInstanceData applicationInstanceData);
+	boolean isPerspectiveAccessible(ApplicationPrivilegeProvider privilegeProvider);
 
 	ApplicationPerspective build(ApplicationInstanceData applicationInstanceData, MutableValue<String> perspectiveInfoBadgeValue);
 

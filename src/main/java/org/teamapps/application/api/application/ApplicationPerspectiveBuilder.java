@@ -19,6 +19,8 @@
  */
 package org.teamapps.application.api.application;
 
+import org.teamapps.ux.application.ResponsiveApplication;
+
 import java.util.List;
 
 public interface ApplicationPerspectiveBuilder extends ApplicationBuilder {
@@ -26,7 +28,6 @@ public interface ApplicationPerspectiveBuilder extends ApplicationBuilder {
 	List<PerspectiveBuilder> getPerspectiveBuilders();
 
 	@Override
-	default Application build(ApplicationInstanceData applicationInstanceData) {
-		return null;
+	default void build(ResponsiveApplication application, ApplicationInstanceData applicationInstanceData) {
 	}
 }
