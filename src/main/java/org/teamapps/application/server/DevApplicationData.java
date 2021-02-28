@@ -66,6 +66,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
+	public int getManagedApplicationId() {
+		return 0;
+	}
+
+	@Override
 	public DocumentConverter getDocumentConverter() {
 		return documentConverter;
 	}

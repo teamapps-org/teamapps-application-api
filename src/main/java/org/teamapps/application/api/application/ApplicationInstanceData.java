@@ -39,6 +39,8 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	OrgField getOrganizationField();
 
+	int getManagedApplicationId();
+
 	DocumentConverter getDocumentConverter();
 
 	MultiProgressDisplay getMultiProgressDisplay();
