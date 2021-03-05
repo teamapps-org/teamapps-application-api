@@ -22,6 +22,7 @@ package org.teamapps.application.api.privilege;
 import org.teamapps.icons.Icon;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -31,7 +32,7 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 	private final Icon icon;
 	private final String titleKey;
 	private final String descriptionKey;
-	private List<Privilege> privileges;
+	private final List<Privilege> privileges;
 	private Supplier<List<PrivilegeObject>> privilegeObjectsSupplier;
 
 	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey) {
@@ -39,6 +40,7 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 		this.icon = icon;
 		this.titleKey = titleKey;
 		this.descriptionKey = descriptionKey;
+		this.privileges = Collections.emptyList();
 	}
 
 	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, List<Privilege> privileges) {
@@ -64,10 +66,6 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 		this.descriptionKey = descriptionKey;
 		this.privileges = privileges;
 		this.privilegeObjectsSupplier = privilegeObjectsSupplier;
-	}
-
-	public void setPrivileges(List<Privilege> privileges) {
-		this.privileges = privileges;
 	}
 
 	public void setPrivilegeObjectsSupplier(Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
