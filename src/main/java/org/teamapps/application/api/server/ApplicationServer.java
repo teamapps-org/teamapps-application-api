@@ -24,7 +24,7 @@ import io.github.classgraph.ClassInfoList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.model.SchemaInfo;
+import org.teamapps.model.ApplicationServerSchema;
 import org.teamapps.model.system.SystemStarts;
 import org.teamapps.model.system.Type;
 import org.teamapps.server.ServletRegistration;
@@ -124,7 +124,7 @@ public class ApplicationServer implements WebController, SessionManager {
 	public void start() throws Exception {
 		File dbPath = new File(basePath, "db");
 		dbPath.mkdir();
-		universalDb = UniversalDB.createStandalone(dbPath, new SchemaInfo());
+		universalDb = UniversalDB.createStandalone(dbPath, new ApplicationServerSchema());
 		sessionHandler.init(this, universalDb, configPath);
 		TeamAppsUndertowEmbeddedServer server = new TeamAppsUndertowEmbeddedServer(this, teamAppsConfiguration, port);
 

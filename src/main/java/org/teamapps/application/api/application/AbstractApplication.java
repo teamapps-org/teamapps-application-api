@@ -21,12 +21,27 @@ package org.teamapps.application.api.application;
 
 import org.teamapps.application.api.organization.OrgUnit;
 import org.teamapps.application.api.privilege.*;
+import org.teamapps.ux.application.ResponsiveApplication;
 
 import java.util.List;
 
 public abstract class AbstractApplication implements Application {
 
+	private final ResponsiveApplication responsiveApplication;
 	private final ApplicationInstanceData applicationInstanceData;
+
+	public AbstractApplication(ResponsiveApplication responsiveApplication, ApplicationInstanceData applicationInstanceData) {
+		this.responsiveApplication = responsiveApplication;
+		this.applicationInstanceData = applicationInstanceData;
+	}
+
+	public ResponsiveApplication getResponsiveApplication() {
+		return responsiveApplication;
+	}
+
+	public ApplicationInstanceData getApplicationInstanceData() {
+		return applicationInstanceData;
+	}
 
 	public void writeActivityLog(String title, String data) {
 		getApplicationInstanceData().writeActivityLog(title, data);
@@ -34,14 +49,6 @@ public abstract class AbstractApplication implements Application {
 
 	public void writeExceptionLog(String title, Throwable throwable) {
 		getApplicationInstanceData().writeExceptionLog(title, throwable);
-	}
-
-	public AbstractApplication(ApplicationInstanceData applicationInstanceData) {
-		this.applicationInstanceData = applicationInstanceData;
-	}
-
-	public ApplicationInstanceData getApplicationInstanceData() {
-		return applicationInstanceData;
 	}
 
 	public String getLocalized(String key, Object... parameters) {

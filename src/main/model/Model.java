@@ -24,14 +24,15 @@ import static org.teamapps.universaldb.schema.TableOption.*;
 public class Model implements SchemaInfoProvider {
 
 	@Override
-	public String getSchema() {
+	public Schema getSchema() {
 		Schema schema = Schema.create("org.teamapps.model");
+		schema.setSchemaName("ApplicationServerSchema");
 		Database db = schema.addDatabase("system");
 		Table systemStarts = db.addTable("systemStarts");
 		systemStarts
 				.addTimestamp("timestamp")
 				.addEnum("type", "start", "stop")
 		;
-		return schema.getSchema();
+		return schema;
 	}
 }
