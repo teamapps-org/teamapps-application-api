@@ -41,6 +41,7 @@ import org.teamapps.ux.component.timegraph.*;
 import org.teamapps.ux.component.timegraph.partitioning.StaticPartitioningTimeGraphModel;
 import org.teamapps.ux.session.SessionContext;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -99,7 +100,7 @@ public abstract class RecordModelBuilder<RECORD> {
 
 			@Override
 			public List<RECORD> getRecords(int startIndex, int length, Sorting sorting) {
-				return records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
+				return records == null ? Collections.emptyList() : records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
 			}
 		};
 		onDataChanged.addListener((Runnable) model.onAllDataChanged::fire);
@@ -123,7 +124,7 @@ public abstract class RecordModelBuilder<RECORD> {
 
 			@Override
 			public List<RECORD> getRecords(int startIndex, int length) {
-				return records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
+				return records == null ? Collections.emptyList() : records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
 			}
 		};
 		onDataChanged.addListener(() -> model.onAllDataChanged().fire());
