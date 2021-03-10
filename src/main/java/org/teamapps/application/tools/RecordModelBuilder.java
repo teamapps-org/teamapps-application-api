@@ -24,17 +24,20 @@ import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
+import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
 import org.teamapps.event.Event;
 import org.teamapps.udb.filter.TimeIntervalFilter;
 import org.teamapps.ux.application.view.View;
+import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteItemViewModel;
 import org.teamapps.ux.component.infiniteitemview.InfiniteItemView2;
 import org.teamapps.ux.component.infiniteitemview.InfiniteItemViewModel;
 import org.teamapps.ux.component.table.AbstractTableModel;
 import org.teamapps.ux.component.table.Table;
+import org.teamapps.ux.component.table.TableColumn;
 import org.teamapps.ux.component.table.TableModel;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.timegraph.*;
@@ -112,6 +115,19 @@ public abstract class RecordModelBuilder<RECORD> {
 		table.setModel(createTableModel());
 		table.onSortingChanged.addListener(event -> setSorting(event.getSortField(), event.getSortDirection() == SortDirection.ASC));
 		table.onRowSelected.addListener(record -> onSelectedRecordChanged.fire(record));
+		return table;
+	}
+
+	public Table<RECORD> createTemplateFieldTableList(Template template, PropertyProvider<RECORD> propertyProvider, int rowHeight) {
+		Table<RECORD> table = createTable();
+		table.setDisplayAsList(true);
+		table.setForceFitWidth(true);
+		table.setRowHeight(rowHeight);
+		table.setHideHeaders(true);
+		TemplateField<RECORD> templateField = new TemplateField<>(template);
+		templateField.setPropertyProvider(propertyProvider);
+		table.addColumn(new TableColumn<>("data", templateField));
+		table.setPropertyExtractor((record, propertyName) -> record);
 		return table;
 	}
 
