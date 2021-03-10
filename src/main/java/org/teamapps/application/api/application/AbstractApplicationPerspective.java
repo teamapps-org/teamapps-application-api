@@ -40,10 +40,8 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 		this.applicationInstanceData = applicationInstanceData;
 		this.perspectiveInfoBadgeValue = perspectiveInfoBadgeValue;
 		perspective = Perspective.createPerspective();
-		createUi();
 	}
 
-	public abstract void createUi();
 
 	public void setPerspectiveMenuPanel(Component perspectiveMenuPanel) {
 		this.perspectiveMenuPanel = perspectiveMenuPanel;
@@ -82,6 +80,10 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 
 	public MutableValue<String> getPerspectiveInfoBadgeValue() {
 		return perspectiveInfoBadgeValue;
+	}
+
+	public String getLocalized(String key) {
+		return getLocalized(key, (Object) null);
 	}
 
 	public String getLocalized(String key, Object... parameters) {

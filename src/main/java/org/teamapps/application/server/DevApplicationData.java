@@ -29,6 +29,7 @@ import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
 import org.teamapps.reporting.convert.DocumentConverter;
+import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
@@ -114,6 +115,14 @@ public class DevApplicationData implements ApplicationInstanceData {
 			}
 		}
 		return key;
+	}
+
+	@Override
+	public String getLocalized(TranslatableText translatableText) {
+		if (translatableText == null) {
+			return null;
+		}
+		return translatableText.getText();
 	}
 
 	@Override
