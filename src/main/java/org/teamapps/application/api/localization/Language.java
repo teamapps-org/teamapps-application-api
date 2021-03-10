@@ -244,7 +244,7 @@ public enum Language {
 	}
 
 	public String getKey() {
-		return "org.teamapps.dictionary.country." + name();
+		return "org.teamapps.dictionary.language." + name();
 	}
 
 	public String getLanguageLocalized(ApplicationInstanceData applicationInstanceData) {
