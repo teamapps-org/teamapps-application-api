@@ -19,14 +19,23 @@
  */
 package org.teamapps.application.api.theme;
 
+import org.teamapps.application.api.localization.Country;
+import org.teamapps.icon.flags.FlagIcon;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.component.field.combobox.ComboBox;
+import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.component.template.Template;
 
 import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ApplicationIcons {
 
 	private static Method iconLoaderMethod;
+	private static Map<String, Icon> iconMap = new HashMap<>();
 
 	static {
 		try {
@@ -39,10 +48,46 @@ public class ApplicationIcons {
 	private static Icon createIcon(String name) {
 		if (iconLoaderMethod != null) {
 			try {
-				return (Icon) iconLoaderMethod.invoke(null, name);
+				Icon icon =  (Icon) iconLoaderMethod.invoke(null, name);
+				iconMap.put(name, icon);
+				return icon;
 			} catch (Exception ignore) { }
 		}
 		return MaterialIcon.QUESTION_ANSWER;
+	}
+
+	public static Map<String, Icon> getIconMap() {
+		return iconMap;
+	}
+
+	public static ComboBox<Icon> createIconComboBox() {
+		return createIconComboBox(BaseTemplate.LIST_ITEM_LARGE_ICON_SINGLE_LINE, true);
+	}
+
+	public static ComboBox<Icon> createIconComboBox(Template template, boolean withFlagIcons) {
+		ComboBox<Icon> comboBox = new ComboBox<>(template);
+		Map<Icon, String> iconNameByIcon = new HashMap<>();
+		getIconMap().forEach((key, value) -> iconNameByIcon.put(value, key));
+		if (withFlagIcons) {
+			Arrays.stream(Country.values())
+					.map(country -> FlagIcon.getByCountryCode(country.getIsoCode()))
+					.filter(Objects::nonNull)
+					.forEach(icon -> iconNameByIcon.put(icon, icon.getIconName().substring(0, icon.getIconName().length() - 4).toUpperCase()));
+		}
+		comboBox.setRecordToStringFunction(iconNameByIcon::get);
+		comboBox.setPropertyExtractor((icon, propertyName) -> switch(propertyName) {
+			case BaseTemplate.PROPERTY_ICON -> icon;
+			case BaseTemplate.PROPERTY_CAPTION -> iconNameByIcon.get(icon);
+			default -> null;
+		});
+		List<Icon> icons = iconNameByIcon.keySet().stream()
+				.sorted(Comparator.comparing(iconNameByIcon::get))
+				.collect(Collectors.toList());
+		comboBox.setModel(query -> icons.stream()
+				.filter(icon -> (query == null || query.isEmpty()) || iconNameByIcon.get(icon).toLowerCase().contains(query.toLowerCase()))
+				.limit(100)
+				.collect(Collectors.toList()));
+		return comboBox;
 	}
 
 	public static final Icon _3D_GLASSES = createIcon("_3D_GLASSES");
