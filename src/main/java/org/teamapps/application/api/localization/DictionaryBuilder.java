@@ -23,8 +23,7 @@ import com.ibm.icu.text.Transliterator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +34,62 @@ public class DictionaryBuilder {
 	private static final String DICTIONARY_PREFIX = "org.teamapps.dictionary.";
 	private static Transliterator TRANSLITERATOR = Transliterator.getInstance("Any-Latin; nfd; [:nonspacing mark:] remove; nfc");
 
+	private static final String HEADER = "/*-\n" +
+			" * ========================LICENSE_START=================================\n" +
+			" * TeamApps Application API\n" +
+			" * ---\n" +
+			" * Copyright (C) 2020 - 2021 TeamApps.org\n" +
+			" * ---\n" +
+			" * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+			" * you may not use this file except in compliance with the License.\n" +
+			" * You may obtain a copy of the License at\n" +
+			" * \n" +
+			" *      http://www.apache.org/licenses/LICENSE-2.0\n" +
+			" * \n" +
+			" * Unless required by applicable law or agreed to in writing, software\n" +
+			" * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+			" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+			" * See the License for the specific language governing permissions and\n" +
+			" * limitations under the License.\n" +
+			" * =========================LICENSE_END==================================\n" +
+			" */";
+
+	private static final String RESOURCE_HEADER = "###\n" +
+			"# ========================LICENSE_START=================================\n" +
+			"# TeamApps Application API\n" +
+			"# ---\n" +
+			"# Copyright (C) 2020 - 2021 TeamApps.org\n" +
+			"# ---\n" +
+			"# Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+			"# you may not use this file except in compliance with the License.\n" +
+			"# You may obtain a copy of the License at\n" +
+			"# \n" +
+			"#      http://www.apache.org/licenses/LICENSE-2.0\n" +
+			"# \n" +
+			"# Unless required by applicable law or agreed to in writing, software\n" +
+			"# distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+			"# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+			"# See the License for the specific language governing permissions and\n" +
+			"# limitations under the License.\n" +
+			"# =========================LICENSE_END==================================\n" +
+			"###";
+
+	private static final String DICTIONARY_HEADER = "package org.teamapps.application.api.localization;\n" +
+			"\n" +
+			"public class Dictionary {";
+	private static final String DICTIONARY_FOOTER = "\n\n}";
+
+
 	public static void main(String[] args) throws IOException {
+		if (args == null || args.length < 2) {
+			System.err.println("Error missing paths!");
+			return;
+		}
 		//createCountryAndLanguageLines();
-		buildDictionaryData();
+		buildDictionaryData(args[0], args[1]);
 	}
 
-	private static void buildDictionaryData() throws IOException {
+	private static void buildDictionaryData(String path, String resourcePath) throws IOException {
 		List<String> values = readData().stream()
 				.filter(s -> s != null && !s.isBlank())
 				.collect(Collectors.toList());;
@@ -63,9 +112,33 @@ public class DictionaryBuilder {
 			}
 		}
 
-		resourceLines.forEach(System.out::println);
-		System.out.println("------");
-		codeLines.forEach(System.out::println);
+		File dictionary = new File(path, "Dictionary.java");
+		File resource = new File(resourcePath, "dictionary.properties");
+		if (!dictionary.exists() || !resource.exists()) {
+			System.err.println("Error paths do not exist!");
+			return;
+		}
+		BufferedWriter writer = new BufferedWriter(new FileWriter(dictionary, StandardCharsets.UTF_8));
+		writer.write(HEADER);
+		writer.newLine();
+		writer.write(DICTIONARY_HEADER);
+		writer.newLine();
+		for (String codeLine : codeLines) {
+			writer.write("\t" + codeLine);
+			writer.newLine();
+		}
+		writer.write(DICTIONARY_FOOTER);
+		writer.close();
+
+		writer = new BufferedWriter(new FileWriter(resource, StandardCharsets.UTF_8));
+		writer.write(RESOURCE_HEADER);
+		writer.newLine();
+		for (String codeLine : resourceLines) {
+			writer.write(codeLine);
+			writer.newLine();
+		}
+		writer.close();
+		System.out.println("Done");
 	}
 
 	private static void createCountryAndLanguageLines() {

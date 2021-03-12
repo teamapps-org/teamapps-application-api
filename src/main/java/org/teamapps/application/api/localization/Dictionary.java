@@ -59,6 +59,18 @@ public class Dictionary {
 	public static final String UPLOAD = "org.teamapps.dictionary.upload";
 	public static final String DOWNLOAD = "org.teamapps.dictionary.download";
 	public static final String ERROR = "org.teamapps.dictionary.error";
+	public static final String MOVE_UP = "org.teamapps.dictionary.moveUp";
+	public static final String MOVE_DOWN = "org.teamapps.dictionary.moveDown";
+	public static final String MOVE_LEFT = "org.teamapps.dictionary.moveLeft";
+	public static final String MOVE_RIGHT = "org.teamapps.dictionary.moveRight";
+	public static final String MOVE_CENTER = "org.teamapps.dictionary.moveCenter";
+	public static final String HIDE = "org.teamapps.dictionary.hide";
+	public static final String SHOW = "org.teamapps.dictionary.show";
+	public static final String HIDDEN = "org.teamapps.dictionary.hidden";
+	public static final String VISIBLE = "org.teamapps.dictionary.visible";
+	public static final String CAPTION = "org.teamapps.dictionary.caption";
+	public static final String KEY = "org.teamapps.dictionary.key";
+	public static final String VALUE = "org.teamapps.dictionary.value";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";
@@ -188,6 +200,9 @@ public class Dictionary {
 	public static final String OPEN_NEW_APPLICATION = "org.teamapps.dictionary.openNewApplication";
 	public static final String APPLICATION_MENU = "org.teamapps.dictionary.applicationMenu";
 	public static final String SELECT_APPLICATION_PERSPECTIVE = "org.teamapps.dictionary.selectApplicationPerspective";
+	public static final String PRIVILEGES = "org.teamapps.dictionary.privileges";
+	public static final String TRANSLATION_KEY = "org.teamapps.dictionary.translationKey";
+	public static final String ERROR_TRANSLATION_KEY_ALREADY_EXISTS = "org.teamapps.dictionary.errorTranslationKeyAlreadyExists";
 	//other
 	public static final String ROTATE = "org.teamapps.dictionary.rotate";
 	public static final String ROTATE_PICTURE = "org.teamapps.dictionary.rotatePicture";
@@ -625,8 +640,6 @@ public class Dictionary {
 	public static final String LANGUAGE_ZH_CHINESE = "org.teamapps.dictionary.language.ZH_CHINESE";
 	public static final String LANGUAGE_ZU_ZULU = "org.teamapps.dictionary.language.ZU_ZULU";
 	public static final String LANGUAGE_PAP_PAPIAMENTO = "org.teamapps.dictionary.language.PAP_PAPIAMENTO";
-
-
 
 
 }

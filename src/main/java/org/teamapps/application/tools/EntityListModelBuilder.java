@@ -27,60 +27,81 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class EntityListModelBuilder<ENTITY> extends RecordModelBuilder<ENTITY> {
+public class EntityListModelBuilder<RECORD> extends RecordModelBuilder<RECORD> {
 
-	private List<ENTITY> entities = Collections.emptyList();
-	private Function<ENTITY, String> entityStringFunction;
-	private Function<ENTITY, Long> entityDateInMillisFunction;
+	private List<RECORD> records = Collections.emptyList();
+	private Function<RECORD, String> entityStringFunction;
+	private Function<RECORD, Long> entityDateInMillisFunction;
 
 	public EntityListModelBuilder(ApplicationInstanceData applicationInstanceData) {
 		super(applicationInstanceData);
 	}
 
-	public EntityListModelBuilder(ApplicationInstanceData applicationInstanceData, Function<ENTITY, String> entityStringFunction) {
+	public EntityListModelBuilder(ApplicationInstanceData applicationInstanceData, Function<RECORD, String> entityStringFunction) {
 		super(applicationInstanceData);
 		this.entityStringFunction = entityStringFunction;
 	}
 
-	public EntityListModelBuilder(ApplicationInstanceData applicationInstanceData, Function<ENTITY, String> entityStringFunction, Function<ENTITY, Long> entityDateInMillisFunction) {
+	public EntityListModelBuilder(ApplicationInstanceData applicationInstanceData, Function<RECORD, String> entityStringFunction, Function<RECORD, Long> entityDateInMillisFunction) {
 		super(applicationInstanceData);
 		this.entityStringFunction = entityStringFunction;
 		this.entityDateInMillisFunction = entityDateInMillisFunction;
 	}
 
-	public void setEntityStringFunction(Function<ENTITY, String> entityStringFunction) {
+	public void setEntityStringFunction(Function<RECORD, String> entityStringFunction) {
 		this.entityStringFunction = entityStringFunction;
 	}
 
-	public void setEntityDateInMillisFunction(Function<ENTITY, Long> entityDateInMillisFunction) {
+	public void setEntityDateInMillisFunction(Function<RECORD, Long> entityDateInMillisFunction) {
 		this.entityDateInMillisFunction = entityDateInMillisFunction;
 	}
 
-	public List<ENTITY> getEntities() {
-		return entities;
+	public List<RECORD> getRecords() {
+		return records;
 	}
 
-	public void setEntities(List<ENTITY> entities) {
-		this.entities = entities;
+	public void setRecords(List<RECORD> records) {
+		this.records = records;
 		onDataChanged.fire();
 	}
 
+	public void addRecord(RECORD record) {
+		records.add(record);
+		onDataChanged.fire();
+	}
+
+	public void addRecords(List<RECORD> records) {
+		records.addAll(records);
+		onDataChanged.fire();
+	}
+
+	public void removeRecord(RECORD record) {
+		records.remove(record);
+		onDataChanged.fire();
+	}
+
+	public void removeRecords(List<RECORD> records) {
+		records.removeAll(records);
+		onDataChanged.fire();
+	}
+
+
 	@Override
-	public List<ENTITY> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter, String sortField, boolean sortAscending) {
-		List<ENTITY> filteredEntities = null;
+	public List<RECORD> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter, String sortField, boolean sortAscending) {
+		List<RECORD> filteredEntities = null;
 		if (entityStringFunction != null && fullTextQuery != null && !fullTextQuery.isBlank()) {
 			String query = fullTextQuery.toLowerCase();
-			filteredEntities = entities.stream().filter(entity -> match(entityStringFunction.apply(entity), query)).collect(Collectors.toList());
+			filteredEntities = records.stream().filter(RECORD -> match(entityStringFunction.apply(RECORD), query)).collect(Collectors.toList());
 		}
 		if (entityDateInMillisFunction != null && timeIntervalFilter != null) {
 			if (filteredEntities == null) {
-				filteredEntities = entities;
+				filteredEntities = records;
 			}
-			filteredEntities = filteredEntities.stream().filter(entity -> match(timeIntervalFilter, entityDateInMillisFunction.apply(entity))).collect(Collectors.toList());
+			filteredEntities = filteredEntities.stream().filter(RECORD -> match(timeIntervalFilter, entityDateInMillisFunction.apply(RECORD))).collect(Collectors.toList());
 		}
 
 		if (filteredEntities == null) {
-			filteredEntities = entities;
+			filteredEntities = records;
 		}
 		return filteredEntities;
 	}

@@ -37,6 +37,18 @@ Help
 Upload
 Download
 Error
+Move up
+Move down
+Move left
+Move right
+Move center
+Hide
+Show
+Hidden
+Visible
+Caption
+Key
+Value
 
 ::options
 OK
@@ -175,7 +187,8 @@ Open new application
 Application menu
 Select application perspective
 Privileges
-
+Translation key
+Error: translation key already exists
 
 ::other
 Rotate

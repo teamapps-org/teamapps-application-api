@@ -41,9 +41,12 @@ import org.teamapps.ux.component.table.TableColumn;
 import org.teamapps.ux.component.table.TableModel;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.timegraph.*;
+import org.teamapps.ux.component.timegraph.partitioning.PartitioningTimeGraphModel;
 import org.teamapps.ux.component.timegraph.partitioning.StaticPartitioningTimeGraphModel;
+import org.teamapps.ux.component.timegraph.partitioning.StaticRawTimedDataModel;
 import org.teamapps.ux.session.SessionContext;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -124,6 +127,7 @@ public abstract class RecordModelBuilder<RECORD> {
 		table.setForceFitWidth(true);
 		table.setRowHeight(rowHeight);
 		table.setHideHeaders(true);
+		table.setStripedRows(false);
 		TemplateField<RECORD> templateField = new TemplateField<>(template);
 		templateField.setPropertyProvider(propertyProvider);
 		table.addColumn(new TableColumn<>("data", templateField));
@@ -155,13 +159,21 @@ public abstract class RecordModelBuilder<RECORD> {
 	}
 
 	public TimeGraphModel createTimeGraphModel(Function<RECORD, Long> recordTimeFunction, String seriesId) {
-		StaticPartitioningTimeGraphModel timeGraphModel = StaticPartitioningTimeGraphModel.create(SessionContext.current().getTimeZone());
+		StaticRawTimedDataModel delegationModel = new StaticRawTimedDataModel();
+		PartitioningTimeGraphModel timeGraphModel = new PartitioningTimeGraphModel(SessionContext.current().getTimeZone(), delegationModel) {
+			@Override
+			public Interval getDomainX(Collection<String> dataSeriesId) {
+				Interval domainX = super.getDomainX(dataSeriesId);
+				long diff = (domainX.getMax() - domainX.getMin()) / 20;
+				return new Interval(domainX.getMin() - diff, domainX.getMax() + diff);
+			}
+		};
 		onDataChanged.addListener(() -> {
 			long[] data = new long[records.size()];
 			for (int i = 0; i < records.size(); i++) {
 				data[i] = recordTimeFunction.apply(records.get(i));
 			}
-			timeGraphModel.setEventTimestampsForDataSeriesId(seriesId, data);
+			delegationModel.setEventTimestampsForDataSeriesIds(seriesId, data);
 		});
 		return timeGraphModel;
 	}

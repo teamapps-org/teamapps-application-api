@@ -23,10 +23,6 @@ import org.teamapps.universaldb.index.translation.TranslatableText;
 
 public interface ApplicationLocalizationProvider {
 
-	default String getLocalized(String key) {
-		return getLocalized(key, (Object) null);
-	}
-
 	String getLocalized(String key, Object... parameters);
 
 	String getLocalized(TranslatableText translatableText);
