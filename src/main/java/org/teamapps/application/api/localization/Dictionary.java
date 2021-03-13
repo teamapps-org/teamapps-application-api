@@ -71,6 +71,15 @@ public class Dictionary {
 	public static final String CAPTION = "org.teamapps.dictionary.caption";
 	public static final String KEY = "org.teamapps.dictionary.key";
 	public static final String VALUE = "org.teamapps.dictionary.value";
+	public static final String DONE = "org.teamapps.dictionary.done";
+	public static final String REJECT = "org.teamapps.dictionary.reject";
+	public static final String UNCLEAR = "org.teamapps.dictionary.unclear";
+	public static final String VERIFIED = "org.teamapps.dictionary.verified";
+	public static final String INCORRECT = "org.teamapps.dictionary.incorrect";
+	public static final String CHECKED = "org.teamapps.dictionary.checked";
+	public static final String OVERVIEW = "org.teamapps.dictionary.overview";
+	public static final String PREVIEW = "org.teamapps.dictionary.preview";
+	public static final String PREVIEW_IMAGE = "org.teamapps.dictionary.previewImage";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";

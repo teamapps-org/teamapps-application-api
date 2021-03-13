@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 	}
 
 	@Override
-	public List<ENTITY> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter, String sortField, boolean sortAscending) {
+	public List<ENTITY> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter) {
 		AbstractUdbQuery<ENTITY> query = (AbstractUdbQuery<ENTITY>) querySupplier.get();
 		if (timeIntervalFilter != null) {
 			NumericFilter numericFilter = tableIndex.getColumnIndex(timeIntervalFilter.getFieldName()).getType() == IndexType.INT ? timeIntervalFilter.getIntFilter() : timeIntervalFilter.getFilter();
@@ -56,6 +56,8 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 		if (fullTextQuery != null && !fullTextQuery.isBlank()) {
 			query.addFullTextQuery(fullTextQuery);
 		}
-		return sortField != null ? query.execute(sortField, sortAscending) : query.execute();
+		return (getSortField() != null && getCustomFieldSorter() == null) ? query.execute(getSortField(), isSortAscending()) : query.execute();
 	}
+
+
 }

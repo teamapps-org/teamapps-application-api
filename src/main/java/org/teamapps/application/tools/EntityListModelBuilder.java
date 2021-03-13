@@ -87,7 +87,7 @@ public class EntityListModelBuilder<RECORD> extends RecordModelBuilder<RECORD> {
 
 
 	@Override
-	public List<RECORD> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter, String sortField, boolean sortAscending) {
+	public List<RECORD> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter) {
 		List<RECORD> filteredEntities = null;
 		if (entityStringFunction != null && fullTextQuery != null && !fullTextQuery.isBlank()) {
 			String query = fullTextQuery.toLowerCase();

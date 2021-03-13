@@ -49,6 +49,16 @@ Visible
 Caption
 Key
 Value
+Done
+Reject
+Unclear
+Verified
+Incorrect
+Checked
+Overview
+Preview
+Preview image
+Copy
 
 ::options
 OK

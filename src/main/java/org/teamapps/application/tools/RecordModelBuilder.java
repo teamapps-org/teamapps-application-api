@@ -27,6 +27,7 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
+import org.teamapps.databinding.TwoWayBindableValue;
 import org.teamapps.event.Event;
 import org.teamapps.udb.filter.TimeIntervalFilter;
 import org.teamapps.ux.application.view.View;
@@ -42,12 +43,12 @@ import org.teamapps.ux.component.table.TableModel;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.timegraph.*;
 import org.teamapps.ux.component.timegraph.partitioning.PartitioningTimeGraphModel;
-import org.teamapps.ux.component.timegraph.partitioning.StaticPartitioningTimeGraphModel;
 import org.teamapps.ux.component.timegraph.partitioning.StaticRawTimedDataModel;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -65,12 +66,88 @@ public abstract class RecordModelBuilder<RECORD> {
 	private String sortField;
 	private boolean sortAscending;
 	private Predicate<RECORD> customFilter;
+	private Function<String, Comparator<RECORD>> customFieldSorter;
+
 	private int countRecords;
 	private List<RECORD> records;
+	private TwoWayBindableValue<RECORD> selectedRecord = TwoWayBindableValue.create();
+	private TwoWayBindableValue<Integer> selectedRecordPosition = TwoWayBindableValue.create();
+
 
 	public RecordModelBuilder(ApplicationInstanceData applicationInstanceData) {
 		this.applicationInstanceData = applicationInstanceData;
 		onDataChanged.addListener(this::queryRecords);
+		onSelectedRecordChanged.addListener(record -> selectedRecord.set(record));
+	}
+
+	public void setSelectedRecord(RECORD record) {
+		onSelectedRecordChanged.fire(record);
+	}
+
+	public RECORD getSelectedRecord() {
+		return selectedRecord.get();
+	}
+
+	public boolean selectPreviousRecord() {
+		if (countRecords == 0) {
+			return false;
+		}
+		RECORD selectedRecord = this.selectedRecord.get();
+		if (selectedRecord == null) {
+			selectedRecord = records.get(0);
+			selectedRecordPosition.set(0);
+			onSelectedRecordChanged.fire(selectedRecord);
+		}
+		int recordPosition = findRecordPosition(selectedRecord);
+		if (recordPosition <= 0) {
+			return false;
+		} else {
+			recordPosition--;
+			RECORD record = records.get(recordPosition);
+			selectedRecordPosition.set(recordPosition);
+			onSelectedRecordChanged.fire(record);
+			return true;
+		}
+	}
+
+	public boolean selectNextRecord() {
+		if (countRecords == 0) {
+			return false;
+		}
+		RECORD selectedRecord = this.selectedRecord.get();
+		if (selectedRecord == null) {
+			selectedRecord = records.get(0);
+			selectedRecordPosition.set(0);
+			onSelectedRecordChanged.fire(selectedRecord);
+		}
+		int recordPosition = findRecordPosition(selectedRecord);
+		if (recordPosition < 0) {
+			return false;
+		} else {
+			recordPosition++;
+			RECORD record = records.get(recordPosition);
+			selectedRecordPosition.set(recordPosition);
+			onSelectedRecordChanged.fire(record);
+			return true;
+		}
+	}
+
+	private int findRecordPosition(RECORD record) {
+		if (record == null) {
+			return -1;
+		}
+		Integer position = selectedRecordPosition.get();
+		if (position != null && position < countRecords) {
+			if (records.get(position).equals(record)) {
+				return position;
+			}
+		}
+		for (int i = 0; i < records.size(); i++) {
+			if (record.equals(records.get(i))) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public void updateModels() {
@@ -213,6 +290,14 @@ public abstract class RecordModelBuilder<RECORD> {
 		onDataChanged.fire();
 	}
 
+	public String getSortField() {
+		return sortField;
+	}
+
+	public boolean isSortAscending() {
+		return sortAscending;
+	}
+
 	public void removeSorting() {
 		if (sortField != null) {
 			sortField = null;
@@ -247,18 +332,43 @@ public abstract class RecordModelBuilder<RECORD> {
 		onDataChanged.fire();
 	}
 
+	public void setCustomFieldSorter(Function<String, Comparator<RECORD>> customFieldSorter) {
+		this.customFieldSorter = customFieldSorter;
+	}
+
+	public void removeCustomFieldSorter() {
+		customFieldSorter = null;
+	}
+
+	public Function<String, Comparator<RECORD>> getCustomFieldSorter() {
+		return customFieldSorter;
+	}
+
+	private Comparator<RECORD> getQuerySorter() {
+		if (sortField == null || customFieldSorter == null) {
+			return null;
+		} else {
+			Comparator<RECORD> comparator = customFieldSorter.apply(sortField);
+			return (comparator == null || sortAscending) ? comparator : comparator.reversed();
+		}
+	}
+
 	private void queryRecords() {
-		List<RECORD> queryResult = queryRecords(fullTextQuery, timeIntervalFilter, sortField, sortAscending);
+		List<RECORD> result = queryRecords(fullTextQuery, timeIntervalFilter);
+
 		if (customFilter != null) {
-			this.records = queryResult.stream()
+			result = result.stream()
 					.filter(record -> customFilter.test(record))
 					.collect(Collectors.toList());
-		} else {
-			this.records = queryResult;
 		}
+		Comparator<RECORD> sorter = getQuerySorter();
+		if (sorter != null) {
+			result = result.stream().sorted(sorter).collect(Collectors.toList());
+		}
+		this.records = result;
 		this.countRecords = records.size();
 	}
 
-	public abstract List<RECORD> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter, String sortField, boolean sortAscending);
+	public abstract List<RECORD> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter);
 
 }
