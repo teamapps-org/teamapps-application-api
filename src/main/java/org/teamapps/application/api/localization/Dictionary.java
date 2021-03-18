@@ -80,6 +80,7 @@ public class Dictionary {
 	public static final String OVERVIEW = "org.teamapps.dictionary.overview";
 	public static final String PREVIEW = "org.teamapps.dictionary.preview";
 	public static final String PREVIEW_IMAGE = "org.teamapps.dictionary.previewImage";
+	public static final String COPY = "org.teamapps.dictionary.copy";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";
@@ -116,6 +117,7 @@ public class Dictionary {
 	public static final String ALL_LANGUAGES = "org.teamapps.dictionary.allLanguages";
 	public static final String MY_MAIN_LANGUAGE = "org.teamapps.dictionary.myMainLanguage";
 	public static final String ALL_MY_LANGUAGES = "org.teamapps.dictionary.allMyLanguages";
+	public static final String BIRTHDATE = "org.teamapps.dictionary.birthdate";
 	//login
 	public static final String LOGIN = "org.teamapps.dictionary.login";
 	public static final String LOGOUT = "org.teamapps.dictionary.logout";
@@ -188,6 +190,9 @@ public class Dictionary {
 	public static final String NOW = "org.teamapps.dictionary.now";
 	public static final String PREVIOUS = "org.teamapps.dictionary.previous";
 	public static final String NEXT = "org.teamapps.dictionary.next";
+	public static final String DATE = "org.teamapps.dictionary.date";
+	public static final String TIME = "org.teamapps.dictionary.time";
+	public static final String TIMESTAMP = "org.teamapps.dictionary.timestamp";
 	//grouping
 	public static final String GROUP = "org.teamapps.dictionary.group";
 	public static final String GROUPING = "org.teamapps.dictionary.grouping";

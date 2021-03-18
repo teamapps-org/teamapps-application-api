@@ -101,7 +101,7 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-flags-icon-provider</artifactId>
-            <version>0.9.9</version>
+            <version>0.9.12</version>
         </dependency>
 
         <dependency>
@@ -151,6 +151,32 @@
             <artifactId>maxmind-db</artifactId>
             <version>2.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.libphonenumber</groupId>
+            <artifactId>libphonenumber</artifactId>
+            <version>8.12.19</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.libphonenumber</groupId>
+            <artifactId>prefixmapper</artifactId>
+            <version>2.155</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.libphonenumber</groupId>
+            <artifactId>carrier</artifactId>
+            <version>1.145</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.libphonenumber</groupId>
+            <artifactId>geocoder</artifactId>
+            <version>2.155</version>
+        </dependency>
+
+
 
 
     </dependencies>
