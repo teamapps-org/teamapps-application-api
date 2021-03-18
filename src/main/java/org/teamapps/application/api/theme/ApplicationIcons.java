@@ -66,13 +66,13 @@ public class ApplicationIcons {
 
 	public static ComboBox<Icon> createIconComboBox(Template template, boolean withFlagIcons) {
 		ComboBox<Icon> comboBox = new ComboBox<>(template);
+		if (template == BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE) {
+			comboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_SINGLE_LINE);
+		}
 		Map<Icon, String> iconNameByIcon = new HashMap<>();
-		getIconMap().forEach((key, value) -> iconNameByIcon.put(value, key));
+		getIconMap().forEach((key, value) -> iconNameByIcon.put(value, key.replace("_", " ")));
 		if (withFlagIcons) {
-			Arrays.stream(Country.values())
-					.map(country -> FlagIcon.getByCountryCode(country.getIsoCode()))
-					.filter(Objects::nonNull)
-					.forEach(icon -> iconNameByIcon.put(icon, icon.getIconName().substring(0, icon.getIconName().length() - 4).toUpperCase()));
+			FlagIcon.getIcons().forEach(flagIcon -> iconNameByIcon.put(flagIcon, flagIcon.getConstantName().replace("_", " ")));
 		}
 		comboBox.setRecordToStringFunction(iconNameByIcon::get);
 		comboBox.setPropertyExtractor((icon, propertyName) -> switch(propertyName) {
@@ -85,7 +85,7 @@ public class ApplicationIcons {
 				.collect(Collectors.toList());
 		comboBox.setModel(query -> icons.stream()
 				.filter(icon -> (query == null || query.isEmpty()) || iconNameByIcon.get(icon).toLowerCase().contains(query.toLowerCase()))
-				.limit(100)
+				.limit(150)
 				.collect(Collectors.toList()));
 		return comboBox;
 	}
