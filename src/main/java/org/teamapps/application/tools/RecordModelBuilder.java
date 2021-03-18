@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,7 @@ import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
 import org.teamapps.databinding.TwoWayBindableValue;
+import org.teamapps.dto.UiTimeGraph;
 import org.teamapps.event.Event;
 import org.teamapps.udb.filter.TimeIntervalFilter;
 import org.teamapps.ux.application.view.View;
@@ -44,6 +45,11 @@ import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.timegraph.*;
 import org.teamapps.ux.component.timegraph.partitioning.PartitioningTimeGraphModel;
 import org.teamapps.ux.component.timegraph.partitioning.StaticRawTimedDataModel;
+import org.teamapps.ux.component.tree.Tree;
+import org.teamapps.ux.component.tree.TreeNodeInfo;
+import org.teamapps.ux.component.tree.TreeNodeInfoImpl;
+import org.teamapps.ux.model.AbstractTreeModel;
+import org.teamapps.ux.model.TreeModel;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.Collection;
@@ -209,6 +215,7 @@ public abstract class RecordModelBuilder<RECORD> {
 		templateField.setPropertyProvider(propertyProvider);
 		table.addColumn(new TableColumn<>("data", templateField));
 		table.setPropertyExtractor((record, propertyName) -> record);
+		table.onRowSelected.addListener(record -> onSelectedRecordChanged.fire(record));
 		return table;
 	}
 
@@ -261,15 +268,53 @@ public abstract class RecordModelBuilder<RECORD> {
 	}
 
 	public TimeGraph createTimeGraph(Function<RECORD, Long> recordTimeFunction, String fieldName, RgbaColor color) {
+		LineChartLine line = createTimeGraphLine(fieldName, color);
+		TimeGraphModel timeGraphModel = createTimeGraphModel(recordTimeFunction, fieldName);
+		TimeGraph timeGraph = new TimeGraph(timeGraphModel);
+		timeGraph.addLine(line);
+		timeGraph.onIntervalSelected.addListener(interval -> {
+			setTimeIntervalFilter(interval != null ? new TimeIntervalFilter(fieldName, interval.getMin(), interval.getMax()) : null);
+			SessionContext.current().queueCommand(new UiTimeGraph.SetSelectedIntervalCommand(timeGraph.getId(), null));
+		});
+		timeGraph.setSelectedInterval(null);
+		return timeGraph;
+	}
+
+	private LineChartLine createTimeGraphLine(String fieldName, RgbaColor color) {
 		LineChartLine line = new LineChartLine(fieldName, LineChartCurveType.MONOTONE, 0.5f, color, color.withAlpha(0.05f));
 		line.setAreaColorScaleMin(color.withAlpha(0.05f));
 		line.setAreaColorScaleMax(color.withAlpha(0.5f));
 		line.setYScaleType(ScaleType.LINEAR);
 		line.setYScaleZoomMode(LineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO);
-		TimeGraphModel timeGraphModel = createTimeGraphModel(recordTimeFunction, fieldName);
-		TimeGraph timeGraph = new TimeGraph(timeGraphModel);
-		timeGraph.onIntervalSelected.addListener(interval -> setTimeIntervalFilter(interval != null ? new TimeIntervalFilter(fieldName, interval.getMin(), interval.getMax()) : null));
-		return timeGraph;
+		return line;
+	}
+
+	public TreeModel<RECORD> createTreeModel(Function<RECORD, RECORD> parentRecordFunction, Function<RECORD, Boolean> expandedFunction) {
+		AbstractTreeModel<RECORD> treeModel = new AbstractTreeModel<>() {
+			@Override
+			public TreeNodeInfo getTreeNodeInfo(RECORD record) {
+				return new TreeNodeInfoImpl<RECORD>(
+						parentRecordFunction.apply(record),
+						expandedFunction != null ? expandedFunction.apply(record) : false
+				);
+			}
+
+			@Override
+			public List<RECORD> getRecords() {
+				return records;
+			}
+		};
+		onDataChanged.addListener((Runnable) treeModel.onAllNodesChanged::fire);
+		return treeModel;
+	}
+
+	public Tree<RECORD> createTree(Template template, PropertyProvider<RECORD> propertyProvider, Function<RECORD, RECORD> parentRecordFunction, Function<RECORD, Boolean> expandedFunction) {
+		Tree<RECORD> tree = new Tree<>(createTreeModel(parentRecordFunction, expandedFunction));
+		tree.setEntryTemplate(template);
+		tree.setOpenOnSelection(true);
+		tree.setPropertyProvider(propertyProvider);
+		tree.onNodeSelected.addListener(record -> onSelectedRecordChanged.fire(record));
+		return tree;
 	}
 
 	public void setFullTextQuery(String query) {
