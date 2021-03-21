@@ -105,11 +105,6 @@ public class Dictionary {
 	public static final String NAME = "org.teamapps.dictionary.name";
 	public static final String FIRST_NAME = "org.teamapps.dictionary.firstName";
 	public static final String LAST_NAME = "org.teamapps.dictionary.lastName";
-	public static final String STREET = "org.teamapps.dictionary.street";
-	public static final String CITY = "org.teamapps.dictionary.city";
-	public static final String POSTAL_CODE = "org.teamapps.dictionary.postalCode";
-	public static final String FEDERAL_STATE = "org.teamapps.dictionary.federalState";
-	public static final String COUNTRY = "org.teamapps.dictionary.country";
 	public static final String PHONE_NUMBER = "org.teamapps.dictionary.phoneNumber";
 	public static final String MOBILE_NUMBER = "org.teamapps.dictionary.mobileNumber";
 	public static final String E_MAIL = "org.teamapps.dictionary.eMail";
@@ -118,6 +113,19 @@ public class Dictionary {
 	public static final String MY_MAIN_LANGUAGE = "org.teamapps.dictionary.myMainLanguage";
 	public static final String ALL_MY_LANGUAGES = "org.teamapps.dictionary.allMyLanguages";
 	public static final String BIRTHDATE = "org.teamapps.dictionary.birthdate";
+	//address
+	public static final String ADDRESS = "org.teamapps.dictionary.address";
+	public static final String POSTAL_ADDRESS = "org.teamapps.dictionary.postalAddress";
+	public static final String ORGANIZATION = "org.teamapps.dictionary.organization";
+	public static final String STREET = "org.teamapps.dictionary.street";
+	public static final String CITY = "org.teamapps.dictionary.city";
+	public static final String DEPENDENT_LOCALITY = "org.teamapps.dictionary.dependentLocality";
+	public static final String POSTAL_CODE = "org.teamapps.dictionary.postalCode";
+	public static final String STATE = "org.teamapps.dictionary.state";
+	public static final String COUNTRY = "org.teamapps.dictionary.country";
+	public static final String P_OBOX = "org.teamapps.dictionary.pOBox";
+	public static final String LATITUDE = "org.teamapps.dictionary.latitude";
+	public static final String LONGITUDE = "org.teamapps.dictionary.longitude";
 	//login
 	public static final String LOGIN = "org.teamapps.dictionary.login";
 	public static final String LOGOUT = "org.teamapps.dictionary.logout";
@@ -228,6 +236,7 @@ public class Dictionary {
 	public static final String ADMINISTRATION = "org.teamapps.dictionary.administration";
 	public static final String PREFERENCES = "org.teamapps.dictionary.preferences";
 	public static final String OPTIONAL = "org.teamapps.dictionary.optional";
+	public static final String LOCATION = "org.teamapps.dictionary.location";
 	//countries
 	public static final String COUNTRY_AF_AFGHANISTAN = "org.teamapps.dictionary.country.AF_AFGHANISTAN";
 	public static final String COUNTRY_AX_ALAND_ISLANDS = "org.teamapps.dictionary.country.AX_ALAND_ISLANDS";

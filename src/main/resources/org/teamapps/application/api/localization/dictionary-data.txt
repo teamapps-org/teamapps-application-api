@@ -86,11 +86,6 @@ Salutation
 Name
 First name
 Last name
-Street
-City
-Postal code
-Federal state
-Country
 Phone number
 Mobile number
 E-Mail
@@ -99,6 +94,20 @@ All languages
 My main language
 All my languages
 Birthdate
+
+::address
+Address
+Postal address
+Organization
+Street
+City
+Dependent locality
+Postal code
+State
+Country
+P.O. Box
+Latitude
+Longitude
 
 ::login
 Login

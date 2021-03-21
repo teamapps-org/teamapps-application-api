@@ -61,7 +61,7 @@ public class ApplicationIcons {
 	}
 
 	public static ComboBox<Icon> createIconComboBox() {
-		return createIconComboBox(BaseTemplate.LIST_ITEM_LARGE_ICON_SINGLE_LINE, true);
+		return createIconComboBox(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE, true);
 	}
 
 	public static ComboBox<Icon> createIconComboBox(Template template, boolean withFlagIcons) {

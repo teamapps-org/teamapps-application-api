@@ -35,6 +35,10 @@ public interface PerspectiveBuilder {
 
 	boolean isPerspectiveAccessible(ApplicationPrivilegeProvider privilegeProvider);
 
+	default boolean autoProvisionPerspective() {
+		return false;
+	}
+
 	ApplicationPerspective build(ApplicationInstanceData applicationInstanceData, MutableValue<String> perspectiveInfoBadgeValue);
 
 }
