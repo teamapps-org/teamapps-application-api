@@ -57,6 +57,16 @@ public interface ApplicationBuilder {
 
 	ApplicationConfig getApplicationConfig();
 
+	default String getApplicationConfigXml() {
+		return getApplicationConfig() != null ? getApplicationConfig().getConfigXml() : null;
+	}
+
+	default void updateConfig(String xml) throws Exception {
+		if (getApplicationConfig() != null) {
+			getApplicationConfig().updateConfig(xml);
+		}
+	}
+
 	void bootstrapApplicationBuilder();
 
 	boolean isApplicationAccessible(ApplicationPrivilegeProvider privilegeProvider);

@@ -19,5 +19,41 @@
  */
 package org.teamapps.application.api.config;
 
-public class ApplicationConfig {
+import org.teamapps.event.Event;
+
+public class ApplicationConfig <CONFIG> {
+
+	private CONFIG config;
+	public final Event<CONFIG> onConfigUpdate = new Event<>();
+
+
+	public ApplicationConfig() {
+	}
+
+	public CONFIG getConfig() {
+		return config;
+	}
+
+	public void setConfig(CONFIG config) {
+		this.config = config;
+	}
+
+	public void updateConfig(String xml) throws Exception {
+		try {
+			ApplicationConfigXml<CONFIG> configXml = new ApplicationConfigXml<>();
+			CONFIG config = configXml.readConfigFile(xml);
+			setConfig(config);
+			onConfigUpdate.fire(config);
+		} catch (Throwable e) {
+			throw new Exception(e);
+		}
+	}
+
+	public String getConfigXml() {
+		if (getConfig() == null) {
+			return null;
+		}
+		ApplicationConfigXml<CONFIG> configXml = new ApplicationConfigXml<>();
+		return configXml.getConfigXml(getConfig());
+	}
 }
