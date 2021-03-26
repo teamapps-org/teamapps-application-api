@@ -225,6 +225,7 @@ public class Dictionary {
 	public static final String PRIVILEGES = "org.teamapps.dictionary.privileges";
 	public static final String TRANSLATION_KEY = "org.teamapps.dictionary.translationKey";
 	public static final String ERROR_TRANSLATION_KEY_ALREADY_EXISTS = "org.teamapps.dictionary.errorTranslationKeyAlreadyExists";
+	public static final String SENTENCE_ERROR_THE_ACTIVE_APPLICATION_CAUSED__ = "org.teamapps.dictionary.errorTheActiveApplicationCausedAnErrorAnWillBeClosed";
 	//other
 	public static final String ROTATE = "org.teamapps.dictionary.rotate";
 	public static final String ROTATE_PICTURE = "org.teamapps.dictionary.rotatePicture";
@@ -232,11 +233,14 @@ public class Dictionary {
 	public static final String NO_RUNNING_TASKS = "org.teamapps.dictionary.noRunningTasks";
 	public static final String ERROR_UNKNOWN_LINK = "org.teamapps.dictionary.errorUnknownLink";
 	public static final String APPLICATIONS = "org.teamapps.dictionary.applications";
+	public static final String APPLICATION = "org.teamapps.dictionary.application";
+	public static final String APPLICATION_PERSPECTIVE = "org.teamapps.dictionary.applicationPerspective";
 	public static final String HOME = "org.teamapps.dictionary.home";
 	public static final String ADMINISTRATION = "org.teamapps.dictionary.administration";
 	public static final String PREFERENCES = "org.teamapps.dictionary.preferences";
 	public static final String OPTIONAL = "org.teamapps.dictionary.optional";
 	public static final String LOCATION = "org.teamapps.dictionary.location";
+	public static final String DATABASE = "org.teamapps.dictionary.database";
 	//countries
 	public static final String COUNTRY_AF_AFGHANISTAN = "org.teamapps.dictionary.country.AF_AFGHANISTAN";
 	public static final String COUNTRY_AX_ALAND_ISLANDS = "org.teamapps.dictionary.country.AX_ALAND_ISLANDS";

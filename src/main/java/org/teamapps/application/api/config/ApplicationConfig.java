@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,11 @@
  */
 package org.teamapps.application.api.config;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.teamapps.event.Event;
 
-public class ApplicationConfig <CONFIG> {
+public class ApplicationConfig<CONFIG> {
 
 	private CONFIG config;
 	public final Event<CONFIG> onConfigUpdate = new Event<>();
@@ -38,10 +40,10 @@ public class ApplicationConfig <CONFIG> {
 		this.config = config;
 	}
 
-	public void updateConfig(String xml) throws Exception {
+	public void updateConfig(String xml, ClassLoader classLoader) throws Exception {
 		try {
-			ApplicationConfigXml<CONFIG> configXml = new ApplicationConfigXml<>();
-			CONFIG config = configXml.readConfigFile(xml);
+			XStream xStream = createXStream(classLoader);
+			CONFIG config = (CONFIG) xStream.fromXML(xml);
 			setConfig(config);
 			onConfigUpdate.fire(config);
 		} catch (Throwable e) {
@@ -49,11 +51,18 @@ public class ApplicationConfig <CONFIG> {
 		}
 	}
 
-	public String getConfigXml() {
+	public String getConfigXml(ClassLoader classLoader) {
 		if (getConfig() == null) {
 			return null;
 		}
-		ApplicationConfigXml<CONFIG> configXml = new ApplicationConfigXml<>();
-		return configXml.getConfigXml(getConfig());
+		XStream xStream = createXStream(classLoader);
+		return xStream.toXML(getConfig());
+	}
+
+
+	private XStream createXStream(ClassLoader classLoader) {
+		XStream xStream = new XStream(new DomDriver());
+		xStream.setClassLoader(classLoader);
+		return xStream;
 	}
 }

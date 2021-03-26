@@ -212,6 +212,7 @@ Select application perspective
 Privileges
 Translation key
 Error: translation key already exists
+Error: the active application caused an error an will be closed.
 
 
 ::other
@@ -221,11 +222,14 @@ Crop image
 No running tasks
 Error: unknown link
 Applications
+Application
+Application perspective
 Home
 Administration
 Preferences
 Optional
 Location
+Database
 
 ::countries
 country.AF_AFGHANISTAN=Afghanistan

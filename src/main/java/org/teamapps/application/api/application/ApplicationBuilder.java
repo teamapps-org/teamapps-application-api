@@ -57,13 +57,13 @@ public interface ApplicationBuilder {
 
 	ApplicationConfig getApplicationConfig();
 
-	default String getApplicationConfigXml() {
-		return getApplicationConfig() != null ? getApplicationConfig().getConfigXml() : null;
+	default String getApplicationConfigXml(ClassLoader classLoader) {
+		return getApplicationConfig() != null ? getApplicationConfig().getConfigXml(classLoader) : null;
 	}
 
-	default void updateConfig(String xml) throws Exception {
+	default void updateConfig(String xml, ClassLoader classLoader) throws Exception {
 		if (getApplicationConfig() != null) {
-			getApplicationConfig().updateConfig(xml);
+			getApplicationConfig().updateConfig(xml, classLoader);
 		}
 	}
 
