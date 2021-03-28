@@ -59,6 +59,10 @@ Overview
 Preview
 Preview image
 Copy
+Zoom in
+Zoom out
+Increase
+Decrease
 
 ::options
 OK

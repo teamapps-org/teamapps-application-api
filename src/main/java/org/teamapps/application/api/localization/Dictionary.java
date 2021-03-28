@@ -81,6 +81,10 @@ public class Dictionary {
 	public static final String PREVIEW = "org.teamapps.dictionary.preview";
 	public static final String PREVIEW_IMAGE = "org.teamapps.dictionary.previewImage";
 	public static final String COPY = "org.teamapps.dictionary.copy";
+	public static final String ZOOM_IN = "org.teamapps.dictionary.zoomIn";
+	public static final String ZOOM_OUT = "org.teamapps.dictionary.zoomOut";
+	public static final String INCREASE = "org.teamapps.dictionary.increase";
+	public static final String DECREASE = "org.teamapps.dictionary.decrease";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";
