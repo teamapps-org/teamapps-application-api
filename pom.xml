@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
         <teamapps-version>0.9.98</teamapps-version>
-        <universal-db-version>0.4.20</universal-db-version>
+        <universal-db-version>0.4.21</universal-db-version>
         <teamapps-universal-db-integration-version>0.10</teamapps-universal-db-integration-version>
     </properties>
 
@@ -202,6 +202,7 @@
                             <modelSourceDirectory>${project.basedir}/src/main/model</modelSourceDirectory>
                             <modelClasses>
                                 <modelClass>Model</modelClass>
+                                <modelClass>ApiModel</modelClass>
                             </modelClasses>
                         </configuration>
                     </execution>

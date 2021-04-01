@@ -21,10 +21,11 @@ package org.teamapps.application.api.application;
 
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
-import org.teamapps.application.api.organization.OrgField;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
+
+import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
@@ -37,7 +38,7 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	SessionUser getUser();
 
-	OrgField getOrganizationField();
+	OrganizationFieldView getOrganizationField();
 
 	int getManagedApplicationId();
 

@@ -23,11 +23,11 @@ import org.teamapps.application.api.application.ApplicationBuilder;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.LocalizationData;
-import org.teamapps.application.api.organization.OrgField;
-import org.teamapps.application.api.organization.OrgUnit;
 import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
+import org.teamapps.model.controlcenter.OrganizationFieldView;
+import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.ux.application.ResponsiveApplication;
@@ -41,16 +41,16 @@ import java.util.Map;
 public class DevApplicationData implements ApplicationInstanceData {
 
 	private final ApplicationBuilder applicationBuilder;
-	private final List<OrgUnit> orgUnits;
+	private final List<OrganizationUnitView> OrganizationUnitViews;
 	private final DocumentConverter documentConverter;
 	private final ResponsiveApplication responsiveApplication;
 	private final Map<String, Map<String, String>> localizationMap;
 	private final Map<String, Map<String, String>> dictionaryMap;
 
-	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter, ResponsiveApplication responsiveApplication) {
+	public DevApplicationData(ApplicationBuilder applicationBuilder, List<OrganizationUnitView> OrganizationUnitViews, DocumentConverter documentConverter, ResponsiveApplication responsiveApplication) {
 		this.applicationBuilder = applicationBuilder;
 		this.localizationMap = applicationBuilder.getLocalizationData() != null ? applicationBuilder.getLocalizationData().createLocalizationMapByLanguage() : new HashMap<>();
-		this.orgUnits = orgUnits;
+		this.OrganizationUnitViews = OrganizationUnitViews;
 		this.documentConverter = documentConverter;
 		this.responsiveApplication = responsiveApplication;
 		dictionaryMap = LocalizationData.createDictionaryData(getClass().getClassLoader()).createLocalizationMapByLanguage();
@@ -62,7 +62,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
-	public OrgField getOrganizationField() {
+	public OrganizationFieldView getOrganizationField() {
 		return null;
 	}
 
@@ -131,7 +131,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
-	public boolean isAllowed(SimpleOrganizationalPrivilege group, OrgUnit orgUnit) {
+	public boolean isAllowed(SimpleOrganizationalPrivilege group, OrganizationUnitView OrganizationUnitView) {
 		return true;
 	}
 
@@ -146,7 +146,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
-	public boolean isAllowed(OrganizationalPrivilegeGroup group, Privilege privilege, OrgUnit orgUnit) {
+	public boolean isAllowed(OrganizationalPrivilegeGroup group, Privilege privilege, OrganizationUnitView OrganizationUnitView) {
 		return true;
 	}
 
@@ -156,13 +156,13 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
-	public List<OrgUnit> getAllowedUnits(SimpleOrganizationalPrivilege simplePrivilege) {
-		return orgUnits;
+	public List<OrganizationUnitView> getAllowedUnits(SimpleOrganizationalPrivilege simplePrivilege) {
+		return OrganizationUnitViews;
 	}
 
 	@Override
-	public List<OrgUnit> getAllowedUnits(OrganizationalPrivilegeGroup group, Privilege privilege) {
-		return orgUnits;
+	public List<OrganizationUnitView> getAllowedUnits(OrganizationalPrivilegeGroup group, Privilege privilege) {
+		return OrganizationUnitViews;
 	}
 
 	@Override

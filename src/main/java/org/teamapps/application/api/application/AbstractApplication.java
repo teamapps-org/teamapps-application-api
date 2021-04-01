@@ -19,8 +19,9 @@
  */
 package org.teamapps.application.api.application;
 
-import org.teamapps.application.api.organization.OrgUnit;
+
 import org.teamapps.application.api.privilege.*;
+import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.ux.application.ResponsiveApplication;
 
 import java.util.List;
@@ -59,8 +60,8 @@ public abstract class AbstractApplication implements Application {
 		return applicationInstanceData.isAllowed(simplePrivilege);
 	}
 
-	public boolean isAllowed(SimpleOrganizationalPrivilege group, OrgUnit orgUnit) {
-		return applicationInstanceData.isAllowed(group, orgUnit);
+	public boolean isAllowed(SimpleOrganizationalPrivilege group, OrganizationUnitView OrganizationUnitView) {
+		return applicationInstanceData.isAllowed(group, OrganizationUnitView);
 	}
 
 	public boolean isAllowed(SimpleCustomObjectPrivilege group, PrivilegeObject privilegeObject) {
@@ -71,19 +72,19 @@ public abstract class AbstractApplication implements Application {
 		return applicationInstanceData.isAllowed(group, privilege);
 	}
 
-	public boolean isAllowed(OrganizationalPrivilegeGroup group, Privilege privilege, OrgUnit orgUnit) {
-		return applicationInstanceData.isAllowed(group, privilege, orgUnit);
+	public boolean isAllowed(OrganizationalPrivilegeGroup group, Privilege privilege, OrganizationUnitView OrganizationUnitView) {
+		return applicationInstanceData.isAllowed(group, privilege, OrganizationUnitView);
 	}
 
 	public boolean isAllowed(CustomObjectPrivilegeGroup group, Privilege privilege, PrivilegeObject privilegeObject) {
 		return applicationInstanceData.isAllowed(group, privilege, privilegeObject);
 	}
 
-	public List<OrgUnit> getAllowedUnits(SimpleOrganizationalPrivilege simplePrivilege) {
+	public List<OrganizationUnitView> getAllowedUnits(SimpleOrganizationalPrivilege simplePrivilege) {
 		return applicationInstanceData.getAllowedUnits(simplePrivilege);
 	}
 
-	public List<OrgUnit> getAllowedUnits(OrganizationalPrivilegeGroup group, Privilege privilege) {
+	public List<OrganizationUnitView> getAllowedUnits(OrganizationalPrivilegeGroup group, Privilege privilege) {
 		return applicationInstanceData.getAllowedUnits(group, privilege);
 	}
 

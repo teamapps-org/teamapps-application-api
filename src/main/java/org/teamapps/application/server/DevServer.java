@@ -20,7 +20,8 @@
 package org.teamapps.application.server;
 
 import org.teamapps.application.api.application.ApplicationPerspectiveBuilder;
-import org.teamapps.application.api.organization.OrgUnit;
+
+import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.server.undertow.embedded.TeamAppsUndertowEmbeddedServer;
 import org.teamapps.universaldb.UniversalDB;
@@ -39,7 +40,7 @@ public class DevServer {
 	private final ApplicationPerspectiveBuilder applicationBuilder;
 	private int port = 8080;
 	private File path = new File("./dev-database");
-	private List<OrgUnit> orgUnits = Collections.emptyList();
+	private List<OrganizationUnitView> OrganizationUnitViews = Collections.emptyList();
 	private DocumentConverter documentConverter;
 
 	public static DevServer create(ApplicationPerspectiveBuilder applicationBuilder) {
@@ -60,8 +61,8 @@ public class DevServer {
 		return this;
 	}
 
-	public DevServer withOrgUnits(List<OrgUnit> orgUnits) {
-		this.orgUnits = orgUnits;
+	public DevServer withOrganizationUnitViews(List<OrganizationUnitView> OrganizationUnitViews) {
+		this.OrganizationUnitViews = OrganizationUnitViews;
 		return this;
 	}
 
@@ -80,7 +81,7 @@ public class DevServer {
 			WebController webController = sessionContext -> {
 				SessionContext context = SessionContext.current();
 				RootPanel rootPanel = context.addRootPanel();
-				rootPanel.setContent(new DevApplication(applicationBuilder, orgUnits, documentConverter).getComponent());
+				rootPanel.setContent(new DevApplication(applicationBuilder, OrganizationUnitViews, documentConverter).getComponent());
 				String defaultBackground = "/resources/backgrounds/default-bl.jpg";
 				context.registerBackgroundImage("default", defaultBackground, defaultBackground);
 				context.setBackgroundImage("default", 0);

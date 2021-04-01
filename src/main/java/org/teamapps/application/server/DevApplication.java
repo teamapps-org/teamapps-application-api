@@ -24,9 +24,10 @@ import org.teamapps.application.api.application.ApplicationPerspective;
 import org.teamapps.application.api.application.ApplicationPerspectiveBuilder;
 import org.teamapps.application.api.application.PerspectiveBuilder;
 import org.teamapps.application.api.localization.Dictionary;
-import org.teamapps.application.api.organization.OrgUnit;
+
 import org.teamapps.common.format.Color;
 import org.teamapps.application.api.theme.ApplicationIcons;
+import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.layout.StandardLayout;
@@ -52,10 +53,10 @@ public class DevApplication {
 	private final DevApplicationData applicationData;
 	private ResponsiveApplication application;
 
-	public DevApplication(ApplicationPerspectiveBuilder applicationBuilder, List<OrgUnit> orgUnits, DocumentConverter documentConverter) {
+	public DevApplication(ApplicationPerspectiveBuilder applicationBuilder, List<OrganizationUnitView> OrganizationUnitViews, DocumentConverter documentConverter) {
 		this.applicationBuilder = applicationBuilder;
 		application = ResponsiveApplication.createApplication();
-		applicationData = new DevApplicationData(applicationBuilder, orgUnits, documentConverter, application);
+		applicationData = new DevApplicationData(applicationBuilder, OrganizationUnitViews, documentConverter, application);
 		createUi();
 	}
 
