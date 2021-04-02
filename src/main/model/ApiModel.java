@@ -37,15 +37,10 @@ public class ApiModel implements SchemaInfoProvider {
 		Table organizationFieldMock = db.addTable("organizationFieldMock", KEEP_DELETED, TRACK_CREATION, TRACK_MODIFICATION);
 		Table addressMock = db.addTable("addressMock", KEEP_DELETED, TRACK_CREATION, TRACK_MODIFICATION);
 
-		Table organizationUnitView = db.addView("organizationUnitView");
-		Table organizationUnitTypeView = db.addView("organizationUnitTypeView");
-		Table organizationFieldView = db.addView("organizationFieldView");
-		Table addressView = db.addView("addressView");
-
-		organizationUnitMock.addView(organizationUnitView);
-		organizationUnitTypeMock.addView(organizationUnitTypeView);
-		organizationFieldMock.addView(organizationFieldView);
-		addressMock.addView(addressView);
+		Table organizationUnitView = db.addView("organizationUnitView", organizationUnitMock);
+		Table organizationUnitTypeView = db.addView("organizationUnitTypeView", organizationUnitTypeMock);
+		Table organizationFieldView = db.addView("organizationFieldView", organizationFieldMock);
+		Table addressView = db.addView("addressView", addressMock);
 
 		addressMock
 				.addText("name")
