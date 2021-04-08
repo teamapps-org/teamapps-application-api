@@ -23,8 +23,10 @@ import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.application.ApplicationPerspective;
 import org.teamapps.application.api.application.ApplicationPerspectiveBuilder;
 import org.teamapps.application.api.application.PerspectiveBuilder;
+import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.localization.Dictionary;
 
+import org.teamapps.application.api.privilege.ApplicationRole;
 import org.teamapps.common.format.Color;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
@@ -42,9 +44,11 @@ import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.tree.Tree;
 import org.teamapps.ux.model.ListTreeModel;
+import org.teamapps.ux.session.SessionContext;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class DevApplication {
@@ -53,10 +57,10 @@ public class DevApplication {
 	private final DevApplicationData applicationData;
 	private ResponsiveApplication application;
 
-	public DevApplication(ApplicationPerspectiveBuilder applicationBuilder, List<OrganizationUnitView> OrganizationUnitViews, DocumentConverter documentConverter) {
+	public DevApplication(ApplicationRole applicationRole, SessionContext context, Locale locale, ApplicationLocalizationProvider applicationLocalizationProvider, ApplicationPerspectiveBuilder applicationBuilder, List<OrganizationUnitView> organizationUnitViews, DocumentConverter documentConverter) {
 		this.applicationBuilder = applicationBuilder;
 		application = ResponsiveApplication.createApplication();
-		applicationData = new DevApplicationData(applicationBuilder, OrganizationUnitViews, documentConverter, application);
+		applicationData = new DevApplicationData(applicationRole, context, locale, applicationLocalizationProvider, applicationBuilder, organizationUnitViews, documentConverter, application);
 		createUi();
 	}
 
