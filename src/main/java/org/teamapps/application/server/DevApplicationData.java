@@ -21,6 +21,7 @@ package org.teamapps.application.server;
 
 import org.teamapps.application.api.application.ApplicationBuilder;
 import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.LocalizationData;
 import org.teamapps.application.api.privilege.*;
@@ -90,6 +91,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	public ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable) {
 		//todo
 		return null;
+	}
+
+	@Override
+	public ApplicationConfig<?> getApplicationConfig() {
+		return applicationBuilder.getApplicationConfig();
 	}
 
 	@Override

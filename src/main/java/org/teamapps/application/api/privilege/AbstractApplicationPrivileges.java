@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@Deprecated
 public class AbstractApplicationPrivileges {
 
 	private static List<PrivilegeGroup> privilegeGroups = new ArrayList<>();

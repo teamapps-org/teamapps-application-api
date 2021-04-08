@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.application;
 
+import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
@@ -60,6 +61,8 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	void showPerspective(Perspective perspective);
 
 	ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable);
+
+	ApplicationConfig<?> getApplicationConfig();
 
 	void writeActivityLog(String title, String data);
 
