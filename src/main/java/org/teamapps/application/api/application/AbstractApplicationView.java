@@ -30,27 +30,26 @@ import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
+import org.teamapps.ux.session.SessionContext;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class AbstractApplication implements Application {
+public abstract class AbstractApplicationView {
 
-	private final ResponsiveApplication responsiveApplication;
 	private final ApplicationInstanceData applicationInstanceData;
 
-	public AbstractApplication(ResponsiveApplication responsiveApplication, ApplicationInstanceData applicationInstanceData) {
-		this.responsiveApplication = responsiveApplication;
+	public AbstractApplicationView(ApplicationInstanceData applicationInstanceData) {
 		this.applicationInstanceData = applicationInstanceData;
-	}
-
-	public ResponsiveApplication getResponsiveApplication() {
-		return responsiveApplication;
 	}
 
 	public ApplicationInstanceData getApplicationInstanceData() {
 		return applicationInstanceData;
+	}
+
+	public SessionContext getContext() {
+		return applicationInstanceData.getUser().getSessionContext();
 	}
 
 	public void writeActivityLog(String title, String data) {

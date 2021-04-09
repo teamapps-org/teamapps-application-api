@@ -22,20 +22,23 @@ import org.teamapps.universaldb.schema.Schema;
 import org.teamapps.universaldb.schema.SchemaInfoProvider;
 import org.teamapps.universaldb.schema.Table;
 
-public class ApiModel implements SchemaInfoProvider {
+import static org.teamapps.universaldb.schema.TableOption.*;
+
+public class MockModel implements SchemaInfoProvider {
 
 	@Override
 	public Schema getSchema() {
-		Schema schema = Schema.create("org.teamapps.model");
-		schema.setSchemaName("ApiSchema");
+		Schema schema = Schema.create("org.teamapps.mock.model");
+		schema.setSchemaName("MockSchema");
 		Database db = schema.addDatabase("controlCenter");
 
-		Table organizationUnitView = db.addView("organizationUnitView", "controlCenter.organizationUnit");
-		Table organizationUnitTypeView = db.addView("organizationUnitTypeView", "controlCenter.organizationUnitType");
-		Table organizationFieldView = db.addView("organizationFieldView", "controlCenter.organizationField");
-		Table addressView = db.addView("addressView", "controlCenter.address");
+		Table organizationUnitMock = db.addTable("organizationUnit", KEEP_DELETED, TRACK_CREATION, TRACK_MODIFICATION);
+		Table organizationUnitTypeMock = db.addTable("organizationUnitType", KEEP_DELETED, TRACK_CREATION, TRACK_MODIFICATION);
+		Table organizationFieldMock = db.addTable("organizationField", KEEP_DELETED, TRACK_CREATION, TRACK_MODIFICATION);
+		Table addressMock = db.addTable("address", KEEP_DELETED, TRACK_CREATION, TRACK_MODIFICATION);
 
-		addressView
+
+		addressMock
 				.addText("name")
 				.addText("organisation")
 				.addText("street")
@@ -48,28 +51,27 @@ public class ApiModel implements SchemaInfoProvider {
 				.addFloat("longitude")
 		;
 
-		organizationUnitView
+		organizationUnitMock
 				.addTranslatableText("name")
-				.addReference("parent", organizationUnitView, false, "children")
-				.addReference("children", organizationUnitView, true, "parent")
-				.addReference("type", organizationUnitTypeView, false)
+				.addReference("parent", organizationUnitMock, false, "children")
+				.addReference("children", organizationUnitMock, true, "parent")
+				.addReference("type", organizationUnitTypeMock, false)
 				.addText("icon")
-				.addReference("address", addressView, false)
+				.addReference("address", addressMock, false)
 		;
 
-
-		organizationUnitTypeView
+		organizationUnitTypeMock
 				.addTranslatableText("name")
 				.addTranslatableText("abbreviation")
 				.addText("icon")
 				.addBoolean("translateOrganizationUnits")
 				.addBoolean("allowUserContainer")
-				.addReference("defaultChildType", organizationUnitTypeView, false)
-				.addReference("possibleChildrenTypes", organizationUnitTypeView, true)
+				.addReference("defaultChildType", organizationUnitTypeMock, false)
+				.addReference("possibleChildrenTypes", organizationUnitTypeMock, true)
 				.addEnum("geoLocationType", "country", "state", "city", "place", "none")
 		;
 
-		organizationFieldView
+		organizationFieldMock
 				.addTranslatableText("title")
 				.addText("icon")
 		;

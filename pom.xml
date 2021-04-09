@@ -203,6 +203,7 @@
                             <modelClasses>
                                 <modelClass>Model</modelClass>
                                 <modelClass>ApiModel</modelClass>
+                                <modelClass>MockModel</modelClass>
                             </modelClasses>
                         </configuration>
                     </execution>

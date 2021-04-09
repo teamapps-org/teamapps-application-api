@@ -27,6 +27,7 @@ import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.ux.IconUtils;
 import org.teamapps.application.ux.combo.ComboBoxUtils;
 import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.mock.model.MockSchema;
 import org.teamapps.model.ApiSchema;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.reporting.convert.DocumentConverter;
@@ -91,9 +92,17 @@ public class DevServer {
 			path.mkdir();
 			SchemaInfoProvider databaseModel = applicationBuilder.getDatabaseModel();
 			if (databaseModel != null) {
-				UniversalDB universalDB = UniversalDB.createStandalone(path, new ApiSchema());
-				universalDB.addAuxiliaryModel(applicationBuilder.getDatabaseModel(), DevServer.class.getClassLoader());
-				universalDB.installAuxiliaryModelClassed(applicationBuilder.getDatabaseModel(), DevServer.class.getClassLoader());
+				UniversalDB universalDB = UniversalDB.createStandalone(path, new MockSchema());
+				ClassLoader classLoader = DevServer.class.getClassLoader();
+
+				ApiSchema apiSchema = new ApiSchema();
+				universalDB.addAuxiliaryModel(apiSchema, classLoader);
+				universalDB.installAuxiliaryModelClassed(apiSchema, classLoader);
+				universalDB.installTableViews(apiSchema, classLoader);
+
+				universalDB.addAuxiliaryModel(databaseModel, classLoader);
+				universalDB.installAuxiliaryModelClassed(databaseModel, classLoader);
+				universalDB.installTableViews(databaseModel, classLoader);
 			}
 			WebController webController = sessionContext -> {
 				SessionContext context = SessionContext.current();

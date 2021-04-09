@@ -19,14 +19,21 @@
  */
 package org.teamapps.application.api.application;
 
+import org.teamapps.application.api.config.ApplicationConfig;
+import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.privilege.*;
+import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.databinding.MutableValue;
+import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.progress.MultiProgressDisplay;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class AbstractApplicationPerspective implements ApplicationPerspective {
 
@@ -73,6 +80,25 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 		getApplicationInstanceData().writeExceptionLog(title, throwable);
 	}
 
+	public SessionUser getUser() {
+		return applicationInstanceData.getUser();
+	}
+
+	public MultiProgressDisplay getMultiProgressDisplay() {
+		return applicationInstanceData.getMultiProgressDisplay();
+	}
+
+	public <RESULT> void runTaskAsync(Icon icon, String title, Supplier<RESULT> task, Consumer<RESULT> uiResultTask) {
+		applicationInstanceData.runTaskAsync(icon, title, task, uiResultTask);
+	}
+
+	public ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable) {
+		return applicationInstanceData.createApplicationDesktop(icon, title, select, closable);
+	}
+
+	public ApplicationConfig<?> getApplicationConfig() {
+		return applicationInstanceData.getApplicationConfig();
+	}
 
 	public ApplicationInstanceData getApplicationInstanceData() {
 		return applicationInstanceData;
