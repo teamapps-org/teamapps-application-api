@@ -77,8 +77,8 @@ public abstract class AbstractApplication implements Application {
 		applicationInstanceData.showPerspective(perspective);
 	}
 
-	public ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable) {
-		return applicationInstanceData.createApplicationDesktop(icon, title, select, closable);
+	public ApplicationDesktop createApplicationDesktop() {
+		return applicationInstanceData.createApplicationDesktop();
 	}
 
 	public ApplicationConfig<?> getApplicationConfig() {

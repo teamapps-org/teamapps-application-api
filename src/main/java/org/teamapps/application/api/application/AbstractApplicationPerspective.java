@@ -92,8 +92,8 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 		applicationInstanceData.runTaskAsync(icon, title, task, uiResultTask);
 	}
 
-	public ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable) {
-		return applicationInstanceData.createApplicationDesktop(icon, title, select, closable);
+	public ApplicationDesktop createApplicationDesktop() {
+		return applicationInstanceData.createApplicationDesktop();
 	}
 
 	public ApplicationConfig<?> getApplicationConfig() {

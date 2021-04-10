@@ -95,8 +95,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
-	public ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable) {
-		//todo
+	public ApplicationDesktop createApplicationDesktop() {
 		return null;
 	}
 

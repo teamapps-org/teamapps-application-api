@@ -60,7 +60,7 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	void showPerspective(Perspective perspective);
 
-	ApplicationDesktop createApplicationDesktop(Icon icon, String title, boolean select, boolean closable);
+	ApplicationDesktop createApplicationDesktop();
 
 	ApplicationConfig<?> getApplicationConfig();
 
