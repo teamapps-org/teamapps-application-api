@@ -19,14 +19,13 @@
  */
 package org.teamapps.application.server;
 
-import org.teamapps.application.api.application.ApplicationBuilder;
+import org.teamapps.application.api.application.BaseApplicationBuilder;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.user.SessionUser;
-import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.reporting.convert.DocumentConverter;
@@ -44,14 +43,14 @@ public class DevApplicationData implements ApplicationInstanceData {
 	private final SessionContext context;
 	private final Locale locale;
 	private final ApplicationLocalizationProvider localizationProvider;
-	private final ApplicationBuilder applicationBuilder;
+	private final BaseApplicationBuilder applicationBuilder;
 	private final List<OrganizationUnitView> organizationUnitViews;
 	private final DocumentConverter documentConverter;
 	private final ResponsiveApplication responsiveApplication;
 	private final SessionUser sessionUser;
 	private ApplicationPrivilegeProvider applicationPrivilegeProvider;
 
-	public DevApplicationData(ApplicationRole applicationRole, SessionContext context, Locale locale, ApplicationLocalizationProvider localizationProvider, ApplicationBuilder applicationBuilder, List<OrganizationUnitView> organizationUnitViews, DocumentConverter documentConverter, ResponsiveApplication responsiveApplication) {
+	public DevApplicationData(ApplicationRole applicationRole, SessionContext context, Locale locale, ApplicationLocalizationProvider localizationProvider, BaseApplicationBuilder applicationBuilder, List<OrganizationUnitView> organizationUnitViews, DocumentConverter documentConverter, ResponsiveApplication responsiveApplication) {
 		this.applicationRole = applicationRole;
 		this.context = context;
 		this.locale = locale;

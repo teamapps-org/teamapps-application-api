@@ -19,7 +19,7 @@
  */
 package org.teamapps.application.server;
 
-import org.teamapps.application.api.application.ApplicationPerspectiveBuilder;
+import org.teamapps.application.api.application.ApplicationBuilder;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.localization.Language;
 import org.teamapps.application.api.privilege.ApplicationRole;
@@ -53,17 +53,17 @@ import java.util.stream.Collectors;
 
 public class DevServer {
 
-	private final ApplicationPerspectiveBuilder applicationBuilder;
+	private final ApplicationBuilder applicationBuilder;
 	private int port = 8080;
 	private File path = new File("./dev-database");
 	private List<OrganizationUnitView> organizationUnitViews = Collections.emptyList();
 	private DocumentConverter documentConverter;
 
-	public static DevServer create(ApplicationPerspectiveBuilder applicationBuilder) {
+	public static DevServer create(ApplicationBuilder applicationBuilder) {
 		return new DevServer(applicationBuilder);
 	}
 
-	protected DevServer(ApplicationPerspectiveBuilder applicationBuilder) {
+	protected DevServer(ApplicationBuilder applicationBuilder) {
 		this.applicationBuilder = applicationBuilder;
 	}
 
@@ -118,20 +118,19 @@ public class DevServer {
 
 				ApplicationLocalizationProvider localizationProvider = new DevLocalizationProvider(applicationBuilder);
 
-				List<ApplicationRole> applicationRoles = applicationBuilder.getApplicationRoles();
-				List<RoleEntry> roleEntries = new ArrayList<>();
+   				List<RoleEntry> roleEntries = new ArrayList<>();
 				roleEntries.add(new RoleEntry(null));
 				if (applicationBuilder.getApplicationRoles() != null) {
 					roleEntries.addAll(applicationBuilder.getApplicationRoles().stream().map(RoleEntry::new).collect(Collectors.toList()));
 				}
 				ComboBox<RoleEntry> roleEntryComboBox = ComboBoxUtils.createRecordComboBox(roleEntries, (roleEntry, propertyNames) -> roleEntry.getPropertyMap(localizationProvider), BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 
-				List<OrganizationUnitView> unitRoots = getUnitRoots(organizationUnitViews != null && !organizationUnitViews.isEmpty() ? organizationUnitViews : OrganizationUnitView.getAll());
-				ComboBox<OrganizationUnitView> rootUnitsComboBox = createOrgUnitComboBox(localizationProvider, unitRoots);
+				List<OrganizationUnitView> orgUnits = organizationUnitViews != null && !organizationUnitViews.isEmpty() ? organizationUnitViews : OrganizationUnitView.getAll();
+				ComboBox<OrganizationUnitView> rootUnitsComboBox = createOrgUnitComboBox(localizationProvider, orgUnits);
 				ComboBox<Language> languageComboBox = Language.createComboBox(localizationProvider);
 				languageComboBox.setValue(Language.EN_ENGLISH);
-				if (!unitRoots.isEmpty()) {
-					rootUnitsComboBox.setValue(unitRoots.get(0));
+				if (!orgUnits.isEmpty()) {
+					rootUnitsComboBox.setValue(orgUnits.get(0));
 				}
 				roleEntryComboBox.setValue(roleEntries.get(0));
 				Button<BaseTemplateRecord> loginButton = Button.create("Login");
@@ -179,11 +178,6 @@ public class DevServer {
 			unitSet.add(unit);
 			unit.getChildren().forEach(child -> getUnits(child, unitSet));
 		}
-	}
-
-	private List<OrganizationUnitView> getUnitRoots(List<OrganizationUnitView> units) {
-		Set<OrganizationUnitView> unitSet = new HashSet<>(units);
-		return units.stream().filter(unit -> !unitSet.contains(unit.getParent())).collect(Collectors.toList());
 	}
 
 	private ComboBox<OrganizationUnitView> createOrgUnitComboBox(ApplicationLocalizationProvider localizationProvider, List<OrganizationUnitView> unitRoots) {

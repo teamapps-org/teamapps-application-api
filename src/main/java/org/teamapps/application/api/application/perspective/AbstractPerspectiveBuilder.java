@@ -17,18 +17,42 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.application.api.application;
+package org.teamapps.application.api.application.perspective;
 
 import org.teamapps.application.api.application.perspective.PerspectiveBuilder;
-import org.teamapps.ux.application.ResponsiveApplication;
+import org.teamapps.icons.Icon;
 
-import java.util.List;
+public abstract class AbstractPerspectiveBuilder implements PerspectiveBuilder {
+	private final String name;
+	private final Icon icon;
+	private final String titleKey;
+	private final String descriptionKey;
 
-public interface ApplicationBuilder extends BaseApplicationBuilder {
-
-	List<PerspectiveBuilder> getPerspectiveBuilders();
+	public AbstractPerspectiveBuilder(String name, Icon icon, String titleKey, String descriptionKey) {
+		this.name = name;
+		this.icon = icon;
+		this.titleKey = titleKey;
+		this.descriptionKey = descriptionKey;
+	}
 
 	@Override
-	default void build(ResponsiveApplication application, ApplicationInstanceData applicationInstanceData) {
+	public String getName() {
+		return name;
 	}
+
+	@Override
+	public Icon getIcon() {
+		return icon;
+	}
+
+	@Override
+	public String getTitleKey() {
+		return titleKey;
+	}
+
+	@Override
+	public String getDescriptionKey() {
+		return descriptionKey;
+	}
+
 }

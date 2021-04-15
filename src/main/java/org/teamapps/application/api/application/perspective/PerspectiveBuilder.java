@@ -17,8 +17,10 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.application.api.application;
+package org.teamapps.application.api.application.perspective;
 
+import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.application.perspective.ApplicationPerspective;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.databinding.MutableValue;
 import org.teamapps.icons.Icon;
@@ -36,6 +38,10 @@ public interface PerspectiveBuilder {
 	boolean isPerspectiveAccessible(ApplicationPrivilegeProvider privilegeProvider);
 
 	default boolean autoProvisionPerspective() {
+		return false;
+	}
+
+	default boolean useToolbarPerspectiveMenu() {
 		return false;
 	}
 

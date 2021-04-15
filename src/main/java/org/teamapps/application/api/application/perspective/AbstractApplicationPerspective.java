@@ -17,13 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.application.api.application;
+package org.teamapps.application.api.application.perspective;
 
+import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.databinding.MutableValue;
+import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.universaldb.index.translation.TranslatableText;
@@ -37,6 +39,8 @@ import java.util.function.Supplier;
 
 public abstract class AbstractApplicationPerspective implements ApplicationPerspective {
 
+	public final Event<Void> onPerspectiveInitialized = new Event<>();
+	public final Event<Void> onPerspectiveRefreshRequested = new Event<>();
 	private final ApplicationInstanceData applicationInstanceData;
 	private final MutableValue<String> perspectiveInfoBadgeValue;
 
@@ -49,6 +53,15 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 		perspective = Perspective.createPerspective();
 	}
 
+	@Override
+	public Event<Void> getOnPerspectiveInitialized() {
+		return onPerspectiveInitialized;
+	}
+
+	@Override
+	public Event<Void> getOnPerspectiveRefreshRequested() {
+		return onPerspectiveRefreshRequested;
+	}
 
 	public void setPerspectiveMenuPanel(Component perspectiveMenuPanel) {
 		this.perspectiveMenuPanel = perspectiveMenuPanel;
