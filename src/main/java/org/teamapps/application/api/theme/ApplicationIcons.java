@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@
  */
 package org.teamapps.application.api.theme;
 
-import org.teamapps.application.api.localization.Country;
 import org.teamapps.icon.flags.FlagIcon;
 import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.icons.Icon;
@@ -28,8 +27,10 @@ import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.function.Function;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ApplicationIcons {
@@ -41,17 +42,18 @@ public class ApplicationIcons {
 		try {
 			Class<?> aClass = Class.forName("org.teamapps.icon.standard.StandardIcon");
 			iconLoaderMethod = aClass.getMethod("valueOf", String.class);
-		} catch(Exception e) {
+		} catch (Exception e) {
 		}
 	}
 
 	private static Icon createIcon(String name) {
 		if (iconLoaderMethod != null) {
 			try {
-				Icon icon =  (Icon) iconLoaderMethod.invoke(null, name);
+				Icon icon = (Icon) iconLoaderMethod.invoke(null, name);
 				iconMap.put(name, icon);
 				return icon;
-			} catch (Exception ignore) { }
+			} catch (Exception ignore) {
+			}
 		}
 		return MaterialIcon.QUESTION_ANSWER;
 	}
@@ -75,7 +77,7 @@ public class ApplicationIcons {
 			FlagIcon.getIcons().forEach(flagIcon -> iconNameByIcon.put(flagIcon, flagIcon.getConstantName().replace("_", " ")));
 		}
 		comboBox.setRecordToStringFunction(iconNameByIcon::get);
-		comboBox.setPropertyExtractor((icon, propertyName) -> switch(propertyName) {
+		comboBox.setPropertyExtractor((icon, propertyName) -> switch (propertyName) {
 			case BaseTemplate.PROPERTY_ICON -> icon;
 			case BaseTemplate.PROPERTY_CAPTION -> iconNameByIcon.get(icon);
 			default -> null;

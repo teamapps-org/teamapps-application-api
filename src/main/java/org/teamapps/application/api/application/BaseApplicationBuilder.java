@@ -48,6 +48,10 @@ public interface BaseApplicationBuilder {
 
 	String getApplicationDescriptionKey();
 
+	default boolean isDarkTheme() {
+		return false;
+	}
+
 	List<ApplicationRole> getApplicationRoles();
 
 	List<PrivilegeGroup> getPrivilegeGroups();

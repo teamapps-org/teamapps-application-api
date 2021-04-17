@@ -11,8 +11,8 @@
         <maven.compiler.target>14</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
-        <teamapps-version>0.9.98</teamapps-version>
-        <universal-db-version>0.4.22</universal-db-version>
+        <teamapps-version>0.9.99</teamapps-version>
+        <universal-db-version>0.4.23</universal-db-version>
         <teamapps-universal-db-integration-version>0.10</teamapps-universal-db-integration-version>
     </properties>
 

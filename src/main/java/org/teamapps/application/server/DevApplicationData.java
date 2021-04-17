@@ -99,6 +99,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
+	public boolean isDarkTheme() {
+		return false;
+	}
+
+	@Override
 	public ApplicationConfig<?> getApplicationConfig() {
 		return applicationBuilder.getApplicationConfig();
 	}

@@ -62,6 +62,8 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	ApplicationDesktop createApplicationDesktop();
 
+	boolean isDarkTheme();
+
 	ApplicationConfig<?> getApplicationConfig();
 
 	void writeActivityLog(String title, String data);
