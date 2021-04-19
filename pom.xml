@@ -11,7 +11,7 @@
         <maven.compiler.target>14</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
-        <teamapps-version>0.9.99</teamapps-version>
+        <teamapps-version>0.9.101</teamapps-version>
         <universal-db-version>0.4.23</universal-db-version>
         <teamapps-universal-db-integration-version>0.10</teamapps-universal-db-integration-version>
     </properties>
@@ -78,6 +78,12 @@
             <groupId>org.teamapps</groupId>
             <artifactId>universal-db</artifactId>
             <version>${universal-db-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -90,7 +96,20 @@
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-reporting</artifactId>
             <version>1.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.teamapps</groupId>
