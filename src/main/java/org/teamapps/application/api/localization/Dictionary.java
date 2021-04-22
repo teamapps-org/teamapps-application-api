@@ -28,6 +28,8 @@ public class Dictionary {
 	public static final String READ = "org.teamapps.dictionary.read";
 	public static final String UPDATE = "org.teamapps.dictionary.update";
 	public static final String REVERT = "org.teamapps.dictionary.revert";
+	public static final String RESTORE = "org.teamapps.dictionary.restore";
+	public static final String RESTORE_RECORD = "org.teamapps.dictionary.restoreRecord";
 	public static final String REFRESH = "org.teamapps.dictionary.refresh";
 	public static final String REVERT_CHANGES = "org.teamapps.dictionary.revertChanges";
 	public static final String REMOVE = "org.teamapps.dictionary.remove";
@@ -85,6 +87,10 @@ public class Dictionary {
 	public static final String ZOOM_OUT = "org.teamapps.dictionary.zoomOut";
 	public static final String INCREASE = "org.teamapps.dictionary.increase";
 	public static final String DECREASE = "org.teamapps.dictionary.decrease";
+	public static final String IMPORT = "org.teamapps.dictionary.import";
+	public static final String EXPORT = "org.teamapps.dictionary.export";
+	public static final String RECYCLE_BIN = "org.teamapps.dictionary.recycleBin";
+	public static final String SHOW_RECYCLE_BIN = "org.teamapps.dictionary.showRecycleBin";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";

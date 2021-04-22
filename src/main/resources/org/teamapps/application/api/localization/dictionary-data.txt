@@ -6,6 +6,8 @@ Create
 Read
 Update
 Revert
+Restore
+Restore record
 Refresh
 Revert changes
 Remove
@@ -63,6 +65,10 @@ Zoom in
 Zoom out
 Increase
 Decrease
+Import
+Export
+Recycle bin
+Show recycle bin
 
 ::options
 OK
