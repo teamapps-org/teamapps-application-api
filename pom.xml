@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
         <teamapps-version>0.9.101</teamapps-version>
-        <universal-db-version>0.4.23</universal-db-version>
+        <universal-db-version>0.4.24</universal-db-version>
         <teamapps-universal-db-integration-version>0.10</teamapps-universal-db-integration-version>
     </properties>
 
