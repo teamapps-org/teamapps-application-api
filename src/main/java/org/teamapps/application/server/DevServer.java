@@ -104,6 +104,8 @@ public class DevServer {
 				universalDB.installAuxiliaryModelClassed(databaseModel, classLoader);
 				universalDB.installTableViews(databaseModel, classLoader);
 			}
+			applicationBuilder.getOnApplicationInstalled().fire();
+			applicationBuilder.getOnApplicationLoaded().fire();
 			WebController webController = sessionContext -> {
 				SessionContext context = SessionContext.current();
 				RootPanel rootPanel = context.addRootPanel();

@@ -54,7 +54,8 @@ public interface PrivilegeGroup {
 		return new CustomObjectPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privileges, privilegeObjectsSupplier);
 	}
 
-	static PrivilegeGroup createCopyWithPrivileges(PrivilegeGroup privilegeGroup, Privilege... privileges) {
+	default PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
+		PrivilegeGroup privilegeGroup = this;
 		return new PrivilegeGroup() {
 			@Override
 			public PrivilegeGroupType getType() {

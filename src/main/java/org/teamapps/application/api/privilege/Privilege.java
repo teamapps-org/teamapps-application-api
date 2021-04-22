@@ -29,8 +29,12 @@ public interface Privilege {
 	Privilege READ = create(PrivilegeType.READ, "read", ApplicationIcons.DOCUMENT_TEXT, Dictionary.READ);
 	Privilege UPDATE = create(PrivilegeType.UPDATE, "update", ApplicationIcons.EDIT, Dictionary.UPDATE);
 	Privilege DELETE = create(PrivilegeType.DELETE, "delete", ApplicationIcons.GARBAGE_EMPTY, Dictionary.DELETE);
+	Privilege RESTORE = create(PrivilegeType.RESTORE, "restore", ApplicationIcons.UNDO, Dictionary.RESTORE);
+	Privilege SHOW_RECYCLE_BIN = create(PrivilegeType.SHOW_RECYCLE_BIN, "readRecycleBin", ApplicationIcons.GARBAGE_OVERFLOW, Dictionary.SHOW_RECYCLE_BIN);
 	Privilege EXECUTE = create(PrivilegeType.EXECUTE, "execute", ApplicationIcons.GEARWHEEL, Dictionary.EXECUTE);
 	Privilege PRINT = create(PrivilegeType.PRINT, "print", ApplicationIcons.PRINTER, Dictionary.PRINT);
+	Privilege IMPORT = create(PrivilegeType.IMPORT, "import", ApplicationIcons.ARROW_INTO, Dictionary.IMPORT);
+	Privilege EXPORT = create(PrivilegeType.EXPORT, "export", ApplicationIcons.ARROW_OUT, Dictionary.EXPORT);
 	Privilege CUSTOM = create(PrivilegeType.CUSTOM, "custom", ApplicationIcons.LOCK_OPEN, Dictionary.CUSTOM);
 
 	static Privilege create(PrivilegeType privilegeType, String name, Icon icon, String titleKey) {
