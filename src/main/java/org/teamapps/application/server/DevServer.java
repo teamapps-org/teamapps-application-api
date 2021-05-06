@@ -27,6 +27,10 @@ import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.ux.IconUtils;
 import org.teamapps.application.ux.combo.ComboBoxUtils;
 import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.icon.antu.AntuIcon;
+import org.teamapps.icon.flags.FlagIcon;
+import org.teamapps.icon.fontawesome.FontAwesomeIcon;
+import org.teamapps.icon.material.MaterialIcon;
 import org.teamapps.mock.model.MockSchema;
 import org.teamapps.model.ApiSchema;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
@@ -108,6 +112,9 @@ public class DevServer {
 			applicationBuilder.getOnApplicationLoaded().fire();
 			WebController webController = sessionContext -> {
 				SessionContext context = SessionContext.current();
+
+				registerBaseIconProvider(context);
+
 				RootPanel rootPanel = context.addRootPanel();
 
 				ResponsiveForm form = new ResponsiveForm(120, 120, 300);
@@ -163,6 +170,13 @@ public class DevServer {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void registerBaseIconProvider(SessionContext context) {
+		context.getIconProvider().registerIconLibrary(FlagIcon.class);
+		context.getIconProvider().registerIconLibrary(MaterialIcon.class);
+		context.getIconProvider().registerIconLibrary(FontAwesomeIcon.class);
+		context.getIconProvider().registerIconLibrary(AntuIcon.class);
 	}
 
 	private List<OrganizationUnitView> getAllUnits(OrganizationUnitView rootUnit) {

@@ -157,9 +157,6 @@ public class Dictionary {
 	public static final String ERROR_RESETTING_THE_PASSWORD = "org.teamapps.dictionary.errorResettingThePassword";
 	public static final String SESSION_TERMINATED = "org.teamapps.dictionary.sessionTerminated";
 	public static final String SESSION_EXPIRED = "org.teamapps.dictionary.sessionExpired";
-	public static final String SENTENCE_YOUR_SESSION_HAS_EXPIREDNN_PLEASE_R__ = "org.teamapps.dictionary.yourSessionHasExpirednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
-	public static final String SENTENCE_A_SERVERSIDE_ERROR_HAS_OCCURREDNN_P__ = "org.teamapps.dictionary.aServersideErrorHasOccurrednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
-	public static final String SENTENCE_YOUR_SESSION_HAS_BEEN_TERMINATEDNN___ = "org.teamapps.dictionary.yourSessionHasBeenTerminatednnPleaseRefreshThisPageIfYouClickCancelTheApplicationWillRemainUnresponsiveUntilYouRefreshThePage";
 	public static final String SENTENCE_THE_PASSWORD_WAS_CHANGED_SUCCESSFUL__ = "org.teamapps.dictionary.thePasswordWasChangedSuccessfullyYouCanNowLogIn";
 	public static final String SENTENCE_YOUR_ACCOUNT_WAS_CREATED_SUCCESSFUL__ = "org.teamapps.dictionary.yourAccountWasCreatedSuccessfullyYouCanNowLogIn";
 	//record data

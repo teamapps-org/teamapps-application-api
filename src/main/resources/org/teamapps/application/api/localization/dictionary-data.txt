@@ -140,9 +140,6 @@ Error: incorrect username or password
 Error resetting the password
 Session Terminated
 Session Expired
-Your session has expired.\n\nPlease refresh this page. If you click cancel, the application will remain unresponsive until you refresh the page.
-A server-side error has occurred.\n\nPlease refresh this page. If you click cancel, the application will remain unresponsive until you refresh the page.
-Your session has been terminated.\\n\\nPlease refresh this page. If you click cancel, the application will remain unresponsive until you refresh the page.
 The password was changed successfully - you can now log in.
 Your account was created successfully - you can now log in.
 
