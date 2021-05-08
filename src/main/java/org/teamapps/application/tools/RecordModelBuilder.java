@@ -56,6 +56,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -73,6 +74,7 @@ public abstract class RecordModelBuilder<RECORD> {
 	private boolean sortAscending;
 	private Predicate<RECORD> customFilter;
 	private Function<String, Comparator<RECORD>> customFieldSorter;
+	private BiFunction<RECORD, String, Boolean> customFullTextFilter;
 
 	private int countRecords;
 	private List<RECORD> records;
@@ -131,6 +133,9 @@ public abstract class RecordModelBuilder<RECORD> {
 			return false;
 		} else {
 			recordPosition++;
+			if (recordPosition >= records.size()) {
+				return false;
+			}
 			RECORD record = records.get(recordPosition);
 			selectedRecordPosition.set(recordPosition);
 			onSelectedRecordChanged.fire(record);
@@ -387,6 +392,14 @@ public abstract class RecordModelBuilder<RECORD> {
 
 	public Function<String, Comparator<RECORD>> getCustomFieldSorter() {
 		return customFieldSorter;
+	}
+
+	public BiFunction<RECORD, String, Boolean> getCustomFullTextFilter() {
+		return customFullTextFilter;
+	}
+
+	public void setCustomFullTextFilter(BiFunction<RECORD, String, Boolean> customFullTextFilter) {
+		this.customFullTextFilter = customFullTextFilter;
 	}
 
 	private Comparator<RECORD> getQuerySorter() {

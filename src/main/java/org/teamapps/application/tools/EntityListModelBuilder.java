@@ -24,6 +24,7 @@ import org.teamapps.udb.filter.TimeIntervalFilter;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -89,7 +90,7 @@ public class EntityListModelBuilder<RECORD> extends RecordModelBuilder<RECORD> {
 	@Override
 	public List<RECORD> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter) {
 		List<RECORD> filteredEntities = null;
-		if (entityStringFunction != null && fullTextQuery != null && !fullTextQuery.isBlank()) {
+		if (entityStringFunction != null && getCustomFullTextFilter() == null && fullTextQuery != null && !fullTextQuery.isBlank()) {
 			String query = fullTextQuery.toLowerCase();
 			filteredEntities = records.stream().filter(RECORD -> match(entityStringFunction.apply(RECORD), query)).collect(Collectors.toList());
 		}
@@ -102,6 +103,12 @@ public class EntityListModelBuilder<RECORD> extends RecordModelBuilder<RECORD> {
 
 		if (filteredEntities == null) {
 			filteredEntities = records;
+		}
+
+		if (getCustomFullTextFilter() != null && fullTextQuery != null && !fullTextQuery.isBlank()) {
+			String query = fullTextQuery.toLowerCase();
+			BiFunction<RECORD, String, Boolean> customFullTextFilter = getCustomFullTextFilter();
+			filteredEntities = records.stream().filter(RECORD -> customFullTextFilter.apply(RECORD, query)).collect(Collectors.toList());
 		}
 		return filteredEntities;
 	}

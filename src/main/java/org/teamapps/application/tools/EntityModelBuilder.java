@@ -30,7 +30,9 @@ import org.teamapps.universaldb.pojo.Query;
 import org.teamapps.universaldb.record.EntityBuilder;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordModelBuilder<ENTITY> {
 
@@ -53,10 +55,16 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 			NumericFilter numericFilter = tableIndex.getColumnIndex(timeIntervalFilter.getFieldName()).getType() == IndexType.INT ? timeIntervalFilter.getIntFilter() : timeIntervalFilter.getFilter();
 			query.addNumericFilter(timeIntervalFilter.getFieldName(), numericFilter);
 		}
-		if (fullTextQuery != null && !fullTextQuery.isBlank()) {
+		if (getCustomFullTextFilter() == null && fullTextQuery != null && !fullTextQuery.isBlank()) {
 			query.addFullTextQuery(fullTextQuery);
 		}
-		return (getSortField() != null && getCustomFieldSorter() == null) ? query.execute(getSortField(), isSortAscending()) : query.execute();
+		List<ENTITY> entities = (getSortField() != null && getCustomFieldSorter() == null) ? query.execute(getSortField(), isSortAscending()) : query.execute();
+		if (getCustomFullTextFilter() != null && fullTextQuery != null && !fullTextQuery.isBlank()) {
+			BiFunction<ENTITY, String, Boolean> customFullTextFilter = getCustomFullTextFilter();
+			String fullTextSearchQuery = fullTextQuery.toLowerCase();
+			return entities.stream().filter(entity -> customFullTextFilter.apply(entity, fullTextSearchQuery)).collect(Collectors.toList());
+		}
+		return entities;
 	}
 
 
