@@ -22,6 +22,8 @@ package org.teamapps.application.api.user;
 import com.ibm.icu.util.ULocale;
 import org.teamapps.ux.session.SessionContext;
 
+import java.text.Collator;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,5 +45,11 @@ public interface SessionUser {
 
 	List<String> getRankedLanguages();
 
+	default Comparator<String> getComparator(boolean ascending) {
+		Collator collator = Collator.getInstance(getLocale());
+		collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+		collator.setStrength(Collator.PRIMARY);
+		return ascending ? Comparator.nullsFirst(collator) : Comparator.nullsLast(collator.reversed());
+	}
 
 }
