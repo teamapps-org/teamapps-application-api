@@ -100,7 +100,32 @@ public interface LocalizationData {
 	}
 
 	static LocalizationData createDictionaryData(ClassLoader classLoader) {
-		return createFromPropertyFiles("org.teamapps.application.api.localization.dictionary", classLoader, Locale.ENGLISH);
+		return createFromPropertyFiles("org.teamapps.application.api.localization.dictionary", classLoader,
+				Locale.ENGLISH,
+				Locale.GERMAN,
+				Locale.FRENCH,
+				Locale.ITALIAN,
+				Locale.JAPANESE,
+				Locale.CHINESE,
+				Locale.forLanguageTag("bg"),
+				Locale.forLanguageTag("cs"),
+				Locale.forLanguageTag("da"),
+				Locale.forLanguageTag("el"),
+				Locale.forLanguageTag("es"),
+				Locale.forLanguageTag("et"),
+				Locale.forLanguageTag("fi"),
+				Locale.forLanguageTag("hu"),
+				Locale.forLanguageTag("lt"),
+				Locale.forLanguageTag("lv"),
+				Locale.forLanguageTag("nl"),
+				Locale.forLanguageTag("pl"),
+				Locale.forLanguageTag("pt"),
+				Locale.forLanguageTag("ro"),
+				Locale.forLanguageTag("ru"),
+				Locale.forLanguageTag("sk"),
+				Locale.forLanguageTag("sl"),
+				Locale.forLanguageTag("sv")
+		);
 	}
 
 	static LocalizationEntrySet createEntrySet(ResourceBundle bundle, Locale translation) {
