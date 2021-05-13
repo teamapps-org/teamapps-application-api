@@ -23,6 +23,7 @@ import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
+import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
 
@@ -61,6 +62,8 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	void showPerspective(Perspective perspective);
 
 	ApplicationDesktop createApplicationDesktop();
+
+	UiComponentFactory getComponentFactory();
 
 	boolean isDarkTheme();
 
