@@ -116,7 +116,7 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-reporting</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>1.8</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
