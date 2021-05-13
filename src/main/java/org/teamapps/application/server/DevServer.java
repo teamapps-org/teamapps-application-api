@@ -27,6 +27,7 @@ import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.ux.IconUtils;
 import org.teamapps.application.ux.combo.ComboBoxUtils;
 import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.event.Event;
 import org.teamapps.icon.antu.AntuIcon;
 import org.teamapps.icon.flags.FlagIcon;
 import org.teamapps.icon.fontawesome.FontAwesomeIcon;
@@ -62,6 +63,15 @@ public class DevServer {
 	private File path = new File("./dev-database");
 	private List<OrganizationUnitView> organizationUnitViews = Collections.emptyList();
 	private DocumentConverter documentConverter;
+	public Event<Void> onDevServerBooted = new Event<>();
+
+	private static Class standardIconClass;
+	static {
+		try {
+			standardIconClass = Class.forName("org.teamapps.icon.standard.StandardIcon");
+		} catch (Exception var1) {
+		}
+	}
 
 	public static DevServer create(ApplicationBuilder applicationBuilder) {
 		return new DevServer(applicationBuilder);
@@ -108,12 +118,16 @@ public class DevServer {
 				universalDB.installAuxiliaryModelClassed(databaseModel, classLoader);
 				universalDB.installTableViews(databaseModel, classLoader);
 			}
+			onDevServerBooted.fire();
 			applicationBuilder.getOnApplicationInstalled().fire();
 			applicationBuilder.getOnApplicationLoaded().fire();
 			WebController webController = sessionContext -> {
 				SessionContext context = SessionContext.current();
 
 				registerBaseIconProvider(context);
+				if (standardIconClass != null) {
+					context.getIconProvider().registerIconLibrary(standardIconClass);
+				}
 
 				RootPanel rootPanel = context.addRootPanel();
 
@@ -125,7 +139,8 @@ public class DevServer {
 				elegantPanel.setCssStyle(".content-container", "display", "flex");
 				elegantPanel.setCssStyle(".content-container", "justify-content", "center");
 
-				ApplicationLocalizationProvider localizationProvider = new DevLocalizationProvider(applicationBuilder);
+				DevLocalizationProvider localizationProvider = new DevLocalizationProvider(applicationBuilder);
+				localizationProvider.setLanguage(context.getLocale().getLanguage());
 
    				List<RoleEntry> roleEntries = new ArrayList<>();
 				roleEntries.add(new RoleEntry(null));
@@ -137,7 +152,7 @@ public class DevServer {
 				List<OrganizationUnitView> orgUnits = organizationUnitViews != null && !organizationUnitViews.isEmpty() ? organizationUnitViews : OrganizationUnitView.getAll();
 				ComboBox<OrganizationUnitView> rootUnitsComboBox = createOrgUnitComboBox(localizationProvider, orgUnits);
 				ComboBox<Language> languageComboBox = Language.createComboBox(localizationProvider);
-				languageComboBox.setValue(Language.EN_ENGLISH);
+				languageComboBox.setValue(Language.getLanguageByIsoCode(context.getLocale().getLanguage()));
 				if (!orgUnits.isEmpty()) {
 					rootUnitsComboBox.setValue(orgUnits.get(0));
 				}
@@ -157,8 +172,10 @@ public class DevServer {
 
 				loginButton.onClicked.addListener(() -> {
 					ApplicationRole applicationRole = roleEntryComboBox.getValue().getRole();
-					Locale locale = Locale.forLanguageTag(languageComboBox.getValue().getIsoCode());
+					String languageIso = languageComboBox.getValue().getIsoCode();
+					Locale locale = Locale.forLanguageTag(languageIso);
 					List<OrganizationUnitView> units = getAllUnits(rootUnitsComboBox.getValue());
+					localizationProvider.setLanguage(languageIso);
 					DevApplication devApplication = new DevApplication(applicationRole, context, locale, localizationProvider, applicationBuilder, units, documentConverter);
 					rootPanel.setContent(devApplication.getComponent());
 					context.showDefaultBackground(0);

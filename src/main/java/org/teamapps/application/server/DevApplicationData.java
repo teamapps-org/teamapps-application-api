@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,12 +19,13 @@
  */
 package org.teamapps.application.server;
 
-import org.teamapps.application.api.application.BaseApplicationBuilder;
 import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.application.BaseApplicationBuilder;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.privilege.*;
+import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
@@ -35,7 +36,9 @@ import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.session.SessionContext;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 
 public class DevApplicationData implements ApplicationInstanceData {
 
@@ -49,6 +52,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 	private final ResponsiveApplication responsiveApplication;
 	private final SessionUser sessionUser;
 	private ApplicationPrivilegeProvider applicationPrivilegeProvider;
+	private UiComponentFactory uiComponentFactory;
 
 	public DevApplicationData(ApplicationRole applicationRole, SessionContext context, Locale locale, ApplicationLocalizationProvider localizationProvider, BaseApplicationBuilder applicationBuilder, List<OrganizationUnitView> organizationUnitViews, DocumentConverter documentConverter, ResponsiveApplication responsiveApplication) {
 		this.applicationRole = applicationRole;
@@ -61,6 +65,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 		this.responsiveApplication = responsiveApplication;
 		sessionUser = new DevSessionUser(context, locale);
 		applicationPrivilegeProvider = applicationRole != null ? new DevApplicationRolePrivilegeProvider(applicationRole, new HashSet<>(organizationUnitViews)) : null;
+		this.uiComponentFactory = new DevUiComponentFactory(this);
 	}
 
 	@Override
@@ -99,6 +104,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
+	public UiComponentFactory getComponentFactory() {
+		return uiComponentFactory;
+	}
+
+	@Override
 	public boolean isDarkTheme() {
 		return false;
 	}
@@ -117,8 +127,6 @@ public class DevApplicationData implements ApplicationInstanceData {
 	public void writeExceptionLog(String title, Throwable throwable) {
 		System.out.println("Exception: " + title + ", " + throwable.getMessage());
 	}
-
-
 
 	@Override
 	public boolean isAllowed(SimplePrivilege simplePrivilege) {

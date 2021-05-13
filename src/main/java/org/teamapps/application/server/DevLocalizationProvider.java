@@ -33,11 +33,18 @@ public class DevLocalizationProvider implements ApplicationLocalizationProvider 
 	private final BaseApplicationBuilder applicationBuilder;
 	private final Map<String, Map<String, String>> localizationMap;
 	private final Map<String, Map<String, String>> dictionaryMap;
+	private String language = "en";
 
 	public DevLocalizationProvider(BaseApplicationBuilder applicationBuilder) {
 		this.applicationBuilder = applicationBuilder;
 		this.localizationMap = applicationBuilder.getLocalizationData() != null ? applicationBuilder.getLocalizationData().createLocalizationMapByLanguage() : new HashMap<>();
 		this.dictionaryMap = LocalizationData.createDictionaryData(getClass().getClassLoader()).createLocalizationMapByLanguage();
+	}
+
+	public void setLanguage(String language) {
+		if (language != null && !language.isEmpty()) {
+			this.language = language;
+		}
 	}
 
 	@Override
@@ -56,6 +63,14 @@ public class DevLocalizationProvider implements ApplicationLocalizationProvider 
 	}
 
 	private String getLocalized(String key) {
+		Map<String, String> translationMap = localizationMap.get(language);
+		if (translationMap != null && translationMap.containsKey(key)) {
+			return translationMap.get(key);
+		}
+		translationMap = dictionaryMap.get(language);
+		if (translationMap != null && translationMap.containsKey(key)) {
+			return translationMap.get(key);
+		}
 		for (Map<String, String> map : localizationMap.values()) {
 			if (map.containsKey(key)) {
 				return map.get(key);
