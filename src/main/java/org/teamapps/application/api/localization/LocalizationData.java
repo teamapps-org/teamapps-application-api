@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,6 +41,13 @@ public interface LocalizationData {
 
 	default Set<String> getLanguageSet() {
 		return getLocalizationEntrySets().stream()
+				.map(LocalizationEntrySet::getLanguage)
+				.collect(Collectors.toSet());
+	}
+
+	default Set<String> getMachineTranslatedLanguages() {
+		return getLocalizationEntrySets().stream()
+				.filter(LocalizationEntrySet::isMachineTranslation)
 				.map(LocalizationEntrySet::getLanguage)
 				.collect(Collectors.toSet());
 	}
@@ -78,58 +85,69 @@ public interface LocalizationData {
 	}
 
 	static LocalizationData createFromResourceBundle(ResourceBundle resourceBundle, Locale language) {
-		return create(locale -> resourceBundle, language);
+		return create(locale -> resourceBundle, new LocalizationLanguages(language));
 	}
 
 	static LocalizationData createFromPropertyFiles(String baseName, ClassLoader classLoader, Locale... translations) {
-		return createFromPropertyFiles(baseName, "properties", classLoader, translations);
+		return createFromPropertyFiles(baseName, "properties", classLoader, new LocalizationLanguages(translations));
 	}
 
-	static LocalizationData createFromPropertyFiles(String baseName, String resourceFileSuffix, ClassLoader classLoader, Locale... translations) {
+	static LocalizationData createFromPropertyFiles(String baseName, ClassLoader classLoader, LocalizationLanguages localizationLanguages) {
+		return createFromPropertyFiles(baseName, "properties", classLoader, localizationLanguages);
+	}
+
+	static LocalizationData createFromPropertyFiles(String baseName, String resourceFileSuffix, ClassLoader classLoader, LocalizationLanguages localizationLanguages) {
 		Function<Locale, ResourceBundle> resourceBundleByLocaleFunction = locale -> ResourceBundle.getBundle(baseName, locale, classLoader, new TeamAppsResourceBundleControl(resourceFileSuffix, Locale.ENGLISH));
-		return create(resourceBundleByLocaleFunction, translations);
+		return create(resourceBundleByLocaleFunction, localizationLanguages);
 	}
 
-	static LocalizationData create(Function<Locale, ResourceBundle> resourceBundleByLocaleFunction, Locale... translations) {
+	static LocalizationData create(Function<Locale, ResourceBundle> resourceBundleByLocaleFunction, LocalizationLanguages localizationLanguages) {
 		List<LocalizationEntrySet> entrySets = new ArrayList<>();
-		for (Locale translation : translations) {
+		for (Locale translation : localizationLanguages.getOriginalLanguages()) {
 			ResourceBundle resourceBundle = resourceBundleByLocaleFunction.apply(translation);
-			entrySets.add(createEntrySet(resourceBundle, translation));
+			entrySets.add(createEntrySet(resourceBundle, translation, false));
+		}
+		for (Locale translation : localizationLanguages.getMachineTranslatedLanguages()) {
+			ResourceBundle resourceBundle = resourceBundleByLocaleFunction.apply(translation);
+			entrySets.add(createEntrySet(resourceBundle, translation, true));
 		}
 		return () -> entrySets;
 	}
 
 	static LocalizationData createDictionaryData(ClassLoader classLoader) {
 		return createFromPropertyFiles("org.teamapps.application.api.localization.dictionary", classLoader,
-				Locale.ENGLISH,
-				Locale.GERMAN,
-				Locale.FRENCH,
-				Locale.ITALIAN,
-				Locale.JAPANESE,
-				Locale.CHINESE,
-				Locale.forLanguageTag("bg"),
-				Locale.forLanguageTag("cs"),
-				Locale.forLanguageTag("da"),
-				Locale.forLanguageTag("el"),
-				Locale.forLanguageTag("es"),
-				Locale.forLanguageTag("et"),
-				Locale.forLanguageTag("fi"),
-				Locale.forLanguageTag("hu"),
-				Locale.forLanguageTag("lt"),
-				Locale.forLanguageTag("lv"),
-				Locale.forLanguageTag("nl"),
-				Locale.forLanguageTag("pl"),
-				Locale.forLanguageTag("pt"),
-				Locale.forLanguageTag("ro"),
-				Locale.forLanguageTag("ru"),
-				Locale.forLanguageTag("sk"),
-				Locale.forLanguageTag("sl"),
-				Locale.forLanguageTag("sv")
+				new LocalizationLanguages(
+						Locale.ENGLISH
+				).setMachineTranslatedLanguages(
+						Locale.GERMAN,
+						Locale.FRENCH,
+						Locale.ITALIAN,
+						Locale.JAPANESE,
+						Locale.CHINESE,
+						Locale.forLanguageTag("bg"),
+						Locale.forLanguageTag("cs"),
+						Locale.forLanguageTag("da"),
+						Locale.forLanguageTag("el"),
+						Locale.forLanguageTag("es"),
+						Locale.forLanguageTag("et"),
+						Locale.forLanguageTag("fi"),
+						Locale.forLanguageTag("hu"),
+						Locale.forLanguageTag("lt"),
+						Locale.forLanguageTag("lv"),
+						Locale.forLanguageTag("nl"),
+						Locale.forLanguageTag("pl"),
+						Locale.forLanguageTag("pt"),
+						Locale.forLanguageTag("ro"),
+						Locale.forLanguageTag("ru"),
+						Locale.forLanguageTag("sk"),
+						Locale.forLanguageTag("sl"),
+						Locale.forLanguageTag("sv")
+				)
 		);
 	}
 
-	static LocalizationEntrySet createEntrySet(ResourceBundle bundle, Locale translation) {
-		LocationEntrySetImpl entrySet = new LocationEntrySetImpl(translation.getLanguage());
+	static LocalizationEntrySet createEntrySet(ResourceBundle bundle, Locale translation, boolean machineTranslation) {
+		LocalizationEntrySetImpl entrySet = new LocalizationEntrySetImpl(translation.getLanguage(), machineTranslation);
 		if (bundle instanceof PropertyResourceBundle) {
 			PropertyResourceBundle propertyResourceBundle = (PropertyResourceBundle) bundle;
 			for (String key : bundle.keySet()) {

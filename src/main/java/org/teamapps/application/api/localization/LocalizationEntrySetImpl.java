@@ -22,13 +22,15 @@ package org.teamapps.application.api.localization;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationEntrySetImpl implements LocalizationEntrySet {
+public class LocalizationEntrySetImpl implements LocalizationEntrySet {
 
 	private final String language;
+	private final boolean machineTranslation;
 	private List<LocalizationEntry> entries = new ArrayList();
 
-	public LocationEntrySetImpl(String language) {
+	public LocalizationEntrySetImpl(String language, boolean machineTranslation) {
 		this.language = language;
+		this.machineTranslation = machineTranslation;
 	}
 
 	public void addEntry(String key, String value) {
@@ -43,5 +45,10 @@ public class LocationEntrySetImpl implements LocalizationEntrySet {
 	@Override
 	public List<LocalizationEntry> getEntries() {
 		return entries;
+	}
+
+	@Override
+	public boolean isMachineTranslation() {
+		return machineTranslation;
 	}
 }
