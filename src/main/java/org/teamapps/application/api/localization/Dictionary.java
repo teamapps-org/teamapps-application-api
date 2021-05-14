@@ -39,6 +39,7 @@ public class Dictionary {
 	public static final String DELETE_RECORD = "org.teamapps.dictionary.deleteRecord";
 	public static final String EXECUTE = "org.teamapps.dictionary.execute";
 	public static final String PRINT = "org.teamapps.dictionary.print";
+	public static final String APPLY = "org.teamapps.dictionary.apply";
 	public static final String CUSTOM = "org.teamapps.dictionary.custom";
 	public static final String SAVE = "org.teamapps.dictionary.save";
 	public static final String SAVE_CHANGES = "org.teamapps.dictionary.saveChanges";
@@ -160,6 +161,9 @@ public class Dictionary {
 	public static final String SENTENCE_THE_PASSWORD_WAS_CHANGED_SUCCESSFUL__ = "org.teamapps.dictionary.thePasswordWasChangedSuccessfullyYouCanNowLogIn";
 	public static final String SENTENCE_YOUR_ACCOUNT_WAS_CREATED_SUCCESSFUL__ = "org.teamapps.dictionary.yourAccountWasCreatedSuccessfullyYouCanNowLogIn";
 	//record data
+	public static final String META_DATA = "org.teamapps.dictionary.metaData";
+	public static final String CREATION = "org.teamapps.dictionary.creation";
+	public static final String MODIFICATION = "org.teamapps.dictionary.modification";
 	public static final String CREATION_DATE = "org.teamapps.dictionary.creationDate";
 	public static final String MODIFICATION_DATE = "org.teamapps.dictionary.modificationDate";
 	public static final String DELETION_DATE = "org.teamapps.dictionary.deletionDate";

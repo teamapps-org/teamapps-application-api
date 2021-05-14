@@ -20,11 +20,12 @@
 package org.teamapps.application.api.ui;
 
 import org.teamapps.universaldb.pojo.Entity;
-import org.teamapps.ux.component.form.ResponsiveForm;
+import org.teamapps.ux.component.form.ResponsiveFormLayout;
+import org.teamapps.ux.component.form.ResponsiveFormSection;
 
 public interface FormMetaFields {
 
-	void addMetaFields(ResponsiveForm<?> form);
+	ResponsiveFormSection addMetaFields(ResponsiveFormLayout formLayout, boolean withIcons);
 
 	void updateEntity(Entity<?> entity);
 }

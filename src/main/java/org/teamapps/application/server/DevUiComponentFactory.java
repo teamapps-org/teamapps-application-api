@@ -25,6 +25,7 @@ import org.teamapps.application.api.ui.FormMetaFields;
 import org.teamapps.application.api.ui.TranslationKeyField;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.ux.UiUtils;
+import org.teamapps.application.ux.form.FormMetaFieldsImpl;
 import org.teamapps.application.ux.localize.TranslatableField;
 import org.teamapps.application.ux.org.OrganizationViewUtils;
 import org.teamapps.data.extract.PropertyProvider;
@@ -112,7 +113,7 @@ public class DevUiComponentFactory implements UiComponentFactory {
 
 	@Override
 	public FormMetaFields createFormMetaFields() {
-		return null;
+		return new FormMetaFieldsImpl(applicationInstanceData);
 	}
 
 	@Override

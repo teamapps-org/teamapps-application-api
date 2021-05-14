@@ -17,6 +17,7 @@ Delete
 Delete record
 Execute
 Print
+Apply
 Custom
 Save
 Save changes
@@ -144,6 +145,9 @@ The password was changed successfully - you can now log in.
 Your account was created successfully - you can now log in.
 
 ::record data
+Meta data
+Creation
+Modification
 Creation date
 Modification date
 Deletion date
