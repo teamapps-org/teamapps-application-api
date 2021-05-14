@@ -63,7 +63,7 @@ public class ApplicationWindow {
 	}
 
 	public ToolbarButton addSaveButton() {
-		return addSaveButton(applicationInstanceData.getLocalized(Dictionary.SAVE_CLOSE), applicationInstanceData.getLocalized(Dictionary.SAVE_AND_CLOSE_WINDOW));
+		return addSaveButton(applicationInstanceData.getLocalized(Dictionary.SAVE), applicationInstanceData.getLocalized(Dictionary.SAVE_AND_CLOSE_WINDOW));
 	}
 
 	public ToolbarButton addSaveButton(String title, String description) {
@@ -73,7 +73,7 @@ public class ApplicationWindow {
 	}
 
 	public ToolbarButton addCancelButton() {
-		return addCancelButton(applicationInstanceData.getLocalized(Dictionary.CANCEL_CLOSE), applicationInstanceData.getLocalized(Dictionary.CANCEL_AND_CLOSE_WINDOW));
+		return addCancelButton(applicationInstanceData.getLocalized(Dictionary.CANCEL), applicationInstanceData.getLocalized(Dictionary.CANCEL_AND_CLOSE_WINDOW));
 	}
 
 	public ToolbarButton addCancelButton(String title, String description) {

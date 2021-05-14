@@ -65,8 +65,7 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 			createdByField.setVisible(createdByField.getValue() != 0);
 			modifiedByField.setVisible(modifiedByField.getValue() != 0);
 			creationDateField.setVisible(creationDateField.getValue() != null);
-			modificationDateField.setVisible(modificationDateField.getValue() != null);
-			System.out.println(modifiedByField.getValue());
+			modificationDateField.setVisible(modificationDateField.getValue() != null && !modificationDateField.getValue().equals(creationDateField.getValue()));
 		}
 	}
 }
