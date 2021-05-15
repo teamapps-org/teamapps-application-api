@@ -81,6 +81,7 @@ public class DevUiComponentFactory implements UiComponentFactory {
 	public TranslationKeyField createTranslationKeyField(String linkButtonCaption) {
 		final TextField selectionField = new TextField();
 		final TextField keyField = new TextField();
+		final LinkButton linkButton = new LinkButton(linkButtonCaption);
 		keyField.setEditingMode(FieldEditingMode.READONLY);
 		return new TranslationKeyField() {
 			@Override
@@ -95,7 +96,7 @@ public class DevUiComponentFactory implements UiComponentFactory {
 
 			@Override
 			public LinkButton getKeyLinkButton() {
-				return new LinkButton(linkButtonCaption);
+				return linkButton;
 			}
 
 			@Override
