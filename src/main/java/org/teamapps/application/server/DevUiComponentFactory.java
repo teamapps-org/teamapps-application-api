@@ -79,7 +79,7 @@ public class DevUiComponentFactory implements UiComponentFactory {
 	}
 
 	@Override
-	public TranslationKeyField createTranslationKeyField(String linkButtonCaption) {
+	public TranslationKeyField createTranslationKeyField(String linkButtonCaption, boolean allowMultiLine, boolean selectionFieldWithKey) {
 		final TextField selectionField = new TextField();
 		final TextField keyField = new TextField();
 		final LinkButton linkButton = new LinkButton(linkButtonCaption);

@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.ui;
 
+import com.graphbuilder.math.func.AbsFunction;
 import org.teamapps.application.ux.localize.TranslatableField;
 import org.teamapps.model.controlcenter.OrganizationUnitTypeView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
@@ -40,7 +41,11 @@ public interface UiComponentFactory {
 
 	TranslatableField createTranslatableField();
 
-	TranslationKeyField createTranslationKeyField(String linkButtonCaption);
+	default TranslationKeyField createTranslationKeyField(String linkButtonCaption) {
+		return createTranslationKeyField(linkButtonCaption, false, false);
+	}
+
+	TranslationKeyField createTranslationKeyField(String linkButtonCaption, boolean allowMultiLine, boolean selectionFieldWithKey);
 
 	FormMetaFields createFormMetaFields();
 
