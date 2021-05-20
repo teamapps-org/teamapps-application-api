@@ -29,6 +29,7 @@ import org.teamapps.application.ux.form.FormMetaFieldsImpl;
 import org.teamapps.application.ux.localize.TranslatableField;
 import org.teamapps.application.ux.org.OrganizationViewUtils;
 import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.event.Event;
 import org.teamapps.model.controlcenter.OrganizationUnitTypeView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.ux.component.field.AbstractField;
@@ -82,8 +83,14 @@ public class DevUiComponentFactory implements UiComponentFactory {
 		final TextField selectionField = new TextField();
 		final TextField keyField = new TextField();
 		final LinkButton linkButton = new LinkButton(linkButtonCaption);
+		final Event<String> onValueChanged = new Event<>();
 		keyField.setEditingMode(FieldEditingMode.READONLY);
 		return new TranslationKeyField() {
+			@Override
+			public Event<String> getOnValueChanged() {
+				return onValueChanged;
+			}
+
 			@Override
 			public AbstractField<String> getSelectionField() {
 				return selectionField;

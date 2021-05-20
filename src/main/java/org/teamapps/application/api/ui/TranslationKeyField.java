@@ -25,6 +25,8 @@ import org.teamapps.ux.component.linkbutton.LinkButton;
 
 public interface TranslationKeyField {
 
+	Event<String> getOnValueChanged();
+
 	AbstractField<String> getSelectionField();
 
 	AbstractField<String> getKeyDisplayField();
