@@ -70,6 +70,10 @@ Import
 Export
 Recycle bin
 Show recycle bin
+New
+Reset
+Discard
+Overwrite
 
 ::options
 OK
@@ -120,6 +124,13 @@ P.O. Box
 Latitude
 Longitude
 
+::reports
+Currency
+Max
+Min
+Sum
+Average
+
 ::login
 Login
 Logout
@@ -156,6 +167,8 @@ Created by
 Modified by
 Deleted by
 Restored by
+Last record
+First record
 This field is required.
 This field must not be empty
 Field value must not be empty
@@ -197,6 +210,7 @@ Next
 Date
 Time
 Timestamp
+Duration
 
 ::grouping
 Group

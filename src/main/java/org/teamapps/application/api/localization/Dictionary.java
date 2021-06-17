@@ -92,6 +92,10 @@ public class Dictionary {
 	public static final String EXPORT = "org.teamapps.dictionary.export";
 	public static final String RECYCLE_BIN = "org.teamapps.dictionary.recycleBin";
 	public static final String SHOW_RECYCLE_BIN = "org.teamapps.dictionary.showRecycleBin";
+	public static final String NEW = "org.teamapps.dictionary.new";
+	public static final String RESET = "org.teamapps.dictionary.reset";
+	public static final String DISCARD = "org.teamapps.dictionary.discard";
+	public static final String OVERWRITE = "org.teamapps.dictionary.overwrite";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";
@@ -137,6 +141,12 @@ public class Dictionary {
 	public static final String P_OBOX = "org.teamapps.dictionary.pOBox";
 	public static final String LATITUDE = "org.teamapps.dictionary.latitude";
 	public static final String LONGITUDE = "org.teamapps.dictionary.longitude";
+	//reports
+	public static final String CURRENCY = "org.teamapps.dictionary.currency";
+	public static final String MAX = "org.teamapps.dictionary.max";
+	public static final String MIN = "org.teamapps.dictionary.min";
+	public static final String SUM = "org.teamapps.dictionary.sum";
+	public static final String AVERAGE = "org.teamapps.dictionary.average";
 	//login
 	public static final String LOGIN = "org.teamapps.dictionary.login";
 	public static final String LOGOUT = "org.teamapps.dictionary.logout";
@@ -172,6 +182,8 @@ public class Dictionary {
 	public static final String MODIFIED_BY = "org.teamapps.dictionary.modifiedBy";
 	public static final String DELETED_BY = "org.teamapps.dictionary.deletedBy";
 	public static final String RESTORED_BY = "org.teamapps.dictionary.restoredBy";
+	public static final String LAST_RECORD = "org.teamapps.dictionary.lastRecord";
+	public static final String FIRST_RECORD = "org.teamapps.dictionary.firstRecord";
 	public static final String THIS_FIELD_IS_REQUIRED = "org.teamapps.dictionary.thisFieldIsRequired";
 	public static final String THIS_FIELD_MUST_NOT_BE_EMPTY = "org.teamapps.dictionary.thisFieldMustNotBeEmpty";
 	public static final String FIELD_VALUE_MUST_NOT_BE_EMPTY = "org.teamapps.dictionary.fieldValueMustNotBeEmpty";
@@ -212,6 +224,7 @@ public class Dictionary {
 	public static final String DATE = "org.teamapps.dictionary.date";
 	public static final String TIME = "org.teamapps.dictionary.time";
 	public static final String TIMESTAMP = "org.teamapps.dictionary.timestamp";
+	public static final String DURATION = "org.teamapps.dictionary.duration";
 	//grouping
 	public static final String GROUP = "org.teamapps.dictionary.group";
 	public static final String GROUPING = "org.teamapps.dictionary.grouping";
