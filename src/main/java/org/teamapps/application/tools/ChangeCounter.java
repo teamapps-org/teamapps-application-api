@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.tools;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -86,10 +87,56 @@ public class ChangeCounter {
 		errorCountMap.compute(name, (k, v) -> (v == null) ? 1 : v + 1);
 	}
 
+	public int getUpdated() {
+		return updateCountMap.getOrDefault(defaultRecord, 0);
+	}
+	
+	public int getCreated() {
+		return createCountMap.getOrDefault(defaultRecord, 0);
+	}
+
+	public int getDeleted() {
+		return createCountMap.getOrDefault(defaultRecord, 0);
+	}
+
+	public int getError() {
+		return createCountMap.getOrDefault(defaultRecord, 0);
+	}
+
+	public int getUpdated(String key) {
+		return updateCountMap.getOrDefault(key, 0);
+	}
+
+	public int getCreated(String key) {
+		return createCountMap.getOrDefault(key, 0);
+	}
+
+	public int getDeleted(String key) {
+		return createCountMap.getOrDefault(key, 0);
+	}
+
+	public int getError(String key) {
+		return createCountMap.getOrDefault(key, 0);
+	}
+
+	public String getDurationAsString() {
+		return Duration.ofMillis(System.currentTimeMillis() - time).toString().substring(2);
+	}
+
+	public int getDuration() {
+		return (int) (System.currentTimeMillis() - time);
+	}
+
 	public String getResults() {
 		return getTime() + ", " + getKeys().stream()
 				.map(this::getResult)
 				.collect(Collectors.joining(", "));
+	}
+
+	public String getResults(String delimiter) {
+		return getTime() + delimiter + getKeys().stream()
+				.map(this::getResult)
+				.collect(Collectors.joining(delimiter));
 	}
 
 	public String getCompactResults() {
@@ -125,6 +172,7 @@ public class ChangeCounter {
 		set.addAll(createCountMap.keySet());
 		set.addAll(updateCountMap.keySet());
 		set.addAll(deleteCountMap.keySet());
+		set.addAll(errorCountMap.keySet());
 		return set.stream().sorted().collect(Collectors.toList());
 	}
 }
