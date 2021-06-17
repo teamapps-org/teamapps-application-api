@@ -78,6 +78,7 @@ public abstract class RecordModelBuilder<RECORD> {
 
 	private int countRecords;
 	private List<RECORD> records;
+	private List<RECORD> timeGraphRecords;
 	private TwoWayBindableValue<RECORD> selectedRecord = TwoWayBindableValue.create();
 	private TwoWayBindableValue<Integer> selectedRecordPosition = TwoWayBindableValue.create();
 
@@ -225,7 +226,7 @@ public abstract class RecordModelBuilder<RECORD> {
 	}
 
 	public InfiniteItemViewModel<RECORD> createInfiniteItemViewModel() {
-		InfiniteItemViewModel<RECORD> model = new AbstractInfiniteItemViewModel<RECORD>() {
+		InfiniteItemViewModel<RECORD> model = new AbstractInfiniteItemViewModel<>() {
 			@Override
 			public int getCount() {
 				return countRecords;
@@ -258,9 +259,9 @@ public abstract class RecordModelBuilder<RECORD> {
 			}
 		};
 		onDataChanged.addListener(() -> {
-			long[] data = new long[records.size()];
-			for (int i = 0; i < records.size(); i++) {
-				data[i] = recordTimeFunction.apply(records.get(i));
+			long[] data = new long[timeGraphRecords.size()];
+			for (int i = 0; i < timeGraphRecords.size(); i++) {
+				data[i] = recordTimeFunction.apply(timeGraphRecords.get(i));
 			}
 			delegationModel.setEventTimestampsForDataSeriesIds(seriesId, data);
 		});
@@ -279,7 +280,6 @@ public abstract class RecordModelBuilder<RECORD> {
 		timeGraph.addLine(line);
 		timeGraph.onIntervalSelected.addListener(interval -> {
 			setTimeIntervalFilter(interval != null ? new TimeIntervalFilter(fieldName, interval.getMin(), interval.getMax()) : null);
-			SessionContext.current().queueCommand(new UiTimeGraph.SetSelectedIntervalCommand(timeGraph.getId(), null));
 		});
 		timeGraph.setSelectedInterval(null);
 		return timeGraph;
@@ -412,8 +412,17 @@ public abstract class RecordModelBuilder<RECORD> {
 	}
 
 	private void queryRecords() {
-		List<RECORD> result = queryRecords(fullTextQuery, timeIntervalFilter);
+		records = performQuery(timeIntervalFilter);
+		countRecords = records.size();
+		if (timeIntervalFilter != null) {
+			timeGraphRecords = performQuery(null);
+		} else {
+			timeGraphRecords = records;
+		}
+	}
 
+	private List<RECORD> performQuery(TimeIntervalFilter timeIntervalFilter) {
+		List<RECORD> result = queryRecords(fullTextQuery, timeIntervalFilter);
 		if (customFilter != null) {
 			result = result.stream()
 					.filter(record -> customFilter.test(record))
@@ -423,8 +432,7 @@ public abstract class RecordModelBuilder<RECORD> {
 		if (sorter != null) {
 			result = result.stream().sorted(sorter).collect(Collectors.toList());
 		}
-		this.records = result;
-		this.countRecords = records.size();
+		return result;
 	}
 
 	public abstract List<RECORD> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter);
