@@ -22,6 +22,7 @@ package org.teamapps.application.ux.combo;
 import org.teamapps.application.ux.UiUtils;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.ux.component.field.combobox.ComboBox;
+import org.teamapps.ux.component.field.combobox.TagComboBox;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.ComboBoxModel;
@@ -66,6 +67,16 @@ public class ComboBoxUtils {
 			List<RECORD> records = recordSupplier.get();
 			return records != null ? records.stream().filter(record -> recordFilterFunction.apply(record, query)).limit(limit).collect(Collectors.toList()) : Collections.emptyList();
 		};
+	}
+
+	public static <RECORD> TagComboBox<RECORD> createTagComboBox(Supplier<List<RECORD>> records, PropertyProvider<RECORD> propertyProvider, Template template) {
+		TagComboBox<RECORD> tagComboBox = new TagComboBox<>(template);
+		tagComboBox.setPropertyProvider(propertyProvider);
+		Function<RECORD, String> recordToStringFunction = UiUtils.createRecordToStringFunction(propertyProvider);
+		tagComboBox.setRecordToStringFunction(recordToStringFunction);
+		tagComboBox.setModel(query -> query == null || query.isBlank() ? records.get() : records.get().stream().filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList()));
+		return tagComboBox;
+
 	}
 
 }

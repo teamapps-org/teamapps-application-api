@@ -13,7 +13,7 @@
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
         <teamapps-version>0.9.101</teamapps-version>
         <universal-db-version>0.5.3-SNAPSHOT</universal-db-version>
-        <teamapps-universal-db-integration-version>0.10</teamapps-universal-db-integration-version>
+        <teamapps-universal-db-integration-version>0.11-SNAPSHOT</teamapps-universal-db-integration-version>
     </properties>
 
     <name>TeamApps Application API</name>
