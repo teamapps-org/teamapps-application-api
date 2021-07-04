@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@
 package org.teamapps.application.ux.window;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.application.ApplicationInstanceDataMethods;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.icons.Icon;
@@ -30,13 +31,14 @@ import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.session.SessionContext;
 
-public class ApplicationWindow {
+public class ApplicationWindow implements ApplicationInstanceDataMethods {
 
 	private final Window window;
 	private final ApplicationInstanceData applicationInstanceData;
 	private Toolbar toolbar;
 	private ToolbarButtonGroup currentButtonGroup;
 	private ToolbarButton saveButton;
+	private ToolbarButton okButton;
 	private ToolbarButton cancelButton;
 
 	public ApplicationWindow(Icon icon, String title, ApplicationInstanceData applicationInstanceData) {
@@ -57,13 +59,13 @@ public class ApplicationWindow {
 	}
 
 	public ToolbarButton addButton(Icon icon, String title) {
-		ToolbarButton button = ToolbarButton.createTiny(icon, title);
+		ToolbarButton button = ToolbarButton.create(icon, title, title);
 		currentButtonGroup.addButton(button);
 		return button;
 	}
 
 	public ToolbarButton addSaveButton() {
-		return addSaveButton(applicationInstanceData.getLocalized(Dictionary.SAVE), applicationInstanceData.getLocalized(Dictionary.SAVE_AND_CLOSE_WINDOW));
+		return addSaveButton(getLocalized(Dictionary.SAVE), getLocalized(Dictionary.SAVE_AND_CLOSE_WINDOW));
 	}
 
 	public ToolbarButton addSaveButton(String title, String description) {
@@ -72,12 +74,22 @@ public class ApplicationWindow {
 		return saveButton;
 	}
 
+	public ToolbarButton addOkButton() {
+		return addOkButton(getLocalized(Dictionary.O_K), getLocalized(Dictionary.O_K));
+	}
+
+	public ToolbarButton addOkButton(String title, String description) {
+		okButton = ToolbarButton.create(ApplicationIcons.OK, title, description);
+		currentButtonGroup.addButton(okButton);
+		return okButton;
+	}
+
 	public ToolbarButton addCancelButton() {
-		return addCancelButton(applicationInstanceData.getLocalized(Dictionary.CANCEL), applicationInstanceData.getLocalized(Dictionary.CANCEL_AND_CLOSE_WINDOW));
+		return addCancelButton(getLocalized(Dictionary.CANCEL), getLocalized(Dictionary.CANCEL_AND_CLOSE_WINDOW));
 	}
 
 	public ToolbarButton addCancelButton(String title, String description) {
-		cancelButton = ToolbarButton.create(ApplicationIcons.ERROR, title, description);
+		cancelButton = ToolbarButton.create(ApplicationIcons.WINDOW_CLOSE, title, description);
 		currentButtonGroup.addButton(cancelButton);
 		cancelButton.onClick.addListener(() -> window.close());
 		return cancelButton;
@@ -120,7 +132,16 @@ public class ApplicationWindow {
 		return saveButton;
 	}
 
+	public ToolbarButton getOkButton() {
+		return okButton;
+	}
+
 	public ToolbarButton getCancelButton() {
 		return cancelButton;
 	}
+
+	public ApplicationInstanceData getApplicationInstanceData() {
+		return applicationInstanceData;
+	}
+
 }
