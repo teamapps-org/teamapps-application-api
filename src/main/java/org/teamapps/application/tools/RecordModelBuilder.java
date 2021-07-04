@@ -221,7 +221,6 @@ public abstract class RecordModelBuilder<RECORD> {
 		templateField.setPropertyProvider(propertyProvider);
 		table.addColumn(new TableColumn<>("data", templateField));
 		table.setPropertyExtractor((record, propertyName) -> record);
-		table.onRowSelected.addListener(record -> onSelectedRecordChanged.fire(record));
 		return table;
 	}
 

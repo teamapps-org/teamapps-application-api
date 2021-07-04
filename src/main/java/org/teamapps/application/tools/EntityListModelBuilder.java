@@ -67,22 +67,22 @@ public class EntityListModelBuilder<RECORD> extends RecordModelBuilder<RECORD> {
 	}
 
 	public void addRecord(RECORD record) {
-		records.add(record);
+		this.records.add(record);
 		onDataChanged.fire();
 	}
 
 	public void addRecords(List<RECORD> records) {
-		records.addAll(records);
+		this.records.addAll(records);
 		onDataChanged.fire();
 	}
 
 	public void removeRecord(RECORD record) {
-		records.remove(record);
+		this.records.remove(record);
 		onDataChanged.fire();
 	}
 
 	public void removeRecords(List<RECORD> records) {
-		records.removeAll(records);
+		this.records.removeAll(records);
 		onDataChanged.fire();
 	}
 
