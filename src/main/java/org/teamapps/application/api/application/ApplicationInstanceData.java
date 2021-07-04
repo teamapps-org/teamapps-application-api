@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,6 @@ import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
-
 import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.ux.application.perspective.Perspective;
@@ -51,8 +50,9 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	default <RESULT> void runTaskAsync(Icon icon, String title, Supplier<RESULT> task, Consumer<RESULT> uiResultTask) {
 		SessionContext context = SessionContext.current();
 		MultiProgressDisplay multiProgressDisplay = getMultiProgressDisplay();
-		multiProgressDisplay.addTask(icon, title, () -> {
+		multiProgressDisplay.addTask(icon, title, progressMonitor -> {
 			RESULT result = task.get();
+			progressMonitor.markCompleted();
 			if (uiResultTask != null) {
 				context.runWithContext(() -> uiResultTask.accept(result));
 			}

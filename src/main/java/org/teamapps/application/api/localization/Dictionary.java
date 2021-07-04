@@ -96,6 +96,7 @@ public class Dictionary {
 	public static final String RESET = "org.teamapps.dictionary.reset";
 	public static final String DISCARD = "org.teamapps.dictionary.discard";
 	public static final String OVERWRITE = "org.teamapps.dictionary.overwrite";
+	public static final String PUBLISH = "org.teamapps.dictionary.publish";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";
@@ -250,6 +251,9 @@ public class Dictionary {
 	public static final String TRANSLATION_KEY = "org.teamapps.dictionary.translationKey";
 	public static final String ERROR_TRANSLATION_KEY_ALREADY_EXISTS = "org.teamapps.dictionary.errorTranslationKeyAlreadyExists";
 	public static final String SENTENCE_ERROR_THE_ACTIVE_APPLICATION_CAUSED__ = "org.teamapps.dictionary.errorTheActiveApplicationCausedAnErrorAnWillBeClosed";
+	public static final String WELCOME = "org.teamapps.dictionary.welcome";
+	public static final String TRANSLATION = "org.teamapps.dictionary.translation";
+	public static final String TRANSLATIONS = "org.teamapps.dictionary.translations";
 	//other
 	public static final String ROTATE = "org.teamapps.dictionary.rotate";
 	public static final String ROTATE_PICTURE = "org.teamapps.dictionary.rotatePicture";
