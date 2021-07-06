@@ -26,6 +26,7 @@ import org.teamapps.universaldb.index.translation.TranslatableText;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DevLocalizationProvider implements ApplicationLocalizationProvider {
@@ -62,7 +63,26 @@ public class DevLocalizationProvider implements ApplicationLocalizationProvider 
 		}
 	}
 
+	@Override
+	public String getLocalized(String key, List<String> languagePriorityOrder, Object... parameters) {
+		String localizationValue = getLocalized(languagePriorityOrder.get(0));
+		if (parameters != null && parameters.length > 0) {
+			try {
+				return MessageFormat.format(localizationValue, parameters);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return localizationValue;
+			}
+		} else {
+			return localizationValue;
+		}
+	}
+
 	private String getLocalized(String key) {
+		return getLocalized(key, language);
+	}
+
+	private String getLocalized(String key, String language) {
 		Map<String, String> translationMap = localizationMap.get(language);
 		if (translationMap != null && translationMap.containsKey(key)) {
 			return translationMap.get(key);
