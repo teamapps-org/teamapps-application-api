@@ -41,6 +41,14 @@ public interface Privilege {
 		return new PrivilegeImpl(privilegeType, name, icon, titleKey);
 	}
 
+	static Privilege[] getDefault() {
+		return new Privilege[] {CREATE, READ, UPDATE, DELETE, RESTORE, SHOW_RECYCLE_BIN};
+	}
+
+	static Privilege[] getAll() {
+		return new Privilege[] {CREATE, READ, UPDATE, DELETE, RESTORE, SHOW_RECYCLE_BIN, EXECUTE, PRINT, IMPORT, EXPORT};
+	}
+
 	PrivilegeType getType();
 
 	String getName();
