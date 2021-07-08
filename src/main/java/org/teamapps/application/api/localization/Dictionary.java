@@ -203,6 +203,17 @@ public class Dictionary {
 	public static final String SENTENCE_DO_YOU_REALLY_WANT_TO_DELETE_THE_RE__ = "org.teamapps.dictionary.doYouReallyWantToDeleteTheRecord";
 	public static final String CONFIRM_DELETION = "org.teamapps.dictionary.confirmDeletion";
 	public static final String SENTENCE_DO_YOU_REALLY_WANT_TO_DELETE_ALL_DA__ = "org.teamapps.dictionary.doYouReallyWantToDeleteAllData";
+	//validation
+	public static final String PLEASE_ENTER_AVALUE = "org.teamapps.dictionary.pleaseEnterAValue";
+	public static final String NOT_AVALID_EMAIL_ADDRESS = "org.teamapps.dictionary.notAValidEmailAddress";
+	public static final String NOT_AVALID_PHONE_NUMBER = "org.teamapps.dictionary.notAValidPhoneNumber";
+	public static final String NOT_AVALID_IP_ADDRESS = "org.teamapps.dictionary.notAValidIPAddress";
+	public static final String NOT_AVALID_DATE = "org.teamapps.dictionary.notAValidDate";
+	public static final String TEXT_ENTERED_IS_TOO_SHORT = "org.teamapps.dictionary.textEnteredIsTooShort";
+	public static final String TEXT_ENTERED_IS_TOO_LONG = "org.teamapps.dictionary.textEnteredIsTooLong";
+	public static final String SENTENCE_THE_FIELD_MUST_CONTAIN_AT_LEAST0_CH__ = "org.teamapps.dictionary.theFieldMustContainAtLeast0Characters";
+	public static final String SENTENCE_THE_FIELD0_MUST_CONTAIN_AT_LEAST1_C__ = "org.teamapps.dictionary.theField0MustContainAtLeast1Characters";
+	public static final String SENTENCE_THE_FIELD_MUST_CONTAIN_LESS_THAN0_C__ = "org.teamapps.dictionary.theFieldMustContainLessThan0Characters";
 	//calendar
 	public static final String YEAR = "org.teamapps.dictionary.year";
 	public static final String YEARS = "org.teamapps.dictionary.years";

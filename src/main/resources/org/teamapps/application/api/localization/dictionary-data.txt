@@ -189,6 +189,18 @@ Do you really want to delete the record?
 Confirm deletion
 Do you really want to delete all data?
 
+::validation
+Please enter a value
+Not a valid e-mail address
+Not a valid phone number
+Not a valid IP address
+Not a valid date
+Text entered is too short
+Text entered is too long
+The field must contain at least {0} characters
+The field {0} must contain at least {1} characters
+The field must contain less than {0} characters
+
 ::calendar
 Year
 Years
