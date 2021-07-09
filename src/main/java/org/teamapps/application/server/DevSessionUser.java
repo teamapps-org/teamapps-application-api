@@ -44,7 +44,7 @@ public class DevSessionUser implements SessionUser {
 
 	@Override
 	public String getName(boolean lastNameFirst) {
-		return "John Doe";
+		return lastNameFirst ? "Doe, John" : "John Doe";
 	}
 
 	@Override
