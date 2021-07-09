@@ -50,7 +50,7 @@ public class DevLocalizationProvider implements ApplicationLocalizationProvider 
 
 	@Override
 	public String getLocalized(String key, Object... parameters) {
-		String localizationValue = getLocalized(key);
+		String localizationValue = getLocalized(key, language);
 		if (parameters != null && parameters.length > 0) {
 			try {
 				return MessageFormat.format(localizationValue, parameters);
@@ -65,7 +65,7 @@ public class DevLocalizationProvider implements ApplicationLocalizationProvider 
 
 	@Override
 	public String getLocalized(String key, List<String> languagePriorityOrder, Object... parameters) {
-		String localizationValue = getLocalized(languagePriorityOrder.get(0));
+		String localizationValue = getLocalized(key, languagePriorityOrder.get(0));
 		if (parameters != null && parameters.length > 0) {
 			try {
 				return MessageFormat.format(localizationValue, parameters);
@@ -76,10 +76,6 @@ public class DevLocalizationProvider implements ApplicationLocalizationProvider 
 		} else {
 			return localizationValue;
 		}
-	}
-
-	private String getLocalized(String key) {
-		return getLocalized(key, language);
 	}
 
 	private String getLocalized(String key, String language) {
