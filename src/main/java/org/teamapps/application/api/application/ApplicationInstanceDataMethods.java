@@ -30,7 +30,9 @@ import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.session.SessionContext;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -76,6 +78,18 @@ public interface ApplicationInstanceDataMethods {
 
 	default String getLocalized(String key, Object... parameters) {
 		return getApplicationInstanceData().getLocalized(key, parameters);
+	}
+
+	default String getLocalized(String key, List<String> languagePriorityOrder, Object... parameters) {
+		return getApplicationInstanceData().getLocalized(key, languagePriorityOrder, parameters);
+	}
+
+	default String getLocalized(String key, String language, Object... parameters) {
+		return getLocalized(key, Collections.singletonList(language), parameters);
+	}
+
+	default String getLocalized(String key, Locale locale, Object... parameters) {
+		return getLocalized(key, Collections.singletonList(locale.getLanguage()), parameters);
 	}
 
 	default String getLocalized(TranslatableText translatableText) {
