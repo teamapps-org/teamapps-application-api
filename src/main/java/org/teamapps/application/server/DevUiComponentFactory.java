@@ -41,9 +41,11 @@ import org.teamapps.ux.component.field.combobox.TagComboBox;
 import org.teamapps.ux.component.linkbutton.LinkButton;
 import org.teamapps.ux.component.template.BaseTemplate;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class DevUiComponentFactory implements UiComponentFactory {
 
@@ -51,6 +53,11 @@ public class DevUiComponentFactory implements UiComponentFactory {
 
 	public DevUiComponentFactory(ApplicationInstanceData applicationInstanceData) {
 		this.applicationInstanceData = applicationInstanceData;
+	}
+
+	@Override
+	public ComboBox<OrganizationUnitView> createOrganizationUnitComboBox(Supplier<Collection<OrganizationUnitView>> allowedUnitsSupplier) {
+		return OrganizationViewUtils.createOrganizationComboBox(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE, allowedUnitsSupplier, applicationInstanceData);
 	}
 
 	@Override

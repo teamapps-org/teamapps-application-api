@@ -40,6 +40,7 @@ import org.teamapps.ux.model.ListTreeModel;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class OrganizationViewUtils {
@@ -96,11 +97,15 @@ public class OrganizationViewUtils {
 	}
 
 	public static ComboBox<OrganizationUnitView> createOrganizationComboBox(Template template, Collection<OrganizationUnitView> allowedUnits, ApplicationInstanceData applicationInstanceData) {
+		return createOrganizationComboBox(template, () -> allowedUnits, applicationInstanceData);
+	}
+
+	public static ComboBox<OrganizationUnitView> createOrganizationComboBox(Template template, Supplier<Collection<OrganizationUnitView>> allowedUnitsSupplier, ApplicationInstanceData applicationInstanceData) {
 		ComboBox<OrganizationUnitView> comboBox = new ComboBox<>(template);
 		ComboBoxModel<OrganizationUnitView> model = new ComboBoxModel<>() {
 			@Override
 			public List<OrganizationUnitView> getRecords(String query) {
-				return queryOrganizationUnits(query, allowedUnits);
+				return queryOrganizationUnits(query, allowedUnitsSupplier.get());
 			}
 
 			@Override
@@ -123,13 +128,13 @@ public class OrganizationViewUtils {
 
 	public static List<OrganizationUnitView> queryOrganizationUnits(String query, Collection<OrganizationUnitView> allowedUnits) {
 		return query == null || query.isBlank() ?
-				allowedUnits.stream().limit(50).collect(Collectors.toList()) :
+				allowedUnits.stream().limit(250).collect(Collectors.toList()) :
 				OrganizationUnitView.filter()
 						.parseFullTextFilter(query)
 						.execute()
 						.stream()
 						.filter(allowedUnits::contains)
-						.limit(50)
+						.limit(250)
 						.collect(Collectors.toList());
 	}
 

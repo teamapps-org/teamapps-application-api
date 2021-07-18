@@ -1,3 +1,22 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps Application API
+ * ---
+ * Copyright (C) 2020 - 2021 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
 package org.teamapps.application.ux.form;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
@@ -11,9 +30,7 @@ import java.util.regex.Pattern;
 public class FormValidationUtils {
 
 	public static Pattern PHONE_NUMBER_PATTERN = Pattern.compile(
-			"^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
-					+ "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?){2}\\d{3}$"
-					+ "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?)(\\d{2}[ ]?){2}\\d{2}$"
+			"^[+0-9.\\-\\s()]+$"
 	);
 
 	public static final Pattern E_MAIL_ADDRESS_PATTERN = Pattern.compile(
@@ -41,7 +58,7 @@ public class FormValidationUtils {
 	}
 
 	public static FieldValidator<String> createPhoneNumberValidator(ApplicationInstanceData applicationInstanceData) {
-		return FieldValidator.fromPredicate(s -> isNotNullOrBlank(s) && PHONE_NUMBER_PATTERN.matcher(s).matches(), applicationInstanceData.getLocalized(Dictionary.NOT_AVALID_PHONE_NUMBER));
+		return FieldValidator.fromPredicate(s -> isNotNullOrBlank(s) &&  PHONE_NUMBER_PATTERN.matcher(s).matches(), applicationInstanceData.getLocalized(Dictionary.NOT_AVALID_PHONE_NUMBER));
 	}
 
 	public static FieldValidator<String> createPhoneNumberOrEmptyValidator(ApplicationInstanceData applicationInstanceData) {

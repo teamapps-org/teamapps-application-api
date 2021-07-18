@@ -26,10 +26,13 @@ import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.field.combobox.TagComboBox;
 
+import java.util.Collection;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public interface UiComponentFactory {
 
+	ComboBox<OrganizationUnitView> createOrganizationUnitComboBox(Supplier<Collection<OrganizationUnitView>> allowedUnitsSupplier);
 	ComboBox<OrganizationUnitView> createOrganizationUnitComboBox(Set<OrganizationUnitView> allowedUnits);
 
 	TagComboBox<OrganizationUnitTypeView> createOrganizationUnitTypeTagComboBox();
