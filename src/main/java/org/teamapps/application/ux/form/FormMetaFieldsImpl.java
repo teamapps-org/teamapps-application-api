@@ -23,6 +23,7 @@ import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.api.ui.FormMetaFields;
+import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.universaldb.index.ColumnIndex;
 import org.teamapps.universaldb.index.TableIndex;
@@ -42,18 +43,31 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 	private final ApplicationInstanceData applicationInstanceData;
 	private final TemplateField<Integer> createdByField;
 	private final TemplateField<Integer> modifiedByField;
+	private final TemplateField<Integer> deletedByField;
 	private final InstantDateTimeField creationDateField;
 	private final InstantDateTimeField modificationDateField;
+	private final InstantDateTimeField deletionDateField;
 
 	public FormMetaFieldsImpl(ApplicationInstanceData applicationInstanceData) {
 		this.applicationInstanceData = applicationInstanceData;
 
 		createdByField = applicationInstanceData.getComponentFactory().createUserTemplateField();
 		modifiedByField = applicationInstanceData.getComponentFactory().createUserTemplateField();
+		deletedByField = applicationInstanceData.getComponentFactory().createUserTemplateField();
 		creationDateField = new InstantDateTimeField();
 		modificationDateField = new InstantDateTimeField();
+		deletionDateField = new InstantDateTimeField();
 		creationDateField.setEditingMode(FieldEditingMode.READONLY);
 		modificationDateField.setEditingMode(FieldEditingMode.READONLY);
+		deletionDateField.setEditingMode(FieldEditingMode.READONLY);
+	}
+
+
+
+	@Override
+	public ResponsiveFormSection addMetaFields(ResponsiveFormLayout formLayout, boolean withIcons, Event<? extends Entity<?>> onEntityChange) {
+		onEntityChange.addListener(this::updateEntity);
+		return addMetaFields(formLayout, withIcons);
 	}
 
 	@Override
@@ -65,6 +79,8 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		formLayout.addLabelAndField(null, null, createdByField, false).field.getColumnDefinition().setWidthPolicy(SizingPolicy.FRACTION);
 		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.MODIFICATION), modificationDateField);
 		formLayout.addLabelAndField(null, null, modifiedByField, false);
+		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.DELETED_BY), deletionDateField);
+		formLayout.addLabelAndField(null, null, deletedByField, false);
 		return formSection;
 	}
 
@@ -85,6 +101,8 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 			modifiedByField.setVisible(modifiedByField.getValue() != 0);
 			creationDateField.setVisible(creationDateField.getValue() != null);
 			modificationDateField.setVisible(modificationDateField.getValue() != null && !modificationDateField.getValue().equals(creationDateField.getValue()));
+			deletionDateField.setVisible(entity.isDeleted());
+			deletedByField.setVisible(entity.isDeleted());
 		}
 	}
 }

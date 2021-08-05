@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -101,18 +101,13 @@ public class OrganizationViewUtils {
 	}
 
 	public static ComboBox<OrganizationUnitView> createOrganizationComboBox(Template template, Supplier<Collection<OrganizationUnitView>> allowedUnitsSupplier, ApplicationInstanceData applicationInstanceData) {
-		ComboBox<OrganizationUnitView> comboBox = new ComboBox<>(template);
-		ComboBoxModel<OrganizationUnitView> model = new ComboBoxModel<>() {
-			@Override
-			public List<OrganizationUnitView> getRecords(String query) {
-				return queryOrganizationUnits(query, allowedUnitsSupplier.get());
-			}
+		return createOrganizationComboBox(template, allowedUnitsSupplier, null, applicationInstanceData);
+	}
 
-			@Override
-			public TreeNodeInfo getTreeNodeInfo(OrganizationUnitView unit) {
-				return new TreeNodeInfoImpl<>(unit.getParent());
-			}
-		};
+	public static ComboBox<OrganizationUnitView> createOrganizationComboBox(Template template, Supplier<Collection<OrganizationUnitView>> allowedUnitsSupplier, Set<OrganizationUnitTypeView> selectableTypes, ApplicationInstanceData applicationInstanceData) {
+		ComboBox<OrganizationUnitView> comboBox = new ComboBox<>(template);
+		//comboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
+		ComboBoxModel<OrganizationUnitView> model = createLazyOrgUnitModel(allowedUnitsSupplier, selectableTypes);
 		comboBox.setModel(model);
 		comboBox.setShowExpanders(true);
 		PropertyProvider<OrganizationUnitView> propertyProvider = creatOrganizationUnitViewPropertyProvider(applicationInstanceData);
@@ -126,16 +121,43 @@ public class OrganizationViewUtils {
 		return comboBox;
 	}
 
-	public static List<OrganizationUnitView> queryOrganizationUnits(String query, Collection<OrganizationUnitView> allowedUnits) {
-		return query == null || query.isBlank() ?
-				allowedUnits.stream().limit(250).collect(Collectors.toList()) :
-				OrganizationUnitView.filter()
-						.parseFullTextFilter(query)
-						.execute()
-						.stream()
-						.filter(allowedUnits::contains)
-						.limit(250)
-						.collect(Collectors.toList());
+	public static ComboBoxModel<OrganizationUnitView> createLazyOrgUnitModel(Supplier<Collection<OrganizationUnitView>> allowedUnitsSupplier, Set<OrganizationUnitTypeView> selectableTypes) {
+		ComboBoxModel<OrganizationUnitView> model = new ComboBoxModel<>() {
+			@Override
+			public List<OrganizationUnitView> getRecords(String query) {
+				Collection<OrganizationUnitView> nodes = allowedUnitsSupplier.get();
+				return query == null || query.isBlank() ?
+						getRootNodes(nodes) :
+						getRootNodes(
+								OrganizationUnitView.filter()
+										.parseFullTextFilter(query)
+										.execute()
+										.stream()
+										.filter(nodes::contains)
+										.limit(250)
+										.collect(Collectors.toList())
+						);
+			}
+
+			@Override
+			public List<OrganizationUnitView> getChildRecords(OrganizationUnitView unit) {
+				Collection<OrganizationUnitView> organizationUnitViews = allowedUnitsSupplier.get();
+				return unit.getChildren().stream().filter(organizationUnitViews::contains).collect(Collectors.toList());
+			}
+
+			@Override
+			public TreeNodeInfo getTreeNodeInfo(OrganizationUnitView unit) {
+				return new TreeNodeInfoImpl<>(unit.getParent(), false, selectableTypes == null || selectableTypes.contains(unit.getType()), unit.getChildrenCount() > 0);
+			}
+		};
+		return model;
+	}
+
+	private static List<OrganizationUnitView> getRootNodes(Collection<OrganizationUnitView> nodes) {
+		Set<OrganizationUnitView> set = nodes instanceof Set ? (Set<OrganizationUnitView>) nodes : new HashSet<>(nodes);
+		return nodes.stream()
+				.filter(node -> node.getParent() == null || !set.contains(node.getParent()))
+				.collect(Collectors.toList());
 	}
 
 	public static TagComboBox<OrganizationUnitTypeView> createOrganizationUnitTypeTagComboBox(int limit, ApplicationInstanceData applicationInstanceData) {
