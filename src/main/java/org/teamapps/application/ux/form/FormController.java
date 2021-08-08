@@ -38,6 +38,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 	public final Event<ENTITY> onEntityUpdated = new Event<>();
 	public final Event<ENTITY> onEntityDeleted = new Event<>();
 	public final Event<ENTITY> onEntityRestored = new Event<>();
+	public final Event<ENTITY> onEntityAnyChanged = new Event<>();
 
 	private final AbstractForm<?, ENTITY> form;
 	private final Set<AbstractField<?>> otherFields = new HashSet<>();
@@ -66,6 +67,11 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 	private ToolbarButton restoreButton;
 	private List<ToolbarButtonGroup> toolbarButtonGroups;
 
+	private boolean isModified;
+
+	private boolean autoApplyFieldValuesToRecord;
+	private boolean autoApplyRecordValuesToFields;
+
 	private Panel toolbarButtonPanel;
 	private Toolbar toolbar;
 
@@ -79,6 +85,9 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		this(applicationInstanceData, form, selectedEntity, createNewEntitySupplier);
 		this.organizationalPrivilegeGroup = organizationalPrivilegeGroup;
 		this.entityOrganizationUnitSelector = entityOrganizationUnitSelector;
+		if (entityOrganizationUnitSelector == null) {
+			throw new RuntimeException("Missing entity org unit selector!");
+		}
 		createOrganizationUnitField();
 	}
 
@@ -92,6 +101,11 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		form.onFieldValueChanged.addListener(event -> handleFieldUpdateByClient(event.getField()));
 		selectedEntity.onChanged().addListener(this::handleEntitySelection);
 		init(applicationInstanceData);
+		onEntityCreated.addListener((Runnable) onEntityAnyChanged::fire);
+		onEntityUpdated.addListener((Runnable) onEntityAnyChanged::fire);
+		onEntityDeleted.addListener((Runnable) onEntityAnyChanged::fire);
+		onEntityRestored.addListener((Runnable) onEntityAnyChanged::fire);
+
 	}
 
 	private void init(ApplicationInstanceData applicationInstanceData) {
@@ -132,6 +146,9 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 			ENTITY entity = selectedEntity.get();
 			if (validate() && (saveEntityHandler == null || saveEntityHandler.test(entity))) {
 				boolean stored = entity.isStored();
+				if (autoApplyFieldValuesToRecord) {
+					form.applyFieldValuesToRecord(entity);
+				}
 				entity.save();
 				saveButton.setVisible(false);
 				restoreButton.setVisible(false);
@@ -224,6 +241,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 
 	public void registerModelBuilder(RecordModelBuilder<ENTITY> modelBuilder) {
 		onEntityCreated.addListener(entity -> modelBuilder.onDataChanged.fire());
+		onEntityUpdated.addListener(entity -> modelBuilder.onDataChanged.fire());
 		onEntityDeleted.addListener(entity -> modelBuilder.onDataChanged.fire());
 		onEntityRestored.addListener(entity -> modelBuilder.onDataChanged.fire());
 	}
@@ -254,6 +272,14 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 	}
 
 	private void handleEntitySelection(ENTITY entity) {
+		if (isModified) {
+			isModified = false;
+			markAllFieldsUnchanged();
+			clearMessages();
+		}
+		if (autoApplyRecordValuesToFields) {
+			form.applyRecordValuesToFields(entity);
+		}
 		if (this.updateFieldEditMode) {
 			boolean editable = !entity.isDeleted() && isEntityEditable(entity);
 			Stream.concat(form.getFields().stream(), otherFields.stream())
@@ -271,6 +297,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 				revertButton.setVisible(true);
 				newButton.setVisible(false);
 				deleteButton.setVisible(false);
+				isModified = true;
 			}
 		}
 	}
@@ -397,5 +424,21 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 
 	public void setRestoreEntityHandler(Predicate<ENTITY> restoreEntityHandler) {
 		this.restoreEntityHandler = restoreEntityHandler;
+	}
+
+	public boolean isAutoApplyFieldValuesToRecord() {
+		return autoApplyFieldValuesToRecord;
+	}
+
+	public void setAutoApplyFieldValuesToRecord(boolean autoApplyFieldValuesToRecord) {
+		this.autoApplyFieldValuesToRecord = autoApplyFieldValuesToRecord;
+	}
+
+	public boolean isAutoApplyRecordValuesToFields() {
+		return autoApplyRecordValuesToFields;
+	}
+
+	public void setAutoApplyRecordValuesToFields(boolean autoApplyRecordValuesToFields) {
+		this.autoApplyRecordValuesToFields = autoApplyRecordValuesToFields;
 	}
 }
