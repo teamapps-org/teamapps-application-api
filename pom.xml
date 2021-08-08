@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
         <teamapps-version>0.9.109</teamapps-version>
-        <universal-db-version>0.5.8-SNAPSHOT</universal-db-version>
+        <universal-db-version>0.5.8</universal-db-version>
         <teamapps-universal-db-integration-version>0.11</teamapps-universal-db-integration-version>
     </properties>
 
@@ -202,11 +202,6 @@
             <version>68.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4.16</version>
-        </dependency>
 
         <dependency>
             <groupId>com.google.cloud</groupId>
