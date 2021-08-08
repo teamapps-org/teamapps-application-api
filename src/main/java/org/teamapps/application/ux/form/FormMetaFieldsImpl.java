@@ -44,9 +44,11 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 	private final TemplateField<Integer> createdByField;
 	private final TemplateField<Integer> modifiedByField;
 	private final TemplateField<Integer> deletedByField;
+	private final TemplateField<Integer> restoredByField;
 	private final InstantDateTimeField creationDateField;
 	private final InstantDateTimeField modificationDateField;
 	private final InstantDateTimeField deletionDateField;
+	private final InstantDateTimeField restoreDateField;
 
 	public FormMetaFieldsImpl(ApplicationInstanceData applicationInstanceData) {
 		this.applicationInstanceData = applicationInstanceData;
@@ -54,12 +56,17 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		createdByField = applicationInstanceData.getComponentFactory().createUserTemplateField();
 		modifiedByField = applicationInstanceData.getComponentFactory().createUserTemplateField();
 		deletedByField = applicationInstanceData.getComponentFactory().createUserTemplateField();
+		restoredByField = applicationInstanceData.getComponentFactory().createUserTemplateField();
+
 		creationDateField = new InstantDateTimeField();
 		modificationDateField = new InstantDateTimeField();
 		deletionDateField = new InstantDateTimeField();
+		restoreDateField = new InstantDateTimeField();
+
 		creationDateField.setEditingMode(FieldEditingMode.READONLY);
 		modificationDateField.setEditingMode(FieldEditingMode.READONLY);
 		deletionDateField.setEditingMode(FieldEditingMode.READONLY);
+		restoreDateField.setEditingMode(FieldEditingMode.READONLY);
 	}
 
 
@@ -74,13 +81,15 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 	public ResponsiveFormSection addMetaFields(ResponsiveFormLayout formLayout, boolean withIcons) {
 		Icon dateIcon = withIcons ? ApplicationIcons.CALENDAR_CLOCK : null;
 		Icon userIcon = withIcons ? ApplicationIcons.USER : null;
-		ResponsiveFormSection formSection = formLayout.addSection(dateIcon, applicationInstanceData.getLocalized(Dictionary.META_DATA));
+		ResponsiveFormSection formSection = formLayout.addSection(ApplicationIcons.WINDOW_SIDEBAR, applicationInstanceData.getLocalized(Dictionary.META_DATA));
 		formLayout.addLabelAndField(userIcon, applicationInstanceData.getLocalized(Dictionary.CREATION), creationDateField).field.getColumnDefinition().setWidthPolicy(SizingPolicy.AUTO);
 		formLayout.addLabelAndField(null, null, createdByField, false).field.getColumnDefinition().setWidthPolicy(SizingPolicy.FRACTION);
 		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.MODIFICATION), modificationDateField);
 		formLayout.addLabelAndField(null, null, modifiedByField, false);
-		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.DELETED_BY), deletionDateField);
+		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.DELETED), deletionDateField);
 		formLayout.addLabelAndField(null, null, deletedByField, false);
+		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.RESTORED), restoreDateField);
+		formLayout.addLabelAndField(null, null, restoredByField, false);
 		return formSection;
 	}
 
@@ -89,20 +98,33 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		if (entity instanceof AbstractUdbEntity) {
 			AbstractUdbEntity<?> udbEntity = (AbstractUdbEntity<?>) entity;
 			TableIndex tableIndex = udbEntity.getTableIndex();
-			ColumnIndex createdByIndex = tableIndex.getColumnIndex(Table.FIELD_CREATED_BY);
+			ColumnIndex<?, ?> createdByIndex = tableIndex.getColumnIndex(Table.FIELD_CREATED_BY);
+			ColumnIndex<?, ?> modifiedByIndex = tableIndex.getColumnIndex(Table.FIELD_MODIFIED_BY);
+			ColumnIndex<?, ?> deletedByIndex = tableIndex.getColumnIndex(Table.FIELD_DELETED_BY);
+			ColumnIndex<?, ?> restoredByIndex = tableIndex.getColumnIndex(Table.FIELD_RESTORED_BY);
+			ColumnIndex<?, ?> creationDateIndex = tableIndex.getColumnIndex(Table.FIELD_CREATION_DATE);
+			ColumnIndex<?, ?> modificationDateIndex = tableIndex.getColumnIndex(Table.FIELD_MODIFICATION_DATE);
+			ColumnIndex<?, ?> deletionDateIndex = tableIndex.getColumnIndex(Table.FIELD_DELETION_DATE);
+			ColumnIndex<?, ?> restoreDateIndex = tableIndex.getColumnIndex(Table.FIELD_RESTORE_DATE);
+
 			createdByField.setValue(createdByIndex != null ? udbEntity.getIntValue((IntegerIndex) createdByIndex) : 0);
-			ColumnIndex modifiedByIndex = tableIndex.getColumnIndex(Table.FIELD_MODIFIED_BY);
 			modifiedByField.setValue(modifiedByIndex != null ? udbEntity.getIntValue((IntegerIndex) modifiedByIndex) : 0);
-			ColumnIndex creationDateIndex = tableIndex.getColumnIndex(Table.FIELD_CREATION_DATE);
+			deletedByField.setValue(deletedByIndex != null ? udbEntity.getIntValue((IntegerIndex) deletedByIndex) : 0);
+			restoredByField.setValue(restoredByIndex != null ? udbEntity.getIntValue((IntegerIndex) restoredByIndex) : 0);
+
 			creationDateField.setValue(creationDateIndex != null ? udbEntity.getTimestampValue((IntegerIndex) creationDateIndex) : null);
-			ColumnIndex modificationDateIndex = tableIndex.getColumnIndex(Table.FIELD_MODIFICATION_DATE);
 			modificationDateField.setValue(modificationDateIndex != null ? udbEntity.getTimestampValue((IntegerIndex) modificationDateIndex) : null);
+			deletionDateField.setValue(deletionDateIndex != null ? udbEntity.getTimestampValue((IntegerIndex) deletionDateIndex) : null);
+			restoreDateField.setValue(restoreDateIndex != null ? udbEntity.getTimestampValue((IntegerIndex) restoreDateIndex) : null);
+
 			createdByField.setVisible(createdByField.getValue() != 0);
 			modifiedByField.setVisible(modifiedByField.getValue() != 0);
+			deletedByField.setVisible(deletedByField.getValue() != 0);
+			restoredByField.setVisible(restoredByField.getValue() != 0);
 			creationDateField.setVisible(creationDateField.getValue() != null);
 			modificationDateField.setVisible(modificationDateField.getValue() != null && !modificationDateField.getValue().equals(creationDateField.getValue()));
-			deletionDateField.setVisible(entity.isDeleted());
-			deletedByField.setVisible(entity.isDeleted());
+			deletionDateField.setVisible(deletedByField.getValue() != 0);
+			restoreDateField.setVisible(restoredByField.getValue() != 0);
 		}
 	}
 }
