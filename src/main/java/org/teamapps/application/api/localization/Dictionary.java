@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -183,6 +183,8 @@ public class Dictionary {
 	public static final String MODIFIED_BY = "org.teamapps.dictionary.modifiedBy";
 	public static final String DELETED_BY = "org.teamapps.dictionary.deletedBy";
 	public static final String RESTORED_BY = "org.teamapps.dictionary.restoredBy";
+	public static final String DELETED = "org.teamapps.dictionary.deleted";
+	public static final String RESTORED = "org.teamapps.dictionary.restored";
 	public static final String LAST_RECORD = "org.teamapps.dictionary.lastRecord";
 	public static final String FIRST_RECORD = "org.teamapps.dictionary.firstRecord";
 	public static final String THIS_FIELD_IS_REQUIRED = "org.teamapps.dictionary.thisFieldIsRequired";
@@ -265,6 +267,15 @@ public class Dictionary {
 	public static final String WELCOME = "org.teamapps.dictionary.welcome";
 	public static final String TRANSLATION = "org.teamapps.dictionary.translation";
 	public static final String TRANSLATIONS = "org.teamapps.dictionary.translations";
+	public static final String EDITOR_PANE = "org.teamapps.dictionary.editorPane";
+	public static final String EDITOR_PANE_BELOW = "org.teamapps.dictionary.editorPaneBelow";
+	public static final String EDITOR_PANE_ON_THE_RIGHT = "org.teamapps.dictionary.editorPaneOnTheRight";
+	public static final String EDITOR_PANE_AS_WINDOW = "org.teamapps.dictionary.editorPaneAsWindow";
+	public static final String CENTRAL_EDITOR_PANE = "org.teamapps.dictionary.centralEditorPane";
+	public static final String SENTENCE_DISPLAY_THE_EDITOR_PANE_ON_THE_RIGH__ = "org.teamapps.dictionary.displayTheEditorPaneOnTheRightSide";
+	public static final String SENTENCE_DISPLAY_THE_EDITOR_PANE_BELOW_THE_M__ = "org.teamapps.dictionary.displayTheEditorPaneBelowTheMasterView";
+	public static final String SENTENCE_DISPLAY_THE_EDITOR_PANE_AS_POPUP_WI__ = "org.teamapps.dictionary.displayTheEditorPaneAsPopupWindow";
+	public static final String SENTENCE_DISPLAY_THE_EDITOR_PANE_IN_THE_CENT__ = "org.teamapps.dictionary.displayTheEditorPaneInTheCenter";
 	//other
 	public static final String ROTATE = "org.teamapps.dictionary.rotate";
 	public static final String ROTATE_PICTURE = "org.teamapps.dictionary.rotatePicture";

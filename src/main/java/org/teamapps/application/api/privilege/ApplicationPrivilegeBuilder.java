@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,10 +51,18 @@ public class ApplicationPrivilegeBuilder {
 		return privilegeGroup;
 	}
 
+	public StandardPrivilegeGroup addDefaultStandardPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey) {
+		return addStandardPrivilegeGroup(name, icon, titleKey, descriptionKey, Privilege.getDefault());
+	}
+
 	public StandardPrivilegeGroup addStandardPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Privilege... privileges) {
 		StandardPrivilegeGroup privilegeGroup = PrivilegeGroup.createStandardPrivilegeGroup(name, icon, titleKey, descriptionKey, privileges);
 		addPrivilege(privilegeGroup);
 		return privilegeGroup;
+	}
+
+	public OrganizationalPrivilegeGroup addDefaultOrganizationalPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey) {
+		return addOrganizationalPrivilegeGroup(name, icon, titleKey, descriptionKey, Privilege.getDefault());
 	}
 
 	public OrganizationalPrivilegeGroup addOrganizationalPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Privilege... privileges) {

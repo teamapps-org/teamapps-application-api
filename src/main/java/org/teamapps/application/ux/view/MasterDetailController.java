@@ -5,7 +5,9 @@ import org.teamapps.application.api.application.ApplicationInstanceDataMethods;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.privilege.OrganizationalPrivilegeGroup;
 import org.teamapps.application.api.privilege.PrivilegeGroup;
+import org.teamapps.application.api.privilege.StandardPrivilegeGroup;
 import org.teamapps.application.api.theme.ApplicationIcons;
+import org.teamapps.application.api.ui.FormMetaFields;
 import org.teamapps.application.tools.EntityModelBuilder;
 import org.teamapps.application.ux.form.FormController;
 import org.teamapps.common.format.Color;
@@ -19,6 +21,7 @@ import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.form.ResponsiveForm;
+import org.teamapps.ux.component.form.ResponsiveFormLayout;
 import org.teamapps.ux.component.itemview.SimpleItemGroup;
 import org.teamapps.ux.component.itemview.SimpleItemView;
 import org.teamapps.ux.component.timegraph.TimeGraph;
@@ -53,9 +56,12 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 	private TimeGraph timeGraph;
 	private ComboBox<String> timeGraphFieldSelectionCombobox;
 	private Toolbar formToolbar;
+	private ToolbarButton windowCloseButton;
+	private ToolbarButton editorNextButton;
+	private ToolbarButton editorPreviousButton;
 
 	public static enum DetailPosition {
-		RIGHT, BOTTOM, WINDOW
+		RIGHT, BOTTOM, CENTER, WINDOW
 	}
 
 	public MasterDetailController(Icon entityIcon, String entityTitle, ApplicationInstanceData applicationInstanceData, EntityModelBuilder<ENTITY> entityModelBuilder, FormController<ENTITY> formController, ResponsiveForm<ENTITY> responsiveForm) {
@@ -65,6 +71,16 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		this.entityModelBuilder = entityModelBuilder;
 		this.formController = formController;
 		this.responsiveForm = responsiveForm;
+		init();
+	}
+
+	public MasterDetailController(Icon entityIcon, String entityTitle, ApplicationInstanceData applicationInstanceData, Supplier<Query<ENTITY>> querySupplier, StandardPrivilegeGroup standardPrivilegeGroup) {
+		this.entityIcon = entityIcon;
+		this.entityTitle = entityTitle;
+		this.applicationInstanceData = applicationInstanceData;
+		this.entityModelBuilder = new EntityModelBuilder<>(querySupplier, applicationInstanceData);
+		this.responsiveForm = new ResponsiveForm<>(120, 120, 0);
+		this.formController = new FormController<>(applicationInstanceData, responsiveForm, entityModelBuilder.getSelectedRecordBindableValue(), () -> entityModelBuilder.getEntityBuilder().build(), standardPrivilegeGroup);
 		init();
 	}
 
@@ -79,14 +95,23 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 	}
 
 	private void init() {
+		formController.registerModelBuilder(entityModelBuilder);
 		detailComponent = responsiveForm;
 		timeGraph = entityModelBuilder.createTimeGraph();
 		timeGraphFieldSelectionCombobox = entityModelBuilder.createTimeGraphFieldSelectionCombobox(timeGraph);
 
-
+		entityModelBuilder.getOnSelectionEvent().addListener(entity -> {
+			if (detailPosition == DetailPosition.WINDOW) {
+				window.show();
+			}
+		});
 	}
 
-	public void createViews(Perspective perspective, Component masterComponent) {
+	public void createViews(Perspective perspective, Component masterComponent, ResponsiveFormLayout formLayout) {
+		createViews(perspective, masterComponent, formLayout, true);
+	}
+
+	public void createViews(Perspective perspective, Component masterComponent, ResponsiveFormLayout formLayout, boolean withMetaFields) {
 		this.masterComponent = masterComponent;
 		timeGraphView = perspective.addView(View.createView(ExtendedLayout.TOP, ApplicationIcons.CHART_LINE, getLocalized(Dictionary.TIMELINE), null));
 		masterView = perspective.addView(View.createView(ExtendedLayout.CENTER, entityIcon, entityTitle, masterComponent));
@@ -107,28 +132,63 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 
 		detailViewRight.setComponent(responsiveForm);
 
-		createToolbarButtons();
+		window = new Window(1200, 800, null);
+		window.setTitle(entityTitle);
+		window.setIcon(entityIcon);
+		window.setCloseable(true);
+		window.setMaximizable(true);
+		window.setCloseOnEscape(true);
+
+		formToolbar = detailViewRight.getPanel().getToolbar();
+		ToolbarButtonGroup buttonGroup = formToolbar.addButtonGroup(new ToolbarButtonGroup());
+
+		editorPreviousButton = buttonGroup.addButton(ToolbarButton.createSmall(ApplicationIcons.NAVIGATE_LEFT, getLocalized(Dictionary.PREVIOUS)));
+		editorNextButton = buttonGroup.addButton(ToolbarButton.createSmall(ApplicationIcons.NAVIGATE_RIGHT, getLocalized(Dictionary.NEXT)));
+		editorPreviousButton.setVisible(false);
+		editorNextButton.setVisible(false);
+
+		buttonGroup = formToolbar.addButtonGroup(new ToolbarButtonGroup());
+		windowCloseButton = buttonGroup.addButton(ToolbarButton.createSmall(ApplicationIcons.WINDOW_CLOSE, getLocalized(Dictionary.CLOSE)));
+		windowCloseButton.setVisible(false);
+
+		editorPreviousButton.onClick.addListener(entityModelBuilder::selectPreviousRecord);
+		editorNextButton.onClick.addListener(entityModelBuilder::selectNextRecord);
+		windowCloseButton.onClick.addListener(() -> window.close());
+
+		if (withMetaFields) {
+			FormMetaFields formMetaFields = getApplicationInstanceData().getComponentFactory().createFormMetaFields();
+			formMetaFields.addMetaFields(formLayout, false);
+			entityModelBuilder.getOnSelectionEvent().addListener(formMetaFields::updateEntity);
+		}
+
+		createToolbarButtons(perspective);
 	}
 
-	private void createToolbarButtons() {
-		ToolbarButtonGroup buttonGroup = masterView.addWorkspaceButtonGroup(new ToolbarButtonGroup());
+	public void setDetailComponent(Component detailComponent) {
+		this.detailComponent = detailComponent;
+		setDetailPosition(detailPosition);
+	}
+
+	private void createToolbarButtons(Perspective perspective) {
+		ToolbarButtonGroup buttonGroup = perspective.addWorkspaceButtonGroup(new ToolbarButtonGroup());
 		ToolbarButton showTimeGraphButton = buttonGroup.addButton(ToolbarButton.create(ApplicationIcons.CHART_LINE, getLocalized(Dictionary.TIMELINE), getLocalized(Dictionary.TIMELINE)));
 		ToolbarButton hideTimeGraphButton = buttonGroup.addButton(ToolbarButton.create(CompositeIcon.of(ApplicationIcons.CHART_LINE, ApplicationIcons.ERROR), getLocalized(Dictionary.TIMELINE), getLocalized(Dictionary.TIMELINE)));
 		hideTimeGraphButton.setVisible(false);
 
-		buttonGroup = masterView.addWorkspaceButtonGroup(new ToolbarButtonGroup());
+		buttonGroup = perspective.addWorkspaceButtonGroup(new ToolbarButtonGroup());
 		ToolbarButton showDeletedButton = buttonGroup.addButton(ToolbarButton.create(ApplicationIcons.GARBAGE_EMPTY, getLocalized(Dictionary.RECYCLE_BIN), getLocalized(Dictionary.SHOW_RECYCLE_BIN)));
 		ToolbarButton hideDeletedButton = buttonGroup.addButton(ToolbarButton.create(CompositeIcon.of(ApplicationIcons.GARBAGE_EMPTY, ApplicationIcons.ERROR), getLocalized(Dictionary.RECYCLE_BIN), getLocalized(Dictionary.RECYCLE_BIN)));
 		hideDeletedButton.setVisible(false);
 
-		buttonGroup = masterView.addWorkspaceButtonGroup(new ToolbarButtonGroup());
+		buttonGroup = perspective.addWorkspaceButtonGroup(new ToolbarButtonGroup());
 		ToolbarButton viewButton = buttonGroup.addButton(ToolbarButton.create(ApplicationIcons.WINDOWS, getLocalized(Dictionary.VIEW), getLocalized(Dictionary.VIEW)));
 		viewButton.setDroDownPanelWidth(400);
 		SimpleItemView<?> simpleItemView = new SimpleItemView<>();
 		SimpleItemGroup<?> itemGroup = simpleItemView.addSingleColumnGroup(ApplicationIcons.WINDOWS, getLocalized(Dictionary.VIEW));
-		itemGroup.addItem(ApplicationIcons.WINDOW_SPLIT_VER, "Detail right", "...").onClick.addListener(() -> setDetailPosition(DetailPosition.RIGHT));
-		itemGroup.addItem(ApplicationIcons.WINDOW_SPLIT_HOR, "Detail bottom", "...").onClick.addListener(() -> setDetailPosition(DetailPosition.BOTTOM));
-		itemGroup.addItem(ApplicationIcons.WINDOWS, "Detail window", "...").onClick.addListener(() -> setDetailPosition(DetailPosition.WINDOW));
+		itemGroup.addItem(ApplicationIcons.WINDOW_SPLIT_HOR, getLocalized(Dictionary.EDITOR_PANE_ON_THE_RIGHT), getLocalized(Dictionary.SENTENCE_DISPLAY_THE_EDITOR_PANE_ON_THE_RIGH__)).onClick.addListener(() -> setDetailPosition(DetailPosition.RIGHT));
+		itemGroup.addItem(ApplicationIcons.WINDOW_SPLIT_VER, getLocalized(Dictionary.EDITOR_PANE_BELOW), getLocalized(Dictionary.SENTENCE_DISPLAY_THE_EDITOR_PANE_BELOW_THE_M__)).onClick.addListener(() -> setDetailPosition(DetailPosition.BOTTOM));
+		itemGroup.addItem(ApplicationIcons.WINDOW_DIALOG, getLocalized(Dictionary.CENTRAL_EDITOR_PANE), getLocalized(Dictionary.SENTENCE_DISPLAY_THE_EDITOR_PANE_IN_THE_CENT__)).onClick.addListener(() -> setDetailPosition(DetailPosition.CENTER));
+		itemGroup.addItem(ApplicationIcons.WINDOWS, getLocalized(Dictionary.EDITOR_PANE_AS_WINDOW), getLocalized(Dictionary.SENTENCE_DISPLAY_THE_EDITOR_PANE_AS_POPUP_WI__)).onClick.addListener(() -> setDetailPosition(DetailPosition.WINDOW));
 		viewButton.setDropDownComponent(simpleItemView);
 
 		showTimeGraphButton.onClick.addListener(() -> {
@@ -157,9 +217,13 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 
 
 	public void setDetailPosition(DetailPosition position) {
-		if (formToolbar == null) {
-			formToolbar = detailViewRight.getPanel().getToolbar();
-		}
+		detailPosition = position;
+		masterView.setVisible(true);
+		window.setToolbar(null);
+		window.setContent(null);
+		windowCloseButton.setVisible(false);
+		editorPreviousButton.setVisible(false);
+		editorNextButton.setVisible(false);
 		switch (position) {
 			case RIGHT -> {
 				detailViewBottom.setVisible(false);
@@ -177,6 +241,17 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 				detailViewBottom.setComponent(detailComponent);
 				detailViewBottom.setVisible(true);
 			}
+			case CENTER -> {
+				masterView.setVisible(false);
+				detailViewBottom.setVisible(false);
+				detailViewBottom.setComponent(null);
+				detailViewBottom.getPanel().setToolbar(null);
+				detailViewRight.getPanel().setToolbar(formToolbar);
+				detailViewRight.setComponent(detailComponent);
+				detailViewRight.setVisible(true);
+				editorPreviousButton.setVisible(true);
+				editorNextButton.setVisible(true);
+			}
 			case WINDOW -> {
 				detailViewBottom.setVisible(false);
 				detailViewBottom.setComponent(null);
@@ -184,6 +259,11 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 				detailViewRight.setComponent(null);
 				detailViewRight.getPanel().setToolbar(null);
 				detailViewBottom.getPanel().setToolbar(null);
+				window.setToolbar(formToolbar);
+				window.setContent(detailComponent);
+				windowCloseButton.setVisible(true);
+				editorPreviousButton.setVisible(true);
+				editorNextButton.setVisible(true);
 			}
 		}
 	}
