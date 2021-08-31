@@ -279,7 +279,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 			nonEditableFields.clear();
 			Stream.concat(form.getFields().stream(), otherFields.stream())
 					.filter(f -> f.getEditingMode() != FieldEditingMode.EDITABLE)
-					.forEach(f -> nonEditableFields.add(f));
+					.forEach(nonEditableFields::add);
 		}
 	}
 

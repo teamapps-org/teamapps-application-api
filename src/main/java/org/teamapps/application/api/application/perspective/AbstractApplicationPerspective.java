@@ -46,6 +46,7 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 	private final MutableValue<String> perspectiveInfoBadgeValue;
 
 	private Component perspectiveMenuPanel;
+	private Component perspectiveToolbarMenuPanel;
 	private Perspective perspective;
 
 	public AbstractApplicationPerspective(ApplicationInstanceData applicationInstanceData, MutableValue<String> perspectiveInfoBadgeValue) {
@@ -64,8 +65,9 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 		return onPerspectiveRefreshRequested;
 	}
 
-	public void setPerspectiveMenuPanel(Component perspectiveMenuPanel) {
+	public void setPerspectiveMenuPanel(Component perspectiveMenuPanel, Component perspectiveToolbarMenuPanel) {
 		this.perspectiveMenuPanel = perspectiveMenuPanel;
+		this.perspectiveToolbarMenuPanel = perspectiveToolbarMenuPanel;
 	}
 
 	public void setPerspective(Perspective perspective) {
@@ -75,6 +77,11 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 	@Override
 	public Component getPerspectiveMenuPanel() {
 		return perspectiveMenuPanel;
+	}
+
+	@Override
+	public Component getPerspectiveToolbarMenuPanel() {
+		return perspectiveToolbarMenuPanel;
 	}
 
 	@Override

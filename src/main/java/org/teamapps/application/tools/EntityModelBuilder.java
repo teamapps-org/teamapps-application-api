@@ -87,7 +87,7 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 		if (getCustomFullTextFilter() == null && fullTextQuery != null && !fullTextQuery.isBlank()) {
 			query.addFullTextQuery(fullTextQuery);
 		}
-		List<ENTITY> entities = (getSortField() != null && getCustomFieldSorter() == null) ? query.execute(showDeletedRecords, getSortField(), isSortAscending()) : query.execute(showDeletedRecords);
+		List<ENTITY> entities = (getSortField() != null && getCustomFieldSorter() == null) ? query.execute(showDeletedRecords, getSortField(), isSortAscending(), getUser()) : query.execute(showDeletedRecords);
 		if (getCustomFullTextFilter() != null && fullTextQuery != null && !fullTextQuery.isBlank()) {
 			BiFunction<ENTITY, String, Boolean> customFullTextFilter = getCustomFullTextFilter();
 			String fullTextSearchQuery = fullTextQuery.toLowerCase();

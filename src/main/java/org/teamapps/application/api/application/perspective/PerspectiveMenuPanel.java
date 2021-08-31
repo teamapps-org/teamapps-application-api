@@ -21,6 +21,8 @@ package org.teamapps.application.api.application.perspective;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.ux.component.Component;
+import org.teamapps.ux.component.itemview.SimpleItemGroup;
+import org.teamapps.ux.component.itemview.SimpleItemView;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.tree.Tree;
 import org.teamapps.ux.model.ListTreeModel;
@@ -36,6 +38,7 @@ public class PerspectiveMenuPanel {
 	private final ApplicationInstanceData applicationInstanceData;
 	private final List<AbstractPerspectiveBuilder> perspectiveBuilders;
 	private Tree<AbstractPerspectiveBuilder> tree;
+	private SimpleItemView<AbstractPerspectiveBuilder> buttonMenu;
 	private Map<AbstractPerspectiveBuilder, ApplicationPerspective> perspectiveByBuilderMap;
 
 	public static PerspectiveMenuPanel createMenuPanel(ApplicationInstanceData applicationInstanceData, AbstractPerspectiveBuilder... perspectiveBuilders) {
@@ -55,6 +58,22 @@ public class PerspectiveMenuPanel {
 	private void init() {
 		perspectiveByBuilderMap = new HashMap<>();
 		List<AbstractPerspectiveBuilder> allowedPerspectiveBuilders = perspectiveBuilders.stream().filter(p -> p.isPerspectiveAccessible(applicationInstanceData)).collect(Collectors.toList());
+		createButtonMenu(allowedPerspectiveBuilders);
+		createTree(allowedPerspectiveBuilders);
+	}
+
+	private void createButtonMenu(List<AbstractPerspectiveBuilder> allowedPerspectiveBuilders) {
+		buttonMenu = new SimpleItemView<>();
+		SimpleItemGroup<AbstractPerspectiveBuilder> itemGroup = buttonMenu.addSingleColumnGroup(null, null);
+		itemGroup.setItemTemplate(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES);
+		allowedPerspectiveBuilders.forEach(builder -> {
+			itemGroup
+					.addItem(builder.getIcon(), applicationInstanceData.getLocalized(builder.getTitleKey()), applicationInstanceData.getLocalized(builder.getDescriptionKey()))
+					.onClick.addListener(() -> openPerspective(builder));
+		});
+	}
+
+	private void createTree(List<AbstractPerspectiveBuilder> allowedPerspectiveBuilders) {
 		ListTreeModel<AbstractPerspectiveBuilder> treeModel = new ListTreeModel<>(allowedPerspectiveBuilders);
 		tree = new Tree<>(treeModel);
 		tree.setShowExpanders(false);
@@ -83,10 +102,16 @@ public class PerspectiveMenuPanel {
 
 	public void addInstantiatedPerspective(AbstractPerspectiveBuilder builder, ApplicationPerspective perspective) {
 		perspectiveByBuilderMap.put(builder, perspective);
-		tree.setSelectedNode(tree.getModel().getRecords().stream().filter(record -> record.equals(builder)).findAny().orElse(null));
+		if (tree != null) {
+			tree.setSelectedNode(tree.getModel().getRecords().stream().filter(record -> record.equals(builder)).findAny().orElse(null));
+		}
 	}
 
 	public Component getComponent() {
 		return tree;
+	}
+
+	public SimpleItemView<AbstractPerspectiveBuilder> getButtonMenu() {
+		return buttonMenu;
 	}
 }

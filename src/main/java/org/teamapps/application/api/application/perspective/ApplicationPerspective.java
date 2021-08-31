@@ -31,5 +31,7 @@ public interface ApplicationPerspective {
 
 	Component getPerspectiveMenuPanel();
 
+	Component getPerspectiveToolbarMenuPanel();
+
 	Perspective getPerspective();
 }
