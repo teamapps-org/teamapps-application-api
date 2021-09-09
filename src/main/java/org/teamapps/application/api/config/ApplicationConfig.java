@@ -21,6 +21,7 @@ package org.teamapps.application.api.config;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.security.AnyTypePermission;
 import org.teamapps.event.Event;
 
 public class ApplicationConfig<CONFIG> {
@@ -63,6 +64,7 @@ public class ApplicationConfig<CONFIG> {
 	private XStream createXStream(ClassLoader classLoader) {
 		XStream xStream = new XStream(new DomDriver());
 		xStream.setClassLoader(classLoader);
+		xStream.addPermission(AnyTypePermission.ANY);
 		return xStream;
 	}
 }
