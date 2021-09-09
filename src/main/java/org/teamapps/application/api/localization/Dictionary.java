@@ -285,6 +285,7 @@ public class Dictionary {
 	public static final String APPLICATIONS = "org.teamapps.dictionary.applications";
 	public static final String APPLICATION = "org.teamapps.dictionary.application";
 	public static final String APPLICATION_PERSPECTIVE = "org.teamapps.dictionary.applicationPerspective";
+	public static final String PERSPECTIVE = "org.teamapps.dictionary.perspective";
 	public static final String HOME = "org.teamapps.dictionary.home";
 	public static final String ADMINISTRATION = "org.teamapps.dictionary.administration";
 	public static final String PREFERENCES = "org.teamapps.dictionary.preferences";

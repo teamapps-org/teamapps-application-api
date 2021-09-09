@@ -275,6 +275,7 @@ Error: unknown link
 Applications
 Application
 Application perspective
+Perspective
 Home
 Administration
 Preferences
