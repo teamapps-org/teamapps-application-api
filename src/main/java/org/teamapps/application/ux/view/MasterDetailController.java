@@ -120,8 +120,12 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		timeGraphFieldSelectionCombobox = entityModelBuilder.createTimeGraphFieldSelectionCombobox(timeGraph);
 
 		entityModelBuilder.getOnSelectionEvent().addListener(entity -> {
-			if (detailPosition == DetailPosition.WINDOW) {
-				window.show();
+			switch (detailPosition) {
+				case RIGHT -> detailViewRight.focus();
+				case BOTTOM -> detailViewBottom.focus();
+				case CENTER -> {
+				}
+				case WINDOW -> window.show();
 			}
 		});
 	}
@@ -214,23 +218,27 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 			showTimeGraphButton.setVisible(false);
 			hideTimeGraphButton.setVisible(true);
 			showTimeGraph(true);
+			timeGraphView.focus();
 		});
 
 		hideTimeGraphButton.onClick.addListener(() -> {
 			hideTimeGraphButton.setVisible(false);
 			showTimeGraphButton.setVisible(true);
 			showTimeGraph(false);
+			masterView.focus();
 		});
 		showDeletedButton.onClick.addListener(() -> {
 			showDeletedButton.setVisible(false);
 			hideDeletedButton.setVisible(true);
 			entityModelBuilder.setShowDeletedRecords(true);
+			masterView.focus();
 		});
 
 		hideDeletedButton.onClick.addListener(() -> {
 			showDeletedButton.setVisible(true);
 			hideDeletedButton.setVisible(false);
 			entityModelBuilder.setShowDeletedRecords(false);
+			masterView.focus();
 		});
 	}
 
