@@ -69,8 +69,6 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		restoreDateField.setEditingMode(FieldEditingMode.READONLY);
 	}
 
-
-
 	@Override
 	public ResponsiveFormSection addMetaFields(ResponsiveFormLayout formLayout, boolean withIcons, Event<? extends Entity<?>> onEntityChange) {
 		onEntityChange.addListener(this::updateEntity);
@@ -117,12 +115,13 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 			deletionDateField.setValue(deletionDateIndex != null ? udbEntity.getTimestampValue((IntegerIndex) deletionDateIndex) : null);
 			restoreDateField.setValue(restoreDateIndex != null ? udbEntity.getTimestampValue((IntegerIndex) restoreDateIndex) : null);
 
+			boolean showModification = modificationDateField.getValue() != null && !modificationDateField.getValue().equals(creationDateField.getValue());
 			createdByField.setVisible(createdByField.getValue() != 0);
-			modifiedByField.setVisible(modifiedByField.getValue() != 0);
+			modifiedByField.setVisible(showModification);
 			deletedByField.setVisible(deletedByField.getValue() != 0);
 			restoredByField.setVisible(restoredByField.getValue() != 0);
 			creationDateField.setVisible(creationDateField.getValue() != null);
-			modificationDateField.setVisible(modificationDateField.getValue() != null && !modificationDateField.getValue().equals(creationDateField.getValue()));
+			modificationDateField.setVisible(showModification);
 			deletionDateField.setVisible(deletedByField.getValue() != 0);
 			restoreDateField.setVisible(restoredByField.getValue() != 0);
 		}
