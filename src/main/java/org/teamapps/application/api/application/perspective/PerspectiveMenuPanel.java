@@ -20,6 +20,8 @@
 package org.teamapps.application.api.application.perspective;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.localization.Dictionary;
+import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.itemview.SimpleItemGroup;
 import org.teamapps.ux.component.itemview.SimpleItemView;
@@ -64,7 +66,7 @@ public class PerspectiveMenuPanel {
 
 	private void createButtonMenu(List<AbstractPerspectiveBuilder> allowedPerspectiveBuilders) {
 		buttonMenu = new SimpleItemView<>();
-		SimpleItemGroup<AbstractPerspectiveBuilder> itemGroup = buttonMenu.addSingleColumnGroup(null, null);
+		SimpleItemGroup<AbstractPerspectiveBuilder> itemGroup = buttonMenu.addSingleColumnGroup(ApplicationIcons.WINDOW_EXPLORER, applicationInstanceData.getLocalized(Dictionary.VIEWS));
 		itemGroup.setItemTemplate(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES);
 		allowedPerspectiveBuilders.forEach(builder -> {
 			itemGroup

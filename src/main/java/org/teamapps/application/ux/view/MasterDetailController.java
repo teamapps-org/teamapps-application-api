@@ -23,17 +23,25 @@ import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.application.ApplicationInstanceDataMethods;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.privilege.OrganizationalPrivilegeGroup;
+import org.teamapps.application.api.privilege.Privilege;
 import org.teamapps.application.api.privilege.PrivilegeGroup;
 import org.teamapps.application.api.privilege.StandardPrivilegeGroup;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.api.ui.FormMetaFields;
 import org.teamapps.application.tools.EntityModelBuilder;
+import org.teamapps.application.tools.PrivilegeUtils;
 import org.teamapps.application.ux.form.FormController;
 import org.teamapps.common.format.Color;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.composite.CompositeIcon;
+import org.teamapps.model.controlcenter.OrganizationUnitView;
+import org.teamapps.universaldb.index.numeric.NumericFilter;
+import org.teamapps.universaldb.index.reference.single.SingleReferenceIndex;
+import org.teamapps.universaldb.index.reference.value.RecordReference;
+import org.teamapps.universaldb.pojo.AbstractUdbQuery;
 import org.teamapps.universaldb.pojo.Entity;
 import org.teamapps.universaldb.pojo.Query;
+import org.teamapps.universaldb.query.IndexFilter;
 import org.teamapps.ux.application.layout.ExtendedLayout;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
@@ -49,7 +57,9 @@ import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.window.Window;
 
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements ApplicationInstanceDataMethods {
 
@@ -112,6 +122,17 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		this.formController = new FormController<>(applicationInstanceData, responsiveForm, entityModelBuilder.getSelectedRecordBindableValue(), () -> entityModelBuilder.getEntityBuilder().build(), organizationalPrivilegeGroup, entityModelBuilder.createEntityOrganizationUnitViewFunction());
 		init();
 	}
+
+	public MasterDetailController(Icon entityIcon, String entityTitle, ApplicationInstanceData applicationInstanceData, Supplier<Query<ENTITY>> querySupplier, OrganizationalPrivilegeGroup organizationalPrivilegeGroup, String orgUnitField) {
+		this.entityIcon = entityIcon;
+		this.entityTitle = entityTitle;
+		this.applicationInstanceData = applicationInstanceData;
+		this.entityModelBuilder = new EntityModelBuilder<>(PrivilegeUtils.createQueryOrgUnitFilter(querySupplier,orgUnitField,organizationalPrivilegeGroup,Privilege.READ,applicationInstanceData), applicationInstanceData);
+		this.responsiveForm = new ResponsiveForm<>(120, 120, 0);
+		this.formController = new FormController<>(applicationInstanceData, responsiveForm, entityModelBuilder.getSelectedRecordBindableValue(), () -> entityModelBuilder.getEntityBuilder().build(), organizationalPrivilegeGroup, entityModelBuilder.createEntityOrganizationUnitViewFunction());
+		init();
+	}
+
 
 	private void init() {
 		formController.registerModelBuilder(entityModelBuilder);
