@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,6 +36,7 @@ import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.infiniteitemview.AbstractInfiniteItemViewModel;
 import org.teamapps.ux.component.infiniteitemview.InfiniteItemView2;
 import org.teamapps.ux.component.infiniteitemview.InfiniteItemViewModel;
+import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.table.AbstractTableModel;
 import org.teamapps.ux.component.table.Table;
 import org.teamapps.ux.component.table.TableColumn;
@@ -178,15 +179,23 @@ public abstract class RecordModelBuilder<RECORD> {
 	}
 
 	public void attachViewCountHandler(View view, Supplier<String> titleSupplier) {
+		attachViewCountHandler(view.getPanel(), titleSupplier);
+	}
+
+	public void attachViewCountHandler(Panel panel, Supplier<String> titleSupplier) {
 		onDataChanged.addListener(() -> {
-			view.getPanel().setTitle(titleSupplier.get() + " (" + countRecords + ")");
+			panel.setTitle(titleSupplier.get() + " (" + countRecords + ")");
 		});
 	}
 
 	public void attachSearchField(View view) {
+		attachSearchField(view.getPanel());
+	}
+
+	public void attachSearchField(Panel panel) {
 		TextField searchField = createSearchField();
-		view.getPanel().setRightHeaderField(searchField);
-		view.getPanel().setRightHeaderFieldIcon(ApplicationIcons.FUNNEL);
+		panel.setRightHeaderField(searchField);
+		panel.setRightHeaderFieldIcon(ApplicationIcons.FUNNEL);
 	}
 
 	public TextField createSearchField() {
@@ -220,6 +229,16 @@ public abstract class RecordModelBuilder<RECORD> {
 		table.onRowSelected.addListener(selectedRecord::set);
 		return table;
 	}
+
+	public Table<RECORD> createListTable(boolean forceFitWidth) {
+		Table<RECORD> table = createTable();
+		table.setDisplayAsList(true);
+		table.setForceFitWidth(forceFitWidth);
+		table.setStripedRows(false);
+		table.setRowHeight(28);
+		return table;
+	}
+
 
 	public Table<RECORD> createTemplateFieldTableList(Template template, PropertyProvider<RECORD> propertyProvider, int rowHeight) {
 		Table<RECORD> table = createTable();
@@ -262,6 +281,7 @@ public abstract class RecordModelBuilder<RECORD> {
 		RgbaColor color = Color.MATERIAL_BLUE_700;
 		return createTimeGraph(recordTimeFunction, fieldName, color);
 	}
+
 
 	public LineGraphModel createTimeGraphModel(Function<RECORD, Long> recordTimeFunction) {
 		StaticTimestampsModel timestampsModel = new StaticTimestampsModel() {
@@ -314,6 +334,7 @@ public abstract class RecordModelBuilder<RECORD> {
 		lineGraph.setAreaColorScaleMax(color.withAlpha(0.5f));
 		lineGraph.setYScaleType(ScaleType.SYMLOG);
 		lineGraph.setYScaleZoomMode(LineChartYScaleZoomMode.DYNAMIC_INCLUDING_ZERO);
+		lineGraph.setYZeroLineVisible(false);
 		timeGraph.addGraph(lineGraph);
 
 		timeGraphFieldName = fieldName;
@@ -327,7 +348,7 @@ public abstract class RecordModelBuilder<RECORD> {
 		AbstractTreeModel<RECORD> treeModel = new AbstractTreeModel<>() {
 			@Override
 			public TreeNodeInfo getTreeNodeInfo(RECORD record) {
-				return new TreeNodeInfoImpl<RECORD>(
+				return new TreeNodeInfoImpl<>(
 						parentRecordFunction.apply(record),
 						expandedFunction != null ? expandedFunction.apply(record) : false
 				);

@@ -22,9 +22,11 @@ package org.teamapps.application.ux.form;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
+import org.teamapps.application.tools.RecordModelBuilder;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.absolutelayout.Length;
+import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.table.Table;
 import org.teamapps.ux.component.toolbar.Toolbar;
@@ -44,6 +46,10 @@ public class FormPanel {
 	private int maxHeight = 300;
 
 	public FormPanel(ApplicationInstanceData applicationInstanceData) {
+		this(applicationInstanceData, null);
+	}
+
+	public FormPanel(ApplicationInstanceData applicationInstanceData, Component content) {
 		this.applicationInstanceData = applicationInstanceData;
 		panel = new Panel();
 		toolbar = new Toolbar();
@@ -51,6 +57,7 @@ public class FormPanel {
 		panel.setToolbar(toolbar);
 		setHeight(75);
 		currentButtonGroup = toolbar.addButtonGroup(new ToolbarButtonGroup());
+		setContent(content);
 	}
 
 	public void setContent(Component content) {
@@ -59,6 +66,15 @@ public class FormPanel {
 
 	public void setHeight(int height) {
 		panel.setMinHeight(Length.ofPixels(height));
+	}
+
+	public <RECORD> void setTable(Table<RECORD> table, RecordModelBuilder<RECORD> recordModelBuilder, Icon panelIcon, String panelTitle, boolean autoHeight, boolean autoEditButtonVisibility, boolean addAllEditButtons) {
+		panel.setHideTitleBar(false);
+		//topSpace += 10;
+		panel.setIcon(panelIcon);
+		recordModelBuilder.attachSearchField(panel);
+		recordModelBuilder.attachViewCountHandler(panel, () -> panelTitle);
+		setTable(table, autoHeight, autoEditButtonVisibility, addAllEditButtons);
 	}
 
 	public void setTable(Table<?> table, boolean autoHeight, boolean autoEditButtonVisibility, boolean addAllEditButtons) {
