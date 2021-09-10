@@ -91,10 +91,6 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 	private boolean autoApplyFieldValuesToRecord;
 	private boolean autoApplyRecordValuesToFields;
 
-	private Panel toolbarButtonPanel;
-	private Toolbar toolbar;
-
-
 	public FormController(ApplicationInstanceData applicationInstanceData, AbstractForm<?, ENTITY> form, TwoWayBindableValue<ENTITY> selectedEntity, Supplier<ENTITY> createNewEntitySupplier, StandardPrivilegeGroup standardPrivilegeGroup) {
 		this(applicationInstanceData, form, selectedEntity, createNewEntitySupplier);
 		this.standardPrivilegeGroup = standardPrivilegeGroup;
@@ -158,6 +154,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 				ENTITY entity = createNewEntitySupplier.get();
 				selectedEntity.set(entity);
 				newButton.setVisible(false);
+				revertButton.setVisible(false);
 			}
 		});
 
@@ -227,6 +224,8 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 			newButton.setVisible(isEntityCreationAllowed());
 			deleteButton.setVisible(isEntityDeletable(entity));
 			restoreButton.setVisible(isEntityRestorable(entity));
+			revertButton.setVisible(false);
+			clearMessages();
 			markAllFieldsUnchanged();
 		});
 	}
