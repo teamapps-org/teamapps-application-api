@@ -65,7 +65,7 @@ public class FormPanel {
 	}
 
 	public void setHeight(int height) {
-		panel.setMinHeight(Length.ofPixels(height));
+		panel.setCssStyle("height", Length.ofPixels(height).toCssString());
 	}
 
 	public <RECORD> void setTable(Table<RECORD> table, RecordModelBuilder<RECORD> recordModelBuilder, Icon panelIcon, String panelTitle, boolean autoHeight, boolean autoEditButtonVisibility, boolean addAllEditButtons) {
