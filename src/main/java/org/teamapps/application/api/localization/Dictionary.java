@@ -292,6 +292,31 @@ public class Dictionary {
 	public static final String OPTIONAL = "org.teamapps.dictionary.optional";
 	public static final String LOCATION = "org.teamapps.dictionary.location";
 	public static final String DATABASE = "org.teamapps.dictionary.database";
+	//password check
+	public static final String PWD_DEFAULT_SUGGESTIONS_USEFEWWORDS = "org.teamapps.dictionary.pwd.default.suggestions.useFewWords";
+	public static final String PWD_DEFAULT_SUGGESTIONS_NONEEDSYMBOLS = "org.teamapps.dictionary.pwd.default.suggestions.noNeedSymbols";
+	public static final String PWD_EXTRA_SUGGESTIONS_ADDANOTHERWORD = "org.teamapps.dictionary.pwd.extra.suggestions.addAnotherWord";
+	public static final String PWD_DICTIONARY_WARNING_PASSWORDS_NOTALLOWED = "org.teamapps.dictionary.pwd.dictionary.warning.passwords.notAllowed";
+	public static final String PWD_DICTIONARY_WARNING_PASSWORDS_TOP10 = "org.teamapps.dictionary.pwd.dictionary.warning.passwords.top10";
+	public static final String PWD_DICTIONARY_WARNING_PASSWORDS_TOP100 = "org.teamapps.dictionary.pwd.dictionary.warning.passwords.top100";
+	public static final String PWD_DICTIONARY_WARNING_PASSWORDS_VERYCOMMON = "org.teamapps.dictionary.pwd.dictionary.warning.passwords.veryCommon";
+	public static final String PWD_DICTIONARY_SUGGESTIONS_CAPITALIZATION = "org.teamapps.dictionary.pwd.dictionary.suggestions.capitalization";
+	public static final String PWD_DICTIONARY_SUGGESTIONS_ALLUPPERCASE = "org.teamapps.dictionary.pwd.dictionary.suggestions.allUppercase";
+	public static final String PWD_DICTIONARY_SUGGESTIONS_REVERSED = "org.teamapps.dictionary.pwd.dictionary.suggestions.reversed";
+	public static final String PWD_DICTIONARY_SUGGESTIONS_LEET = "org.teamapps.dictionary.pwd.dictionary.suggestions.leet";
+	public static final String PWD_DICTIONARY_SUGGESTIONS_PASSWORDS_NOTALLOWED = "org.teamapps.dictionary.pwd.dictionary.suggestions.passwords.notAllowed";
+	public static final String PWD_SPATIAL_WARNING_STRAIGHTROWSOFKEYS = "org.teamapps.dictionary.pwd.spatial.warning.straightRowsOfKeys";
+	public static final String PWD_SPATIAL_WARNING_SHORTKEYBOARDPATTERNS = "org.teamapps.dictionary.pwd.spatial.warning.shortKeyboardPatterns";
+	public static final String PWD_SPATIAL_SUGGESTIONS_USELONGERKEYBOARDPATTERN = "org.teamapps.dictionary.pwd.spatial.suggestions.UseLongerKeyboardPattern";
+	public static final String PWD_REPEAT_WARNING_LIKEAAA = "org.teamapps.dictionary.pwd.repeat.warning.likeAAA";
+	public static final String PWD_REPEAT_WARNING_LIKEABCABCABC = "org.teamapps.dictionary.pwd.repeat.warning.likeABCABCABC";
+	public static final String PWD_REPEAT_SUGGESTIONS_AVOIDREPEATED = "org.teamapps.dictionary.pwd.repeat.suggestions.avoidRepeated";
+	public static final String PWD_SEQUENCE_WARNING_SEQUENCEWARNING = "org.teamapps.dictionary.pwd.sequence.warning.sequenceWarning";
+	public static final String PWD_SEQUENCE_SUGGESTIONS_AVOIDSEQUENCES = "org.teamapps.dictionary.pwd.sequence.suggestions.avoidSequences";
+	public static final String PWD_YEAR_WARNING_RECENTYEARS = "org.teamapps.dictionary.pwd.year.warning.recentYears";
+	public static final String PWD_YEAR_SUGGESTIONS_AVOIDYEARS = "org.teamapps.dictionary.pwd.year.suggestions.avoidYears";
+	public static final String PWD_DATE_WARNING_DATES = "org.teamapps.dictionary.pwd.date.warning.dates";
+	public static final String PWD_DATE_SUGGESTIONS_AVOIDDATES = "org.teamapps.dictionary.pwd.date.suggestions.avoidDates";
 	//countries
 	public static final String COUNTRY_AF_AFGHANISTAN = "org.teamapps.dictionary.country.AF_AFGHANISTAN";
 	public static final String COUNTRY_AX_ALAND_ISLANDS = "org.teamapps.dictionary.country.AX_ALAND_ISLANDS";
