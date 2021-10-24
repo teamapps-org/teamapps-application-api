@@ -59,7 +59,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 	public final Event<ENTITY> onEntityRestored = new Event<>();
 	public final Event<ENTITY> onEntityAnyChanged = new Event<>();
 
-	private final AbstractForm<?, ENTITY> form;
+	private final AbstractForm<ENTITY> form;
 	private final Set<AbstractField<?>> otherFields = new HashSet<>();
 	private final TwoWayBindableValue<ENTITY> selectedEntity;
 	private final ApplicationInstanceData applicationInstanceData;
@@ -91,12 +91,12 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 	private boolean autoApplyFieldValuesToRecord;
 	private boolean autoApplyRecordValuesToFields;
 
-	public FormController(ApplicationInstanceData applicationInstanceData, AbstractForm<?, ENTITY> form, TwoWayBindableValue<ENTITY> selectedEntity, Supplier<ENTITY> createNewEntitySupplier, StandardPrivilegeGroup standardPrivilegeGroup) {
+	public FormController(ApplicationInstanceData applicationInstanceData, AbstractForm<ENTITY> form, TwoWayBindableValue<ENTITY> selectedEntity, Supplier<ENTITY> createNewEntitySupplier, StandardPrivilegeGroup standardPrivilegeGroup) {
 		this(applicationInstanceData, form, selectedEntity, createNewEntitySupplier);
 		this.standardPrivilegeGroup = standardPrivilegeGroup;
 	}
 
-	public FormController(ApplicationInstanceData applicationInstanceData, AbstractForm<?, ENTITY> form, TwoWayBindableValue<ENTITY> selectedEntity, Supplier<ENTITY> createNewEntitySupplier, OrganizationalPrivilegeGroup organizationalPrivilegeGroup, Function<ENTITY, OrganizationUnitView> entityOrganizationUnitSelector) {
+	public FormController(ApplicationInstanceData applicationInstanceData, AbstractForm<ENTITY> form, TwoWayBindableValue<ENTITY> selectedEntity, Supplier<ENTITY> createNewEntitySupplier, OrganizationalPrivilegeGroup organizationalPrivilegeGroup, Function<ENTITY, OrganizationUnitView> entityOrganizationUnitSelector) {
 		this(applicationInstanceData, form, selectedEntity, createNewEntitySupplier);
 		this.organizationalPrivilegeGroup = organizationalPrivilegeGroup;
 		this.entityOrganizationUnitSelector = entityOrganizationUnitSelector;
@@ -106,7 +106,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		createOrganizationUnitField();
 	}
 
-	private FormController(ApplicationInstanceData applicationInstanceData, AbstractForm<?, ENTITY> form, TwoWayBindableValue<ENTITY> selectedEntity, Supplier<ENTITY> createNewEntitySupplier) {
+	private FormController(ApplicationInstanceData applicationInstanceData, AbstractForm<ENTITY> form, TwoWayBindableValue<ENTITY> selectedEntity, Supplier<ENTITY> createNewEntitySupplier) {
 		super(applicationInstanceData);
 		this.form = form;
 		this.selectedEntity = selectedEntity;
