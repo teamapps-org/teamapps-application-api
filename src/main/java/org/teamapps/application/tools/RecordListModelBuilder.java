@@ -20,7 +20,6 @@
 package org.teamapps.application.tools;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
-import org.teamapps.udb.filter.TimeIntervalFilter;
 
 import java.util.Collections;
 import java.util.List;

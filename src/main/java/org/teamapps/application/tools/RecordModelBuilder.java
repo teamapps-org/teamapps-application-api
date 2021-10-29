@@ -29,7 +29,6 @@ import org.teamapps.data.value.SortDirection;
 import org.teamapps.data.value.Sorting;
 import org.teamapps.databinding.TwoWayBindableValue;
 import org.teamapps.event.Event;
-import org.teamapps.udb.filter.TimeIntervalFilter;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.component.field.TextField;

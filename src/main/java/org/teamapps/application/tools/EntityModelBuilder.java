@@ -27,7 +27,6 @@ import org.teamapps.application.ux.combo.ComboBoxUtils;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
-import org.teamapps.udb.filter.TimeIntervalFilter;
 import org.teamapps.universaldb.index.ColumnIndex;
 import org.teamapps.universaldb.index.ColumnType;
 import org.teamapps.universaldb.index.IndexType;

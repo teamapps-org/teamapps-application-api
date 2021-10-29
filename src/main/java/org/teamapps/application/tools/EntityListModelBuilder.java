@@ -20,14 +20,9 @@
 package org.teamapps.application.tools;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
-import org.teamapps.udb.filter.TimeIntervalFilter;
 import org.teamapps.universaldb.pojo.Entity;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class EntityListModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordListModelBuilder<ENTITY> {
 
