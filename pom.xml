@@ -91,12 +91,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-universal-db-integration</artifactId>
-            <version>${teamapps-universal-db-integration-version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>one.util</groupId>
             <artifactId>streamex</artifactId>
             <version>0.7.3</version>
@@ -208,25 +202,10 @@
             <version>68.2</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-translate</artifactId>
-            <version>1.95.6</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-lang3</artifactId>
-                    <groupId>org.apache.commons</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>guava</artifactId>
-                    <groupId>com.google.guava</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-codec</artifactId>
-                    <groupId>commons-codec</groupId>
-                </exclusion>
-            </exclusions>
+            <version>2.1.7</version>
         </dependency>
 
         <dependency>
