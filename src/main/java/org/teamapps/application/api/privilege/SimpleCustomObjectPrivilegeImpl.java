@@ -29,4 +29,9 @@ public class SimpleCustomObjectPrivilegeImpl extends AbstractPrivilegeGroup impl
 	public SimpleCustomObjectPrivilegeImpl(String name, Icon icon, String titleKey, String descriptionKey, Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
 		super(name, icon, titleKey, descriptionKey, null, privilegeObjectsSupplier);
 	}
+
+	@Override
+	public PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
+		return new SimpleCustomObjectPrivilegeImpl(getName(), getIcon(), getTitleKey(), getDescriptionKey(), getPrivilegeObjectsSupplier());
+	}
 }

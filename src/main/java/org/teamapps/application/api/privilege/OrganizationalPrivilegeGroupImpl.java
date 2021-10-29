@@ -32,4 +32,9 @@ public class OrganizationalPrivilegeGroupImpl extends AbstractPrivilegeGroup imp
 	public OrganizationalPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, Privilege... privileges) {
 		super(name, icon, titleKey, descriptionKey, privileges);
 	}
+
+	@Override
+	public PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
+		return new OrganizationalPrivilegeGroupImpl(getName(), getIcon(), getTitleKey(), getDescriptionKey(), privileges);
+	}
 }

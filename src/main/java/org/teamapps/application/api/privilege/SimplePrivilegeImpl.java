@@ -26,4 +26,9 @@ public class SimplePrivilegeImpl extends AbstractPrivilegeGroup implements Simpl
 	public SimplePrivilegeImpl(String name, Icon icon, String titleKey, String descriptionKey) {
 		super(name, icon, titleKey, descriptionKey);
 	}
+
+	@Override
+	public PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
+		return new SimplePrivilegeImpl(getName(), getIcon(), getTitleKey(), getDescriptionKey());
+	}
 }

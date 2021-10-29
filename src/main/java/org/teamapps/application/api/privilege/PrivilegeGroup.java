@@ -54,45 +54,7 @@ public interface PrivilegeGroup {
 		return new CustomObjectPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privileges, privilegeObjectsSupplier);
 	}
 
-	default PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
-		PrivilegeGroup privilegeGroup = this;
-		return new PrivilegeGroup() {
-			@Override
-			public PrivilegeGroupType getType() {
-				return privilegeGroup.getType();
-			}
-
-			@Override
-			public String getName() {
-				return privilegeGroup.getName();
-			}
-
-			@Override
-			public Icon getIcon() {
-				return privilegeGroup.getIcon();
-			}
-
-			@Override
-			public String getTitleKey() {
-				return privilegeGroup.getTitleKey();
-			}
-
-			@Override
-			public String getDescriptionKey() {
-				return privilegeGroup.getDescriptionKey();
-			}
-
-			@Override
-			public List<Privilege> getPrivileges() {
-				return Arrays.asList(privileges);
-			}
-
-			@Override
-			public Supplier<List<PrivilegeObject>> getPrivilegeObjectsSupplier() {
-				return privilegeGroup.getPrivilegeObjectsSupplier();
-			}
-		};
-	}
+	PrivilegeGroup createCopyWithPrivileges(Privilege... privileges);
 
 	PrivilegeGroupType getType();
 

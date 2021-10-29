@@ -38,6 +38,18 @@ public interface ApplicationPrivilegeProvider {
 
 	boolean isAllowed(CustomObjectPrivilegeGroup group, Privilege privilege, PrivilegeObject privilegeObject);
 
+	default boolean isAnyReadAccess(OrganizationalPrivilegeGroup privilegeGroup) {
+		return isAnyAccess(privilegeGroup, Privilege.READ);
+	}
+
+	default boolean isAnyAccess(OrganizationalPrivilegeGroup privilegeGroup, Privilege privilege) {
+		return !getAllowedUnits(privilegeGroup, privilege).isEmpty();
+	}
+
+	default boolean isReadAccess(StandardPrivilegeGroup privilegeGroup) {
+		return isAllowed(privilegeGroup, Privilege.READ);
+	}
+
 	List<OrganizationUnitView> getAllowedUnits(SimpleOrganizationalPrivilege simplePrivilege);
 
 	List<OrganizationUnitView> getAllowedUnits(OrganizationalPrivilegeGroup group, Privilege privilege);
