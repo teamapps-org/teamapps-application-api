@@ -306,8 +306,14 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		}
 	}
 
+	public void setFormDataModified() {
+		handleFieldUpdateByClient(null);
+	}
+
 	public void handleFieldUpdateByClient(AbstractField<?> field) {
-		markFieldChanged(field);
+		if (field != null) {
+			markFieldChanged(field);
+		}
 		if (!saveButton.isVisible()) {
 			ENTITY entity = selectedEntity.get();
 			if (isEntityEditable(entity)) {
