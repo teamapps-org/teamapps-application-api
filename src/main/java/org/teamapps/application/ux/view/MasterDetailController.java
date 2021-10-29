@@ -89,6 +89,8 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 	private ToolbarButton editorNextButton;
 	private ToolbarButton editorPreviousButton;
 
+	private boolean isRecycleBinAllowed = true;
+
 	public static enum DetailPosition {
 		RIGHT, BOTTOM, CENTER, WINDOW
 	}
@@ -110,6 +112,7 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		this.entityModelBuilder = new EntityModelBuilder<>(querySupplier, applicationInstanceData);
 		this.responsiveForm = new ResponsiveForm<>(120, 120, 0);
 		this.formController = new FormController<>(applicationInstanceData, responsiveForm, entityModelBuilder.getSelectedRecordBindableValue(), () -> entityModelBuilder.getEntityBuilder().build(), standardPrivilegeGroup);
+		this.isRecycleBinAllowed = applicationInstanceData.isAllowed(standardPrivilegeGroup, Privilege.SHOW_RECYCLE_BIN);
 		init();
 	}
 
@@ -120,6 +123,7 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		this.entityModelBuilder = new EntityModelBuilder<>(querySupplier, applicationInstanceData);
 		this.responsiveForm = new ResponsiveForm<>(120, 120, 0);
 		this.formController = new FormController<>(applicationInstanceData, responsiveForm, entityModelBuilder.getSelectedRecordBindableValue(), () -> entityModelBuilder.getEntityBuilder().build(), organizationalPrivilegeGroup, entityModelBuilder.createEntityOrganizationUnitViewFunction());
+		this.isRecycleBinAllowed = applicationInstanceData.isAnyAccess(organizationalPrivilegeGroup, Privilege.SHOW_RECYCLE_BIN);
 		init();
 	}
 
@@ -130,6 +134,7 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		this.entityModelBuilder = new EntityModelBuilder<>(PrivilegeUtils.createQueryOrgUnitFilter(querySupplier,orgUnitField,organizationalPrivilegeGroup,Privilege.READ,applicationInstanceData), applicationInstanceData);
 		this.responsiveForm = new ResponsiveForm<>(120, 120, 0);
 		this.formController = new FormController<>(applicationInstanceData, responsiveForm, entityModelBuilder.getSelectedRecordBindableValue(), () -> entityModelBuilder.getEntityBuilder().build(), organizationalPrivilegeGroup, entityModelBuilder.createEntityOrganizationUnitViewFunction());
+		this.isRecycleBinAllowed = applicationInstanceData.isAnyAccess(organizationalPrivilegeGroup, Privilege.SHOW_RECYCLE_BIN);
 		init();
 	}
 
@@ -219,10 +224,26 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		ToolbarButton hideTimeGraphButton = buttonGroup.addButton(ToolbarButton.create(CompositeIcon.of(ApplicationIcons.CHART_LINE, ApplicationIcons.ERROR), getLocalized(Dictionary.TIMELINE), getLocalized(Dictionary.TIMELINE)));
 		hideTimeGraphButton.setVisible(false);
 
-		buttonGroup = perspective.addWorkspaceButtonGroup(new ToolbarButtonGroup());
-		ToolbarButton showDeletedButton = buttonGroup.addButton(ToolbarButton.create(ApplicationIcons.GARBAGE_EMPTY, getLocalized(Dictionary.RECYCLE_BIN), getLocalized(Dictionary.SHOW_RECYCLE_BIN)));
-		ToolbarButton hideDeletedButton = buttonGroup.addButton(ToolbarButton.create(CompositeIcon.of(ApplicationIcons.GARBAGE_EMPTY, ApplicationIcons.ERROR), getLocalized(Dictionary.RECYCLE_BIN), getLocalized(Dictionary.RECYCLE_BIN)));
-		hideDeletedButton.setVisible(false);
+		if (isRecycleBinAllowed) {
+			buttonGroup = perspective.addWorkspaceButtonGroup(new ToolbarButtonGroup());
+			ToolbarButton showDeletedButton = buttonGroup.addButton(ToolbarButton.create(ApplicationIcons.GARBAGE_EMPTY, getLocalized(Dictionary.RECYCLE_BIN), getLocalized(Dictionary.SHOW_RECYCLE_BIN)));
+			ToolbarButton hideDeletedButton = buttonGroup.addButton(ToolbarButton.create(CompositeIcon.of(ApplicationIcons.GARBAGE_EMPTY, ApplicationIcons.ERROR), getLocalized(Dictionary.RECYCLE_BIN), getLocalized(Dictionary.RECYCLE_BIN)));
+			hideDeletedButton.setVisible(false);
+
+			showDeletedButton.onClick.addListener(() -> {
+				showDeletedButton.setVisible(false);
+				hideDeletedButton.setVisible(true);
+				entityModelBuilder.setShowDeletedRecords(true);
+				masterView.focus();
+			});
+
+			hideDeletedButton.onClick.addListener(() -> {
+				showDeletedButton.setVisible(true);
+				hideDeletedButton.setVisible(false);
+				entityModelBuilder.setShowDeletedRecords(false);
+				masterView.focus();
+			});
+		}
 
 		buttonGroup = perspective.addWorkspaceButtonGroup(new ToolbarButtonGroup());
 		ToolbarButton viewButton = buttonGroup.addButton(ToolbarButton.create(ApplicationIcons.WINDOWS, getLocalized(Dictionary.VIEW), getLocalized(Dictionary.VIEW)));
@@ -248,19 +269,7 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 			showTimeGraph(false);
 			masterView.focus();
 		});
-		showDeletedButton.onClick.addListener(() -> {
-			showDeletedButton.setVisible(false);
-			hideDeletedButton.setVisible(true);
-			entityModelBuilder.setShowDeletedRecords(true);
-			masterView.focus();
-		});
 
-		hideDeletedButton.onClick.addListener(() -> {
-			showDeletedButton.setVisible(true);
-			hideDeletedButton.setVisible(false);
-			entityModelBuilder.setShowDeletedRecords(false);
-			masterView.focus();
-		});
 	}
 
 
