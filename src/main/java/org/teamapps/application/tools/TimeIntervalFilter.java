@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * TeamApps.org UniversalDB Integration
+ * TeamApps Application API
  * ---
  * Copyright (C) 2020 - 2021 TeamApps.org
  * ---
