@@ -148,6 +148,12 @@ public class Dictionary {
 	public static final String MIN = "org.teamapps.dictionary.min";
 	public static final String SUM = "org.teamapps.dictionary.sum";
 	public static final String AVERAGE = "org.teamapps.dictionary.average";
+	public static final String FULL_PAGE = "org.teamapps.dictionary.fullPage";
+	public static final String PAGE_WIDTH = "org.teamapps.dictionary.pageWidth";
+	public static final String PAGE_HEIGHT = "org.teamapps.dictionary.pageHeight";
+	public static final String WIDTH = "org.teamapps.dictionary.width";
+	public static final String HEIGHT = "org.teamapps.dictionary.height";
+	public static final String DETAILS = "org.teamapps.dictionary.details";
 	//login
 	public static final String LOGIN = "org.teamapps.dictionary.login";
 	public static final String LOGOUT = "org.teamapps.dictionary.logout";
