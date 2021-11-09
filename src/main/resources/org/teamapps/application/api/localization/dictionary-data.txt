@@ -131,6 +131,12 @@ Max
 Min
 Sum
 Average
+Full page
+Page width
+Page height
+Width
+Height
+Details
 
 ::login
 Login
