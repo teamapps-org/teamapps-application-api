@@ -38,9 +38,11 @@ import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.Fields;
+import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.form.AbstractForm;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
 import org.teamapps.ux.component.panel.Panel;
+import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
@@ -372,6 +374,14 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 	}
 
 	public AbstractField<OrganizationUnitView> getOrganizationUnitViewField() {
+		return organizationUnitViewField;
+	}
+
+	public AbstractField<OrganizationUnitView> getOrganizationUnitViewField(Template template) {
+		if (organizationUnitViewField instanceof ComboBox) {
+			ComboBox<OrganizationUnitView> comboBox = (ComboBox<OrganizationUnitView>) organizationUnitViewField;
+			comboBox.setTemplate(template);
+		}
 		return organizationUnitViewField;
 	}
 

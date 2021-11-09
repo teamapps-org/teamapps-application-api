@@ -24,6 +24,7 @@ import org.teamapps.application.api.application.BaseApplicationBuilder;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
+import org.teamapps.application.api.organization.UserRoleType;
 import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.SessionUser;
@@ -36,6 +37,7 @@ import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.session.SessionContext;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -126,6 +128,16 @@ public class DevApplicationData implements ApplicationInstanceData {
 	@Override
 	public void writeExceptionLog(String title, Throwable throwable) {
 		System.out.println("Exception: " + title + ", " + throwable.getMessage());
+	}
+
+	@Override
+	public Integer getOrganizationUserWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType) {
+		return null;
+	}
+
+	@Override
+	public List<Integer> getOrganizationUsersWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType) {
+		return Collections.emptyList();
 	}
 
 	@Override

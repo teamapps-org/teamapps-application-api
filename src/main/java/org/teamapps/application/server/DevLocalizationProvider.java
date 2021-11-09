@@ -24,7 +24,7 @@ import org.teamapps.application.api.localization.ApplicationLocalizationProvider
 import org.teamapps.application.api.localization.LocalizationData;
 import org.teamapps.universaldb.index.translation.TranslatableText;
 
-import java.text.MessageFormat;
+import com.ibm.icu.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

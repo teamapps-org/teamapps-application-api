@@ -85,7 +85,7 @@ public abstract class RecordModelBuilder<RECORD> {
 
 	public RecordModelBuilder(ApplicationInstanceData applicationInstanceData) {
 		this.applicationInstanceData = applicationInstanceData;
-		onDataChanged.addListener(this::queryRecords);
+		onDataChanged.addListener(this::query);
 	}
 
 	public ApplicationInstanceData getApplicationInstanceData() {
@@ -460,7 +460,7 @@ public abstract class RecordModelBuilder<RECORD> {
 		}
 	}
 
-	private void queryRecords() {
+	private void query() {
 		records = performQuery(timeIntervalFilter);
 		countRecords = records.size();
 		if (timeIntervalFilter != null) {

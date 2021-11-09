@@ -153,6 +153,14 @@ public class OrganizationViewUtils {
 		return model;
 	}
 
+	private static List<OrganizationUnitView> getRootNodesOrSortByOrgLevel(Collection<OrganizationUnitView> nodes, int maxUnitsWithoutFiltering) {
+		if (nodes.size() <= maxUnitsWithoutFiltering) {
+			return new ArrayList<>(nodes).stream().sorted(Comparator.comparingInt(OrganizationViewUtils::getOrgLevel)).collect(Collectors.toList());
+		} else {
+			return getRootNodes(nodes);
+		}
+	}
+
 	private static List<OrganizationUnitView> getRootNodes(Collection<OrganizationUnitView> nodes) {
 		Set<OrganizationUnitView> set = nodes instanceof Set ? (Set<OrganizationUnitView>) nodes : new HashSet<>(nodes);
 		return nodes.stream()
