@@ -132,12 +132,17 @@ public class DevApplicationData implements ApplicationInstanceData {
 
 	@Override
 	public Integer getOrganizationUserWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType) {
-		return null;
+		return 1;
+	}
+
+	@Override
+	public String getOrganizationUserNameWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType, boolean lastNameFirst) {
+		return lastNameFirst ? "Doe, John" : "John Doe";
 	}
 
 	@Override
 	public List<Integer> getOrganizationUsersWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType) {
-		return Collections.emptyList();
+		return Collections.singletonList(1);
 	}
 
 	@Override

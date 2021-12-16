@@ -78,5 +78,7 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	Integer getOrganizationUserWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType);
 
+	String getOrganizationUserNameWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType, boolean lastNameFirst);
+
 	List<Integer> getOrganizationUsersWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType);
 }
