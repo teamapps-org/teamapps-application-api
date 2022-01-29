@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps Application API
  * ---
- * Copyright (C) 2020 - 2021 TeamApps.org
+ * Copyright (C) 2020 - 2022 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -213,7 +213,7 @@ public abstract class RecordModelBuilder<RECORD> {
 			}
 
 			@Override
-			public List<RECORD> getRecords(int startIndex, int length, Sorting sorting) {
+			public List<RECORD> getRecords(int startIndex, int length) {
 				return records == null ? Collections.emptyList() : records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
 			}
 		};
@@ -225,7 +225,7 @@ public abstract class RecordModelBuilder<RECORD> {
 		Table<RECORD> table = new Table<>();
 		table.setModel(createTableModel());
 		table.onSortingChanged.addListener(event -> setSorting(event.getSortField(), event.getSortDirection() == SortDirection.ASC));
-		table.onRowSelected.addListener(selectedRecord::set);
+		table.onSingleRowSelected.addListener(selectedRecord::set);
 		return table;
 	}
 

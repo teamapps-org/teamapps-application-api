@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps Application API
  * ---
- * Copyright (C) 2020 - 2021 TeamApps.org
+ * Copyright (C) 2020 - 2022 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ public class FormPanel {
 	}
 
 	public void setAutoDisplayEditButtons(Table<?> table) {
-		table.onRowSelected.addListener(record -> {
+		table.onSingleRowSelected.addListener(record -> {
 			if (editButton != null) {
 				editButton.setVisible(true);
 			}
