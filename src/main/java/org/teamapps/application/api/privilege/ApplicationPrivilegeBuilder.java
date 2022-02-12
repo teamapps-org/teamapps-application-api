@@ -78,6 +78,9 @@ public class ApplicationPrivilegeBuilder {
 	}
 
 	private PrivilegeGroup addPrivilege(PrivilegeGroup privilegeGroup) {
+		if (privilegeGroups.stream().anyMatch(group -> group.getName().equals(privilegeGroup.getName()))) {
+			throw new RuntimeException("Duplicate privilege group name:" + privilegeGroup.getName());
+		}
 		privilegeGroups.add(privilegeGroup);
 		return privilegeGroup;
 	}
