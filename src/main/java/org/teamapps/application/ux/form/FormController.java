@@ -377,10 +377,11 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		return organizationUnitViewField;
 	}
 
-	public AbstractField<OrganizationUnitView> getOrganizationUnitViewField(Template template) {
+	public AbstractField<OrganizationUnitView> getOrganizationUnitViewField(Template template, boolean showClearButton) {
 		if (organizationUnitViewField instanceof ComboBox) {
 			ComboBox<OrganizationUnitView> comboBox = (ComboBox<OrganizationUnitView>) organizationUnitViewField;
 			comboBox.setTemplate(template);
+			comboBox.setShowClearButton(showClearButton);
 		}
 		return organizationUnitViewField;
 	}
