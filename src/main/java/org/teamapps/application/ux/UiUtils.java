@@ -150,4 +150,18 @@ public class UiUtils {
 		return (record, s) -> s == null || s.isBlank() || queryStringFunction.apply(record).contains(s.toLowerCase());
 	}
 
+	public static <RECORD> PropertyProvider<RECORD> createPropertyProvider(Function<RECORD, Icon> icon, Function<RECORD, String> image, Function<RECORD, String> caption, Function<RECORD, String> description) {
+		return (record, collection) -> {
+			Map<String, Object> map = new HashMap<>();
+			if (record == null) {
+				return map;
+			}
+			map.put(BaseTemplate.PROPERTY_ICON, icon != null ? icon.apply(record) : null);
+			map.put(BaseTemplate.PROPERTY_IMAGE, image != null ? image.apply(record) : null);
+			map.put(BaseTemplate.PROPERTY_CAPTION, caption != null ? caption.apply(record) : null);
+			map.put(BaseTemplate.PROPERTY_DESCRIPTION, description != null ? description.apply(record) : null);
+			return map;
+		};
+	}
+
 }
