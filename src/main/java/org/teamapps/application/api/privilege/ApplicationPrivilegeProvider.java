@@ -46,6 +46,15 @@ public interface ApplicationPrivilegeProvider {
 		return !getAllowedUnits(privilegeGroup, privilege).isEmpty();
 	}
 
+	default boolean isAnyAccess(OrganizationalPrivilegeGroup privilegeGroup, Privilege... privileges) {
+		for (Privilege privilege : privileges) {
+			if (!getAllowedUnits(privilegeGroup, privilege).isEmpty()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	default boolean isReadAccess(StandardPrivilegeGroup privilegeGroup) {
 		return isAllowed(privilegeGroup, Privilege.READ);
 	}
