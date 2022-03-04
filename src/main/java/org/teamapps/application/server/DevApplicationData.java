@@ -176,6 +176,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
+	public boolean isAllowed(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege, PrivilegeObject privilegeObject) {
+		return applicationPrivilegeProvider == null || applicationPrivilegeProvider.isAllowed(group, privilege, privilegeObject);
+	}
+
+	@Override
 	public List<OrganizationUnitView> getAllowedUnits(SimpleOrganizationalPrivilege simplePrivilege) {
 		return applicationPrivilegeProvider != null ? applicationPrivilegeProvider.getAllowedUnits(simplePrivilege) : organizationUnitViews;
 	}
@@ -193,6 +198,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	@Override
 	public List<PrivilegeObject> getAllowedPrivilegeObjects(CustomObjectPrivilegeGroup group, Privilege privilege) {
 		return applicationPrivilegeProvider != null ? applicationPrivilegeProvider.getAllowedPrivilegeObjects(group, privilege) : group.getPrivilegeObjectsSupplier().get();
+	}
+
+	@Override
+	public List<PrivilegeObject> getAllowedPrivilegeObjects(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege) {
+		return applicationPrivilegeProvider != null ? applicationPrivilegeProvider.getAllowedPrivilegeObjects(group, privilege) : Collections.emptyList();
 	}
 
 	@Override

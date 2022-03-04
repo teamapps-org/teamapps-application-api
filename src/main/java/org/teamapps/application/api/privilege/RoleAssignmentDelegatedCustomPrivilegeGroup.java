@@ -19,18 +19,20 @@
  */
 package org.teamapps.application.api.privilege;
 
-public enum PrivilegeGroupType {
+import java.util.List;
+import java.util.function.Supplier;
 
+public interface RoleAssignmentDelegatedCustomPrivilegeGroup extends PrivilegeGroup {
 
-	SIMPLE_PRIVILEGE,
-	SIMPLE_ORGANIZATIONAL_PRIVILEGE,
-	SIMPLE_CUSTOM_OBJECT_PRIVILEGE,
+	@Override
+	default PrivilegeGroupType getType() {
+		return PrivilegeGroupType.ROLE_ASSIGNMENT_DELEGATED_CUSTOM_PRIVILEGE_GROUP;
+	}
 
-	STANDARD_PRIVILEGE_GROUP,
-	ORGANIZATIONAL_PRIVILEGE_GROUP,
-	CUSTOM_OBJECT_PRIVILEGE_GROUP,
+	@Override
+	default Supplier<List<PrivilegeObject>> getPrivilegeObjectsSupplier() {
+		return null;
+	}
 
-	ROLE_ASSIGNMENT_DELEGATED_CUSTOM_PRIVILEGE_GROUP,
-
-
+	PrivilegeObject getPrivilegeObjectById(int id);
 }

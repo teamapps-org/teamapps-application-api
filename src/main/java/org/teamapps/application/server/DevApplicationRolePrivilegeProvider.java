@@ -135,6 +135,11 @@ public class DevApplicationRolePrivilegeProvider implements ApplicationPrivilege
 	}
 
 	@Override
+	public boolean isAllowed(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege, PrivilegeObject privilegeObject) {
+		return false;
+	}
+
+	@Override
 	public List<OrganizationUnitView> getAllowedUnits(SimpleOrganizationalPrivilege simpleOrganizationalPrivilege) {
 		if (simpleOrganizationalPrivilegeSetMap == null || !simpleOrganizationalPrivilegeSetMap.containsKey(simpleOrganizationalPrivilege)) {
 			return Collections.emptyList();
@@ -170,5 +175,10 @@ public class DevApplicationRolePrivilegeProvider implements ApplicationPrivilege
 			Set<PrivilegeObject> privilegeObjects = customObjectPrivilegeGroupMap.get(customObjectPrivilegeGroup).get(privilege);
 			return new ArrayList<>(privilegeObjects);
 		}
+	}
+
+	@Override
+	public List<PrivilegeObject> getAllowedPrivilegeObjects(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege) {
+		return Collections.emptyList();
 	}
 }

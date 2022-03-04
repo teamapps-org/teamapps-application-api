@@ -38,6 +38,8 @@ public interface ApplicationPrivilegeProvider {
 
 	boolean isAllowed(CustomObjectPrivilegeGroup group, Privilege privilege, PrivilegeObject privilegeObject);
 
+	boolean isAllowed(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege, PrivilegeObject privilegeObject);
+
 	default boolean isAnyReadAccess(OrganizationalPrivilegeGroup privilegeGroup) {
 		return isAnyAccess(privilegeGroup, Privilege.READ);
 	}
@@ -67,4 +69,5 @@ public interface ApplicationPrivilegeProvider {
 
 	List<PrivilegeObject> getAllowedPrivilegeObjects(CustomObjectPrivilegeGroup group, Privilege privilege);
 
+	List<PrivilegeObject> getAllowedPrivilegeObjects(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege);
 }

@@ -76,6 +76,10 @@ public interface BaseApplicationBuilder {
 		}
 	}
 
+	default ApplicationRoleAssignmentPrivilegeObjectProvider getRoleAssignmentDelegatedPrivilegeObjectProvider() {
+		return null;
+	}
+
 	Event<Void> getOnApplicationInstalled();
 
 	Event<Void> getOnApplicationLoaded();
