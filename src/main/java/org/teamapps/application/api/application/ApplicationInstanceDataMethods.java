@@ -120,6 +120,10 @@ public interface ApplicationInstanceDataMethods {
 		return getApplicationInstanceData().isAllowed(group, privilege, privilegeObject);
 	}
 
+	default boolean isAllowed(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege, PrivilegeObject privilegeObject) {
+		return getApplicationInstanceData().isAllowed(group, privilege, privilegeObject);
+	}
+
 	default List<OrganizationUnitView> getAllowedUnits(SimpleOrganizationalPrivilege simplePrivilege) {
 		return getApplicationInstanceData().getAllowedUnits(simplePrivilege);
 	}
@@ -133,6 +137,10 @@ public interface ApplicationInstanceDataMethods {
 	}
 
 	default List<PrivilegeObject> getAllowedPrivilegeObjects(CustomObjectPrivilegeGroup group, Privilege privilege) {
+		return getApplicationInstanceData().getAllowedPrivilegeObjects(group, privilege);
+	}
+
+	default List<PrivilegeObject> getAllowedPrivilegeObjects(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege) {
 		return getApplicationInstanceData().getAllowedPrivilegeObjects(group, privilege);
 	}
 }

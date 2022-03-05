@@ -30,10 +30,12 @@ public class RoleAssignmentDelegatedCustomPrivilegeGroupImpl extends AbstractPri
 
 	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, List<Privilege> privileges, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction) {
 		super(name, icon, titleKey, descriptionKey, privileges);
+		this.privilegeObjectByIdFunction = privilegeObjectByIdFunction;
 	}
 
 	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
 		super(name, icon, titleKey, descriptionKey, privileges);
+		this.privilegeObjectByIdFunction = privilegeObjectByIdFunction;
 	}
 
 	@Override

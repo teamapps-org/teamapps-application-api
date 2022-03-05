@@ -25,6 +25,7 @@ import org.teamapps.icons.Icon;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface PrivilegeGroup {
@@ -53,6 +54,11 @@ public interface PrivilegeGroup {
 	static CustomObjectPrivilegeGroup createCustomObjectPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, List<Privilege> privileges, Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
 		return new CustomObjectPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privileges, privilegeObjectsSupplier);
 	}
+
+	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
+	}
+
 
 	PrivilegeGroup createCopyWithPrivileges(Privilege... privileges);
 

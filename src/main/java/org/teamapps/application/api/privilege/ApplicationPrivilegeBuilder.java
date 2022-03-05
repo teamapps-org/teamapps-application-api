@@ -25,6 +25,7 @@ import org.teamapps.icons.Icon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ApplicationPrivilegeBuilder {
@@ -75,6 +76,12 @@ public class ApplicationPrivilegeBuilder {
 		CustomObjectPrivilegeGroup privilegeGroup = PrivilegeGroup.createCustomObjectPrivilegeGroup(name, icon, titleKey, descriptionKey, privileges, privilegeObjectsSupplier);
 		addPrivilege(privilegeGroup);
 		return privilegeGroup;
+	}
+
+	public RoleAssignmentDelegatedCustomPrivilegeGroup addDelegatedCustomPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
+		RoleAssignmentDelegatedCustomPrivilegeGroup customPrivilegeGroup = PrivilegeGroup.createDelegatedCustomPrivilegeGroup(name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
+		addPrivilege(customPrivilegeGroup);
+		return customPrivilegeGroup;
 	}
 
 	private PrivilegeGroup addPrivilege(PrivilegeGroup privilegeGroup) {
