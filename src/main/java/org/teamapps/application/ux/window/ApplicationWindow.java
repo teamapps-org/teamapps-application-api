@@ -23,6 +23,7 @@ import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.application.ApplicationInstanceDataMethods;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
+import org.teamapps.common.format.Color;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.toolbar.Toolbar;
@@ -144,4 +145,11 @@ public class ApplicationWindow implements ApplicationInstanceDataMethods {
 		return applicationInstanceData;
 	}
 
+	public Window getWindow() {
+		return window;
+	}
+
+	public Toolbar getToolbar() {
+		return toolbar;
+	}
 }

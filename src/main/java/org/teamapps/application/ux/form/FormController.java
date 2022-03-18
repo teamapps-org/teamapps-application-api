@@ -28,6 +28,7 @@ import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.api.ui.FormMetaFields;
 import org.teamapps.application.tools.RecordModelBuilder;
 import org.teamapps.application.ux.UiUtils;
+import org.teamapps.application.ux.view.RecordVersionsView;
 import org.teamapps.databinding.TwoWayBindableValue;
 import org.teamapps.event.Event;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
@@ -132,6 +133,13 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		deleteButton = FormButtonUtils.createDeleteButton(applicationInstanceData);
 		restoreButton = FormButtonUtils.createRestoreButton(applicationInstanceData);
 
+		ToolbarButton versionsButton = ToolbarButton.createSmall(ApplicationIcons.INDEX, applicationInstanceData.getLocalized("Show record versions"));
+		versionsButton.onClick.addListener(() -> {
+			ENTITY entity = selectedEntity.get();
+			RecordVersionsView<ENTITY> recordVersionsView = new RecordVersionsView<>(entity, applicationInstanceData);
+			recordVersionsView.showVersionsWindow();
+		});
+
 		newButton.setVisible(isEntityCreationAllowed());
 		saveButton.setVisible(false);
 		revertButton.setVisible(false);
@@ -149,6 +157,10 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		buttonGroup = new ToolbarButtonGroup();
 		buttonGroup.addButton(deleteButton);
 		buttonGroup.addButton(restoreButton);
+		toolbarButtonGroups.add(buttonGroup);
+
+		buttonGroup = new ToolbarButtonGroup();
+		buttonGroup.addButton(versionsButton);
 		toolbarButtonGroups.add(buttonGroup);
 
 		newButton.onClick.addListener(() -> {
