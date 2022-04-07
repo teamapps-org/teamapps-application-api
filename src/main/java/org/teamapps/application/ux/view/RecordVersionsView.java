@@ -15,11 +15,10 @@ import org.teamapps.universaldb.index.ColumnType;
 import org.teamapps.universaldb.index.file.FileValue;
 import org.teamapps.universaldb.index.reference.multi.MultiReferenceIndex;
 import org.teamapps.universaldb.index.reference.single.SingleReferenceIndex;
-import org.teamapps.universaldb.index.reference.value.MultiReferenceUpdateEntry;
-import org.teamapps.universaldb.index.reference.value.MultiReferenceUpdateType;
+import org.teamapps.universaldb.index.reference.value.ResolvedMultiReferenceUpdate;
+import org.teamapps.universaldb.index.transaction.resolved.ResolvedTransactionRecordValue;
 import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.universaldb.index.versioning.RecordUpdate;
-import org.teamapps.universaldb.index.versioning.RecordUpdateValue;
 import org.teamapps.universaldb.pojo.AbstractUdbEntity;
 import org.teamapps.universaldb.pojo.Entity;
 import org.teamapps.ux.application.ResponsiveApplication;
@@ -40,6 +39,7 @@ import org.teamapps.ux.component.table.ListTableModel;
 import org.teamapps.ux.component.table.Table;
 import org.teamapps.ux.component.table.TableColumn;
 import org.teamapps.ux.component.template.BaseTemplate;
+import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.template.gridtemplate.GridTemplate;
 import org.teamapps.ux.component.template.gridtemplate.IconElement;
@@ -118,7 +118,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		formLayout.addSection(ApplicationIcons.EDIT, applicationInstanceData.getLocalized("Changed data")).setHideWhenNoVisibleFields(true);
 
 
-		Set<Integer> usedColumnIds = recordUpdates.stream().flatMap(rec -> rec.getUpdateValues().stream()).map(RecordUpdateValue::getColumnId).collect(Collectors.toSet());
+		Set<Integer> usedColumnIds = recordUpdates.stream().flatMap(rec -> rec.getRecordValues().stream()).map(ResolvedTransactionRecordValue::getColumnId).collect(Collectors.toSet());
 		List<ColumnIndex> columns = record.getTableIndex().getColumnIndices().stream().filter(col -> usedColumnIds.contains(col.getMappingId())).collect(Collectors.toList());
 		List<ColumnIndex> sortedColumns = Stream.concat(columns.stream().filter(c -> !isMetaField(c.getName())), columns.stream().filter(c -> isMetaField(c.getName()))).collect(Collectors.toList());
 
@@ -149,7 +149,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 		table.onSingleRowSelected.addListener(recordUpdate -> {
 			Set<AbstractField> fieldSet = new HashSet<>();
-			for (RecordUpdateValue updateValue : recordUpdate.getUpdateValues()) {
+			for (ResolvedTransactionRecordValue updateValue : recordUpdate.getRecordValues()) {
 				int columnId = updateValue.getColumnId();
 				Function<RecordUpdate, Object> fieldValueFunction = fieldFunctionMap.get(columnId);
 				AbstractField field = fieldMap.get(columnId);
@@ -212,7 +212,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		String fieldName = column.getName();
 		TableColumn<RecordUpdate, ? extends Object> tableColumn;
 		Function<RecordUpdate, Object> valueFunction = recordUpdate -> {
-			RecordUpdateValue updateValue = recordUpdate.getValue(column.getMappingId());
+			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
 			return updateValue != null ? updateValue.getValue() : null;
 		};
 		if (isMetaUserColumn(column)) {
@@ -293,28 +293,10 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 							});
 				}
 				case MULTI_REFERENCE -> {
-					MultiReferenceIndex multiReferenceIndex = (MultiReferenceIndex) column;
-					List<ColumnIndex> textIndices = multiReferenceIndex.getReferencedTable().getColumnIndices().stream()
-							.filter(c -> c.getColumnType() == ColumnType.TEXT || c.getColumnType() == ColumnType.TRANSLATABLE_TEXT)
-							.limit(5)
-							.collect(Collectors.toList());
-					TagComboBox<MultiReferenceUpdateEntry> tagComboBox = new TagComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
-					tagComboBox.setPropertyProvider((entry, collection) -> {
-						Map<String, Object> map = new HashMap<>();
-						map.put(BaseTemplate.PROPERTY_ICON, getIcon(entry));
-						if (entry.getReferencedRecordId() == 0) {
-							if (entry.getType() == MultiReferenceUpdateType.REMOVE_ALL) {
-								map.put(BaseTemplate.PROPERTY_CAPTION, "Remove all");
-							}
-						} else {
-							String value = textIndices.stream().map(col -> col.getStringValue(entry.getReferencedRecordId())).filter(s -> !"NULL".equals(s)).filter(Objects::nonNull).collect(Collectors.joining(" "));
-							map.put(BaseTemplate.PROPERTY_CAPTION, value);
-						}
-						return map;
-					});
-					return new TableColumn<RecordUpdate, List<MultiReferenceUpdateEntry>>(fieldName, tagComboBox)
+					TagComboBox<BaseTemplateRecord<Integer>> tagComboBox = new TagComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+					return new TableColumn<RecordUpdate, List<BaseTemplateRecord<Integer>>>(fieldName, tagComboBox)
 							.setDefaultWidth(250)
-							.setValueExtractor(recordUpdate -> (List<MultiReferenceUpdateEntry>) valueFunction.apply(recordUpdate));
+							.setValueExtractor(recordUpdate -> (List<BaseTemplateRecord<Integer>>) valueFunction.apply(recordUpdate));
 				}
 				case TIMESTAMP -> {
 					return new TableColumn<RecordUpdate, Instant>(fieldName, new InstantDateTimeField())
@@ -408,26 +390,8 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 					return new TextField();
 				}
 				case MULTI_REFERENCE -> {
-					MultiReferenceIndex multiReferenceIndex = (MultiReferenceIndex) column;
-					List<ColumnIndex> textIndices = multiReferenceIndex.getReferencedTable().getColumnIndices().stream()
-							.filter(c -> c.getColumnType() == ColumnType.TEXT || c.getColumnType() == ColumnType.TRANSLATABLE_TEXT)
-							.limit(5)
-							.collect(Collectors.toList());
-					TagComboBox<MultiReferenceUpdateEntry> tagComboBox = new TagComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+					TagComboBox<BaseTemplateRecord<Integer>> tagComboBox = new TagComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 					tagComboBox.setWrappingMode(TagBoxWrappingMode.SINGLE_TAG_PER_LINE);
-					tagComboBox.setPropertyProvider((entry, collection) -> {
-						Map<String, Object> map = new HashMap<>();
-						map.put(BaseTemplate.PROPERTY_ICON, getIcon(entry));
-						if (entry.getReferencedRecordId() == 0) {
-							if (entry.getType() == MultiReferenceUpdateType.REMOVE_ALL) {
-								map.put(BaseTemplate.PROPERTY_CAPTION, "Remove all");
-							}
-						} else {
-							String value = textIndices.stream().map(col -> col.getStringValue(entry.getReferencedRecordId())).filter(s -> !"NULL".equals(s)).filter(Objects::nonNull).collect(Collectors.joining(" "));
-							map.put(BaseTemplate.PROPERTY_CAPTION, value);
-						}
-						return map;
-					});
 					return tagComboBox;
 				}
 				case TIMESTAMP -> {
@@ -458,7 +422,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 	private Function<RecordUpdate, Object> createFieldValueFunction(ColumnIndex column) {
 		Function<RecordUpdate, Object> valueFunction = recordUpdate -> {
-			RecordUpdateValue updateValue = recordUpdate.getValue(column.getMappingId());
+			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
 			return updateValue != null ? updateValue.getValue() : null;
 		};
 		if (isMetaUserColumn(column)) {
@@ -523,7 +487,36 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 					};
 				}
 				case MULTI_REFERENCE -> {
-					return recordUpdate -> (List<MultiReferenceUpdateEntry>) valueFunction.apply(recordUpdate);
+					MultiReferenceIndex multiReferenceIndex = (MultiReferenceIndex) column;
+					List<ColumnIndex> textIndices = multiReferenceIndex.getReferencedTable().getColumnIndices().stream()
+							.filter(c -> c.getColumnType() == ColumnType.TEXT || c.getColumnType() == ColumnType.TRANSLATABLE_TEXT)
+							.limit(5)
+							.collect(Collectors.toList());
+
+					return recordUpdate -> {
+						List<BaseTemplateRecord<Integer>> records = new ArrayList<>();
+						ResolvedMultiReferenceUpdate multiReferenceUpdate = (ResolvedMultiReferenceUpdate) valueFunction.apply(recordUpdate);
+						switch (multiReferenceUpdate.getType()) {
+							case REMOVE_ALL_REFERENCES -> {
+								for (Integer referencedId : multiReferenceUpdate.getRemoveReferences()) {
+									String value = textIndices.stream().map(col -> col.getStringValue(referencedId)).filter(s -> !"NULL".equals(s)).filter(Objects::nonNull).collect(Collectors.joining(" "));
+									records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.DELETE, value, referencedId));
+								}
+								for (Integer referencedId : multiReferenceUpdate.getAddReferences()) {
+									String value = textIndices.stream().map(col -> col.getStringValue(referencedId)).filter(s -> !"NULL".equals(s)).filter(Objects::nonNull).collect(Collectors.joining(" "));
+									records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.ADD, value, referencedId));
+								}
+							}
+							case SET_REFERENCES -> {
+								for (Integer referencedId : multiReferenceUpdate.getSetReferences()) {
+									String value = textIndices.stream().map(col -> col.getStringValue(referencedId)).filter(s -> !"NULL".equals(s)).filter(Objects::nonNull).collect(Collectors.joining(" "));
+									records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.CHECK, value, referencedId));
+								}
+							}
+							case ADD_REMOVE_REFERENCES -> records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.ERROR, "Remove all", 0));
+						}
+						return records;
+					};
 				}
 				case TIMESTAMP -> {
 					return recordUpdate -> {
@@ -615,18 +608,15 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		return org.teamapps.universaldb.schema.Table.isReservedMetaName(fieldName);
 	}
 
-	private Icon getIcon(MultiReferenceUpdateEntry entry) {
+	private Icon getIcon(ResolvedMultiReferenceUpdate entry) {
 		switch (entry.getType()) {
-			case SET -> {
-				return ApplicationIcons.CHECK;
-			}
-			case ADD -> {
+			case ADD_REMOVE_REFERENCES -> {
 				return ApplicationIcons.ADD;
 			}
-			case REMOVE -> {
-				return ApplicationIcons.DELETE;
+			case SET_REFERENCES -> {
+				return ApplicationIcons.CHECK;
 			}
-			case REMOVE_ALL -> {
+			case REMOVE_ALL_REFERENCES -> {
 				return ApplicationIcons.ERROR;
 			}
 		}
@@ -634,7 +624,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 	}
 
 	private Icon getIcon(RecordUpdate update) {
-		switch (update.getType()) {
+		switch (update.getRecordType()) {
 			case CREATE -> {
 				return ApplicationIcons.ADD;
 			}
