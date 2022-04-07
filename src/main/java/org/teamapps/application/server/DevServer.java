@@ -111,12 +111,8 @@ public class DevServer {
 
 				ApiSchema apiSchema = new ApiSchema();
 				universalDB.addAuxiliaryModel(apiSchema, classLoader);
-				universalDB.installAuxiliaryModelClassed(apiSchema, classLoader);
-				universalDB.installTableViews(apiSchema, classLoader);
 
 				universalDB.addAuxiliaryModel(databaseModel, classLoader);
-				universalDB.installAuxiliaryModelClassed(databaseModel, classLoader);
-				universalDB.installTableViews(databaseModel, classLoader);
 			}
 			onDevServerBooted.fire();
 			applicationBuilder.getOnApplicationInstalled().fire();
