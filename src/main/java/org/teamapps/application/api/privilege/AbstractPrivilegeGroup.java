@@ -107,7 +107,7 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		AbstractPrivilegeGroup that = (AbstractPrivilegeGroup) o;
+		PrivilegeGroup that = (PrivilegeGroup) o;
 		return getName().equals(that.getName());
 	}
 

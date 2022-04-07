@@ -61,8 +61,8 @@ public class PrivilegeImpl implements Privilege {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		AbstractPrivilegeGroup that = (AbstractPrivilegeGroup) o;
-		return getName().equals(that.getName());
+		Privilege privilege = (Privilege) o;
+		return getName().equals(privilege.getName());
 	}
 
 	@Override
