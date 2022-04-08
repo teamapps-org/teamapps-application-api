@@ -9,9 +9,11 @@ import org.teamapps.application.ux.window.ApplicationWindow;
 import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.data.extract.ValueExtractor;
 import org.teamapps.icons.Icon;
 import org.teamapps.universaldb.index.ColumnIndex;
 import org.teamapps.universaldb.index.ColumnType;
+import org.teamapps.universaldb.index.TableIndex;
 import org.teamapps.universaldb.index.file.FileValue;
 import org.teamapps.universaldb.index.reference.multi.MultiReferenceIndex;
 import org.teamapps.universaldb.index.reference.single.SingleReferenceIndex;
@@ -26,6 +28,7 @@ import org.teamapps.ux.application.layout.StandardLayout;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.field.*;
+import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.field.combobox.TagBoxWrappingMode;
 import org.teamapps.ux.component.field.combobox.TagComboBox;
 import org.teamapps.ux.component.field.datetime.InstantDateTimeField;
@@ -62,21 +65,41 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 	private final ENTITY entity;
 	private final ApplicationInstanceData applicationInstanceData;
+	private final AbstractUdbEntity<ENTITY> record;
+	private final TableIndex tableIndex;
+	private final List<RecordUpdate> recordUpdates;
 	private ResponsiveApplication responsiveApplication;
 	private View leftView;
 	private View centerView;
 	private View rightView;
+	private Map<Integer, RecordVersionViewFieldData> fieldDataByColumnIndex = new HashMap<>();
 
 	public RecordVersionsView(ENTITY entity, ApplicationInstanceData applicationInstanceData) {
 		this.entity = entity;
 		this.applicationInstanceData = applicationInstanceData;
-		createUi();
+		this.record = (AbstractUdbEntity<ENTITY>) entity;
+		this.tableIndex = record.getTableIndex();
+		this.recordUpdates = record.getRecordUpdates();
+
+	}
+
+	public void addField(String fieldName, String fieldTitle) {
+		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle));
+	}
+
+	public void addReferenceField(String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
+		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle, referencedRecordIdToTemplateRecord));
+	}
+
+	public void addCustomField(String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
+		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle, formField, formFieldDataProvider, tableField, tableFieldDataProvider));
+	}
+
+	private int getFieldId(String name) {
+		return tableIndex.getColumnIndex(name).getMappingId();
 	}
 
 	private void createUi() {
-		AbstractUdbEntity<ENTITY> record = (AbstractUdbEntity<ENTITY>) entity;
-		List<RecordUpdate> recordUpdates = record.getRecordUpdates();
-
 		responsiveApplication = ResponsiveApplication.createApplication();
 		Perspective perspective = Perspective.createPerspective();
 		leftView = perspective.addView(View.createView(StandardLayout.LEFT, ApplicationIcons.INDEX, "Versions", null));
@@ -118,7 +141,11 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		formLayout.addSection(ApplicationIcons.EDIT, applicationInstanceData.getLocalized("Changed data")).setHideWhenNoVisibleFields(true);
 
 
-		Set<Integer> usedColumnIds = recordUpdates.stream().flatMap(rec -> rec.getRecordValues().stream()).map(ResolvedTransactionRecordValue::getColumnId).collect(Collectors.toSet());
+		Set<Integer> usedColumnIds = recordUpdates.stream()
+				.flatMap(rec -> rec.getRecordValues().stream())
+				.map(ResolvedTransactionRecordValue::getColumnId)
+				.filter(columnId -> fieldDataByColumnIndex.containsKey(columnId) || isMetaField(columnId))
+				.collect(Collectors.toSet());
 		List<ColumnIndex> columns = record.getTableIndex().getColumnIndices().stream().filter(col -> usedColumnIds.contains(col.getMappingId())).collect(Collectors.toList());
 		List<ColumnIndex> sortedColumns = Stream.concat(columns.stream().filter(c -> !isMetaField(c.getName())), columns.stream().filter(c -> isMetaField(c.getName()))).collect(Collectors.toList());
 
@@ -126,25 +153,53 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		Map<Integer, Function<RecordUpdate, Object>> fieldFunctionMap = new HashMap<>();
 		boolean metaSection = false;
 		for (ColumnIndex column : sortedColumns) {
-			if (!metaSection && isMetaField(column.getName())) {
+			boolean metaField = isMetaField(column.getName());
+			if (!metaSection && metaField) {
 				metaSection = true;
 				formLayout.addSection(ApplicationIcons.WINDOW_SIDEBAR, applicationInstanceData.getLocalized(Dictionary.META_DATA)).setHideWhenNoVisibleFields(true);
 			}
-			Function<RecordUpdate, Object> fieldValueFunction = createFieldValueFunction(column);
+
+			Function<RecordUpdate, Object> fieldValueFunction = null;
+			AbstractField<?> formField = null;
+			String title = null;
+			if (metaField) {
+				title = getMetaFieldTitle(column.getName());
+				formField = createFormField(column);
+				fieldValueFunction = createFieldValueFunction(column);
+			} else {
+				RecordVersionViewFieldData fieldData = fieldDataByColumnIndex.get(column.getMappingId());
+				title = fieldData.getFieldTitle();
+				if (fieldData.isCustomField()) {
+					formField = fieldData.getFormField();
+					fieldValueFunction = recordUpdate -> {
+						ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
+						Object value = updateValue != null ? updateValue.getValue() : null;
+						return fieldData.getFormFieldDataProvider().apply(value);
+					};
+				} else if (fieldData.getReferencedRecordIdToTemplateRecord() != null) {
+					formField = createReferenceField(column, false);
+					fieldValueFunction = createReferenceFieldValueFunction(column, fieldData);
+				} else {
+					formField = createFormField(column);
+					fieldValueFunction = createFieldValueFunction(column);
+				}
+			}
+
+			if (title == null) {
+				title = createTitleFromCamelCase(column.getName());
+			}
+
 			fieldFunctionMap.put(column.getMappingId(), fieldValueFunction);
-			AbstractField<?> formField = createFormField(column);
 			fieldMap.put(column.getMappingId(), formField);
 			formField.setVisible(false);
-			if (!(formField instanceof TextField || formField instanceof NumberField)) {
-				//formField.setEditingMode(FieldEditingMode.READONLY);
-			}
+
 			if (formField instanceof TagComboBox) {
 				formField.setEditingMode(FieldEditingMode.READONLY);
 			}
 			if (metaSection) {
 				formField.setEditingMode(FieldEditingMode.READONLY);
 			}
-			formLayout.addLabelAndField(null, createTitleFromCamelCase(column.getName()), formField);
+			formLayout.addLabelAndField(null, title, formField);
 		}
 
 		table.onSingleRowSelected.addListener(recordUpdate -> {
@@ -152,10 +207,12 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 			for (ResolvedTransactionRecordValue updateValue : recordUpdate.getRecordValues()) {
 				int columnId = updateValue.getColumnId();
 				Function<RecordUpdate, Object> fieldValueFunction = fieldFunctionMap.get(columnId);
-				AbstractField field = fieldMap.get(columnId);
-				field.setValue(fieldValueFunction.apply(recordUpdate));
-				field.setVisible(true);
-				fieldSet.add(field);
+				if (fieldValueFunction != null) {
+					AbstractField field = fieldMap.get(columnId);
+					field.setValue(fieldValueFunction.apply(recordUpdate));
+					field.setVisible(true);
+					fieldSet.add(field);
+				}
 			}
 			fieldMap.values().stream().filter(f -> !fieldSet.contains(f)).forEach(f -> f.setVisible(false));
 		});
@@ -170,8 +227,35 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 
 		for (ColumnIndex column : columns) {
-			TableColumn<RecordUpdate, ?> tableCol = createTableColumn(column);
-			tableCol.setTitle(createTitleFromCamelCase(column.getName()));
+			TableColumn<RecordUpdate, ?> tableCol = null;
+			String title = null;
+			if (isMetaField(column.getName())) {
+				tableCol = createTableColumn(column);
+				title = getMetaFieldTitle(column.getName());
+			} else {
+				RecordVersionViewFieldData fieldData = fieldDataByColumnIndex.get(column.getMappingId());
+				title = fieldData.getFieldTitle();
+				if (fieldData.isCustomField()) {
+					tableCol = createCustomTableColumn(column, fieldData);
+					tableCol = new TableColumn<RecordUpdate, Object>(column.getName(), fieldData.getTableField()).setValueExtractor(recordUpdate -> {
+						ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
+						Object value = updateValue != null ? updateValue.getValue() : null;
+						return fieldData.getTableFieldDataProvider().apply(value);
+					});
+					tableCol.setDefaultWidth(fieldData.getTableColumnWidth());
+
+				} else if (fieldData.getReferencedRecordIdToTemplateRecord() != null) {
+					Function<RecordUpdate, Object> referenceFieldValueFunction = createReferenceFieldValueFunction(column, fieldData);
+					tableCol = new TableColumn<RecordUpdate, Object>(column.getName(), createReferenceField(column, true)).setValueExtractor(referenceFieldValueFunction::apply);
+				} else {
+					tableCol = createTableColumn(column);
+				}
+			}
+
+			if (title == null) {
+				createTitleFromCamelCase(column.getName());
+			}
+			tableCol.setTitle(title);
 			versionTable.addColumn(tableCol);
 		}
 		rightView.setComponent(versionTable);
@@ -179,6 +263,8 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 
 	public void showVersionsWindow() {
+		createUi();
+
 		ApplicationWindow window = new ApplicationWindow(ApplicationIcons.INDEX, "Record versions", applicationInstanceData);
 		window.getWindow().setBodyBackgroundColor(Color.WHITE.withAlpha(0.001f));
 
@@ -208,9 +294,22 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		window.show();
 	}
 
+	private TableColumn<RecordUpdate, ? extends Object> createCustomTableColumn(ColumnIndex column, RecordVersionViewFieldData fieldData) {
+		TableColumn<RecordUpdate, ? extends Object> tableColumn = new TableColumn<RecordUpdate, Object>(column.getName(), fieldData.getTableField()).setValueExtractor(recordUpdate -> {
+			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
+			Object value = updateValue != null ? updateValue.getValue() : null;
+			return fieldData.getTableFieldDataProvider().apply(value);
+		});
+		tableColumn.setDefaultWidth(fieldData.getTableColumnWidth());
+		tableColumn.setTitle(fieldData.getFieldTitle());
+		return tableColumn;
+	}
+
 	private TableColumn<RecordUpdate, ? extends Object> createTableColumn(ColumnIndex column) {
 		String fieldName = column.getName();
 		TableColumn<RecordUpdate, ? extends Object> tableColumn;
+		Function<RecordUpdate, Object> fieldValueFunction = createFieldValueFunction(column);
+		ValueExtractor<RecordUpdate, Object> valueExtractor = fieldValueFunction::apply;
 		Function<RecordUpdate, Object> valueFunction = recordUpdate -> {
 			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
 			return updateValue != null ? updateValue.getValue() : null;
@@ -279,24 +378,13 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 				case SINGLE_REFERENCE -> {
 					return new TableColumn<RecordUpdate, String>(fieldName, new TextField())
 							.setDefaultWidth(250)
-							.setValueExtractor(recordUpdate -> {
-								Integer value = (Integer) valueFunction.apply(recordUpdate);
-								if (value == null) {
-									return null;
-								}
-								SingleReferenceIndex singleReferenceIndex = (SingleReferenceIndex) column;
-								List<ColumnIndex> textIndices = singleReferenceIndex.getReferencedTable().getColumnIndices().stream()
-										.filter(c -> c.getColumnType() == ColumnType.TEXT || c.getColumnType() == ColumnType.TRANSLATABLE_TEXT)
-										.limit(5)
-										.collect(Collectors.toList());
-								return textIndices.stream().map(idx -> idx.getStringValue(value)).filter(s -> !"NULL".equals(s)).filter(Objects::nonNull).collect(Collectors.joining(" "));
-							});
+							.setValueExtractor(recordUpdate -> (String) valueExtractor.extract(recordUpdate));
 				}
 				case MULTI_REFERENCE -> {
 					TagComboBox<BaseTemplateRecord<Integer>> tagComboBox = new TagComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 					return new TableColumn<RecordUpdate, List<BaseTemplateRecord<Integer>>>(fieldName, tagComboBox)
 							.setDefaultWidth(250)
-							.setValueExtractor(recordUpdate -> (List<BaseTemplateRecord<Integer>>) valueFunction.apply(recordUpdate));
+							.setValueExtractor(recordUpdate -> (List<BaseTemplateRecord<Integer>>) valueExtractor.extract(recordUpdate));
 				}
 				case TIMESTAMP -> {
 					return new TableColumn<RecordUpdate, Instant>(fieldName, new InstantDateTimeField())
@@ -363,6 +451,22 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		return null;
 	}
 
+	private AbstractField createReferenceField(ColumnIndex column, boolean table) {
+		if (column.getColumnType() == ColumnType.MULTI_REFERENCE) {
+			TagComboBox<BaseTemplateRecord<Integer>> tagComboBox = new TagComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+			if (table) {
+				tagComboBox.setWrappingMode(TagBoxWrappingMode.SINGLE_LINE);
+			} else {
+				tagComboBox.setWrappingMode(TagBoxWrappingMode.SINGLE_TAG_PER_LINE);
+				tagComboBox.setTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
+			}
+			return tagComboBox;
+		} else {
+			ComboBox<BaseTemplateRecord<Integer>> comboBox = new ComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+			return comboBox;
+		}
+	}
+
 	private AbstractField<?> createFormField(ColumnIndex column) {
 		if (isMetaUserColumn(column)) {
 			return applicationInstanceData.getComponentFactory().createUserTemplateField();
@@ -416,6 +520,46 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 					return new TextField();
 				}
 			}
+		}
+		return null;
+	}
+
+	private Function<RecordUpdate, Object> createReferenceFieldValueFunction(ColumnIndex column, RecordVersionViewFieldData fieldData) {
+		Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord = fieldData.getReferencedRecordIdToTemplateRecord();
+		if (column.getColumnType() == ColumnType.MULTI_REFERENCE) {
+			return recordUpdate -> {
+				ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
+				Object value = updateValue != null ? updateValue.getValue() : null;
+				ResolvedMultiReferenceUpdate multiReferenceUpdate = (ResolvedMultiReferenceUpdate) value;
+				List<BaseTemplateRecord<Integer>> records = new ArrayList<>();
+				switch (multiReferenceUpdate.getType()) {
+					case ADD_REMOVE_REFERENCES -> {
+						for (Integer referencedId : multiReferenceUpdate.getRemoveReferences()) {
+							records.add(referencedRecordIdToTemplateRecord.apply(referencedId * -1));
+						}
+						for (Integer referencedId : multiReferenceUpdate.getAddReferences()) {
+							records.add(referencedRecordIdToTemplateRecord.apply(referencedId));
+						}
+					}
+					case SET_REFERENCES -> {
+						for (Integer referencedId : multiReferenceUpdate.getSetReferences()) {
+							records.add(referencedRecordIdToTemplateRecord.apply(referencedId));
+						}
+					}
+					case REMOVE_ALL_REFERENCES -> records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.ERROR, "Remove all", 0));
+				}
+				return records;
+			};
+		} else if (column.getColumnType() == ColumnType.SINGLE_REFERENCE) {
+			return recordUpdate -> {
+				ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
+				Object value = updateValue != null ? updateValue.getValue() : null;
+				Integer referencedId = (Integer) value;
+				if (referencedId == null) {
+					return null;
+				}
+				return referencedRecordIdToTemplateRecord.apply(referencedId);
+			};
 		}
 		return null;
 	}
@@ -496,8 +640,11 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 					return recordUpdate -> {
 						List<BaseTemplateRecord<Integer>> records = new ArrayList<>();
 						ResolvedMultiReferenceUpdate multiReferenceUpdate = (ResolvedMultiReferenceUpdate) valueFunction.apply(recordUpdate);
+						if (multiReferenceUpdate == null) {
+							return null;
+						}
 						switch (multiReferenceUpdate.getType()) {
-							case REMOVE_ALL_REFERENCES -> {
+							case ADD_REMOVE_REFERENCES -> {
 								for (Integer referencedId : multiReferenceUpdate.getRemoveReferences()) {
 									String value = textIndices.stream().map(col -> col.getStringValue(referencedId)).filter(s -> !"NULL".equals(s)).filter(Objects::nonNull).collect(Collectors.joining(" "));
 									records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.DELETE, value, referencedId));
@@ -513,7 +660,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 									records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.CHECK, value, referencedId));
 								}
 							}
-							case ADD_REMOVE_REFERENCES -> records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.ERROR, "Remove all", 0));
+							case REMOVE_ALL_REFERENCES -> records.add(new BaseTemplateRecord<Integer>(ApplicationIcons.ERROR, "Remove all", 0));
 						}
 						return records;
 					};
@@ -602,6 +749,25 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 			}
 		}
 		return false;
+	}
+
+	private String getMetaFieldTitle(String name) {
+		return switch (name) {
+			case org.teamapps.universaldb.schema.Table.FIELD_CREATED_BY -> applicationInstanceData.getLocalized(Dictionary.CREATED_BY);
+			case org.teamapps.universaldb.schema.Table.FIELD_CREATION_DATE -> applicationInstanceData.getLocalized(Dictionary.CREATION_DATE);
+			case org.teamapps.universaldb.schema.Table.FIELD_MODIFIED_BY -> applicationInstanceData.getLocalized(Dictionary.MODIFIED_BY);
+			case org.teamapps.universaldb.schema.Table.FIELD_MODIFICATION_DATE -> applicationInstanceData.getLocalized(Dictionary.MODIFICATION_DATE);
+			case org.teamapps.universaldb.schema.Table.FIELD_DELETED_BY -> applicationInstanceData.getLocalized(Dictionary.DELETED_BY);
+			case org.teamapps.universaldb.schema.Table.FIELD_DELETION_DATE -> applicationInstanceData.getLocalized(Dictionary.DELETION_DATE);
+			case org.teamapps.universaldb.schema.Table.FIELD_RESTORED_BY -> applicationInstanceData.getLocalized(Dictionary.RESTORED_BY);
+			case org.teamapps.universaldb.schema.Table.FIELD_RESTORE_DATE -> applicationInstanceData.getLocalized(Dictionary.RESTORE_DATE);
+			default -> name;
+		};
+	}
+
+	private boolean isMetaField(int columnId) {
+		ColumnIndex column = tableIndex.getColumnIndices().stream().filter(col -> col.getMappingId() == columnId).findFirst().orElse(null);
+		return isMetaField(column.getName());
 	}
 
 	private boolean isMetaField(String fieldName) {

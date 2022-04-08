@@ -32,6 +32,7 @@ import org.teamapps.application.ux.view.RecordVersionsView;
 import org.teamapps.databinding.TwoWayBindableValue;
 import org.teamapps.event.Event;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
+import org.teamapps.universaldb.pojo.AbstractUdbEntity;
 import org.teamapps.universaldb.pojo.Entity;
 import org.teamapps.ux.application.view.View;
 import org.teamapps.ux.component.dialogue.Dialogue;
@@ -41,7 +42,11 @@ import org.teamapps.ux.component.field.FieldMessage;
 import org.teamapps.ux.component.field.Fields;
 import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.form.AbstractForm;
+import org.teamapps.ux.component.form.ResponsiveForm;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
+import org.teamapps.ux.component.form.layoutpolicy.FormLayoutPolicy;
+import org.teamapps.ux.component.form.layoutpolicy.FormSection;
+import org.teamapps.ux.component.form.layoutpolicy.FormSectionPlacement;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.component.toolbar.Toolbar;
@@ -137,6 +142,8 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		versionsButton.onClick.addListener(() -> {
 			ENTITY entity = selectedEntity.get();
 			RecordVersionsView<ENTITY> recordVersionsView = new RecordVersionsView<>(entity, applicationInstanceData);
+			AbstractUdbEntity<ENTITY> udbEntity = (AbstractUdbEntity<ENTITY>) entity;
+			udbEntity.getTableIndex().getColumnIndices().forEach(col -> recordVersionsView.addField(col.getName(), null));
 			recordVersionsView.showVersionsWindow();
 		});
 

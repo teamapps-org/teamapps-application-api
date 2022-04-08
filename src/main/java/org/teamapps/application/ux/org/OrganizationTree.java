@@ -19,7 +19,6 @@
  */
 package org.teamapps.application.ux.org;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.teamapps.application.api.application.AbstractApplicationView;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
