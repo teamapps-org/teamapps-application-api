@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.application;
 
+import org.teamapps.application.api.application.entity.EntityUpdate;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.privilege.*;
@@ -26,6 +27,7 @@ import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.universaldb.index.translation.TranslatableText;
+import org.teamapps.universaldb.record.EntityBuilder;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.session.SessionContext;
@@ -142,5 +144,9 @@ public interface ApplicationInstanceDataMethods {
 
 	default List<PrivilegeObject> getAllowedPrivilegeObjects(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege) {
 		return getApplicationInstanceData().getAllowedPrivilegeObjects(group, privilege);
+	}
+
+	default <ENTITY> void registerEntity(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener) {
+		getApplicationInstanceData().registerEntity(entityBuilder, listener);
 	}
 }

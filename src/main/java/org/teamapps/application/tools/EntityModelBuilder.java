@@ -76,6 +76,14 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 		return entityBuilder;
 	}
 
+	public boolean matchesQuery(Entity<ENTITY> entity) {
+		return querySupplier.get().matches(entity);
+	}
+
+	public boolean containsEntity(Entity<ENTITY> entity) {
+		return querySupplier.get().matches(entity);
+	}
+
 	@Override
 	public List<ENTITY> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter) {
 		AbstractUdbQuery<ENTITY> query = (AbstractUdbQuery<ENTITY>) querySupplier.get();

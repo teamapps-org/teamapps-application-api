@@ -102,16 +102,19 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 	}
 
-	public void addField(String fieldName, String fieldTitle) {
+	public RecordVersionsView addField(String fieldName, String fieldTitle) {
 		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle));
+		return this;
 	}
 
-	public void addReferenceField(String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
+	public RecordVersionsView addReferenceField(String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
 		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle, referencedRecordIdToTemplateRecord));
+		return this;
 	}
 
-	public void addCustomField(String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
+	public RecordVersionsView addCustomField(String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
 		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle, formField, formFieldDataProvider, tableField, tableFieldDataProvider));
+		return this;
 	}
 
 	private int getFieldId(String name) {

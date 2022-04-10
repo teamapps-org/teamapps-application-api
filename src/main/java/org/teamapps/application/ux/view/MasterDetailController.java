@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,14 +34,8 @@ import org.teamapps.application.ux.form.FormController;
 import org.teamapps.common.format.Color;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.composite.CompositeIcon;
-import org.teamapps.model.controlcenter.OrganizationUnitView;
-import org.teamapps.universaldb.index.numeric.NumericFilter;
-import org.teamapps.universaldb.index.reference.single.SingleReferenceIndex;
-import org.teamapps.universaldb.index.reference.value.RecordReference;
-import org.teamapps.universaldb.pojo.AbstractUdbQuery;
 import org.teamapps.universaldb.pojo.Entity;
 import org.teamapps.universaldb.pojo.Query;
-import org.teamapps.universaldb.query.IndexFilter;
 import org.teamapps.ux.application.layout.ExtendedLayout;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.application.view.View;
@@ -57,9 +51,7 @@ import org.teamapps.ux.component.toolbar.ToolbarButton;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.window.Window;
 
-import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements ApplicationInstanceDataMethods {
 
@@ -131,7 +123,7 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		this.entityIcon = entityIcon;
 		this.entityTitle = entityTitle;
 		this.applicationInstanceData = applicationInstanceData;
-		this.entityModelBuilder = new EntityModelBuilder<>(PrivilegeUtils.createQueryOrgUnitFilter(querySupplier,orgUnitField,organizationalPrivilegeGroup,Privilege.READ,applicationInstanceData), applicationInstanceData);
+		this.entityModelBuilder = new EntityModelBuilder<>(PrivilegeUtils.createQueryOrgUnitFilter(querySupplier, orgUnitField, organizationalPrivilegeGroup, Privilege.READ, applicationInstanceData), applicationInstanceData);
 		this.responsiveForm = new ResponsiveForm<>(120, 120, 0);
 		this.formController = new FormController<>(applicationInstanceData, responsiveForm, entityModelBuilder.getSelectedRecordBindableValue(), () -> entityModelBuilder.getEntityBuilder().build(), organizationalPrivilegeGroup, entityModelBuilder.createEntityOrganizationUnitViewFunction());
 		this.isRecycleBinAllowed = applicationInstanceData.isAnyAccess(organizationalPrivilegeGroup, Privilege.SHOW_RECYCLE_BIN);
@@ -144,6 +136,12 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		detailComponent = responsiveForm;
 		timeGraph = entityModelBuilder.createTimeGraph();
 		timeGraphFieldSelectionCombobox = entityModelBuilder.createTimeGraphFieldSelectionCombobox(timeGraph);
+
+		registerEntity(entityModelBuilder.getEntityBuilder(), entityUpdate -> {
+			if (entityModelBuilder.matchesQuery(entityUpdate.getEntity())) {
+				entityModelBuilder.updateModels();
+			}
+		});
 
 		entityModelBuilder.getOnSelectionEvent().addListener(entity -> {
 			switch (detailPosition) {

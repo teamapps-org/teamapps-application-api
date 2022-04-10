@@ -19,8 +19,10 @@
  */
 package org.teamapps.application.server;
 
+import org.apache.http.MethodNotSupportedException;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.application.BaseApplicationBuilder;
+import org.teamapps.application.api.application.entity.EntityUpdate;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
@@ -32,6 +34,7 @@ import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.universaldb.index.translation.TranslatableText;
+import org.teamapps.universaldb.record.EntityBuilder;
 import org.teamapps.ux.application.ResponsiveApplication;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
@@ -41,6 +44,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class DevApplicationData implements ApplicationInstanceData {
 
@@ -143,6 +147,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	@Override
 	public List<Integer> getOrganizationUsersWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType) {
 		return Collections.singletonList(1);
+	}
+
+	@Override
+	public <ENTITY> void registerEntity(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener) {
+		throw new RuntimeException("registerEntity not supported");
 	}
 
 	@Override

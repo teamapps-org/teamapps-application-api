@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.application;
 
+import org.teamapps.application.api.application.entity.EntityUpdate;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
@@ -30,6 +31,7 @@ import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.reporting.convert.DocumentConverter;
+import org.teamapps.universaldb.record.EntityBuilder;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.session.SessionContext;
@@ -81,4 +83,6 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	String getOrganizationUserNameWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType, boolean lastNameFirst);
 
 	List<Integer> getOrganizationUsersWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType);
+
+	<ENTITY> void registerEntity(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener);
 }
