@@ -19,35 +19,50 @@
  */
 package org.teamapps.application.ux.view;
 
+import org.teamapps.universaldb.index.ColumnIndex;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
+import org.teamapps.ux.component.template.Template;
 
 import java.util.function.Function;
 
 public class RecordVersionViewFieldData {
-	private String fieldName;
-	private String fieldTitle;
+	private final ColumnIndex column;
+	private final String fieldName;
+	private final String fieldTitle;
 	private Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord;
 	private boolean customField;
 	private AbstractField<?> formField;
 	private Function<Object, Object> formFieldDataProvider;
 	private AbstractField<?> tableField;
 	private Function<Object, Object> tableFieldDataProvider;
+	private Template template;
 
 	private int tableColumnWidth = 200;
 
-	public RecordVersionViewFieldData(String fieldName, String fieldTitle) {
+	public RecordVersionViewFieldData(ColumnIndex column, String fieldName, String fieldTitle) {
+		this.column = column;
 		this.fieldName = fieldName;
 		this.fieldTitle = fieldTitle;
 	}
 
-	public RecordVersionViewFieldData(String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
+	public RecordVersionViewFieldData(ColumnIndex column, String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
+		this.column = column;
 		this.fieldName = fieldName;
 		this.fieldTitle = fieldTitle;
 		this.referencedRecordIdToTemplateRecord = referencedRecordIdToTemplateRecord;
 	}
 
-	public RecordVersionViewFieldData(String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
+	public RecordVersionViewFieldData(ColumnIndex column, String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord, Template template) {
+		this.column = column;
+		this.fieldName = fieldName;
+		this.fieldTitle = fieldTitle;
+		this.referencedRecordIdToTemplateRecord = referencedRecordIdToTemplateRecord;
+		this.template = template;
+	}
+
+	public RecordVersionViewFieldData(ColumnIndex column, String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
+		this.column = column;
 		this.fieldName = fieldName;
 		this.fieldTitle = fieldTitle;
 		this.formField = formField;
@@ -55,6 +70,10 @@ public class RecordVersionViewFieldData {
 		this.tableField = tableField;
 		this.tableFieldDataProvider = tableFieldDataProvider;
 		this.customField = true;
+	}
+
+	public ColumnIndex getColumn() {
+		return column;
 	}
 
 	public String getFieldName() {
@@ -95,5 +114,13 @@ public class RecordVersionViewFieldData {
 
 	public void setTableColumnWidth(int tableColumnWidth) {
 		this.tableColumnWidth = tableColumnWidth;
+	}
+
+	public Template getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Template template) {
+		this.template = template;
 	}
 }

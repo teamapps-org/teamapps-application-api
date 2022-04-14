@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -91,7 +91,8 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 	private View leftView;
 	private View centerView;
 	private View rightView;
-	private Map<Integer, RecordVersionViewFieldData> fieldDataByColumnIndex = new HashMap<>();
+	private List<RecordVersionViewFieldData> viewFields = new ArrayList<>();
+
 
 	public RecordVersionsView(ENTITY entity, ApplicationInstanceData applicationInstanceData) {
 		this.entity = entity;
@@ -103,30 +104,42 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 	}
 
 	public RecordVersionsView addField(String fieldName, String fieldTitle) {
-		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle));
+		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle));
 		return this;
 	}
 
 	public RecordVersionsView addReferenceField(String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
-		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle, referencedRecordIdToTemplateRecord));
+
+		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle, referencedRecordIdToTemplateRecord));
 		return this;
 	}
+
+	public RecordVersionsView addReferenceField(String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord, Template template) {
+		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle, referencedRecordIdToTemplateRecord, template));
+		return this;
+	}
+
 
 	public RecordVersionsView addCustomField(String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
-		fieldDataByColumnIndex.put(getFieldId(fieldName), new RecordVersionViewFieldData(fieldName, fieldTitle, formField, formFieldDataProvider, tableField, tableFieldDataProvider));
+		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle, formField, formFieldDataProvider, tableField, tableFieldDataProvider));
 		return this;
 	}
 
-	private int getFieldId(String name) {
-		return tableIndex.getColumnIndex(name).getMappingId();
+	public RecordVersionsView addCustomField(String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> fieldDataProvider, AbstractField<?> tableField) {
+		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle, formField, fieldDataProvider, tableField, fieldDataProvider));
+		return this;
+	}
+
+	private ColumnIndex getColumn(String fieldName) {
+		return tableIndex.getColumnIndex(fieldName);
 	}
 
 	private void createUi() {
 		responsiveApplication = ResponsiveApplication.createApplication();
 		Perspective perspective = Perspective.createPerspective();
-		leftView = perspective.addView(View.createView(StandardLayout.LEFT, ApplicationIcons.INDEX, "Versions", null));
-		centerView = perspective.addView(View.createView(StandardLayout.CENTER, ApplicationIcons.FORM, "Edited Fields", null));
-		rightView = perspective.addView(View.createView(StandardLayout.RIGHT, ApplicationIcons.TABLE, "Version Table", null));
+		leftView = perspective.addView(View.createView(StandardLayout.LEFT, ApplicationIcons.HISTORY, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), null));
+		centerView = perspective.addView(View.createView(StandardLayout.CENTER, ApplicationIcons.FORM, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), null));
+		rightView = perspective.addView(View.createView(StandardLayout.RIGHT, ApplicationIcons.TABLE, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), null));
 		rightView.setVisible(false);
 		responsiveApplication.showPerspective(perspective);
 
@@ -162,14 +175,25 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		ResponsiveFormLayout formLayout = form.addResponsiveFormLayout(450);
 		formLayout.addSection(ApplicationIcons.EDIT, applicationInstanceData.getLocalized("Changed data")).setHideWhenNoVisibleFields(true);
 
-
 		Set<Integer> usedColumnIds = recordUpdates.stream()
 				.flatMap(rec -> rec.getRecordValues().stream())
 				.map(ResolvedTransactionRecordValue::getColumnId)
-				.filter(columnId -> fieldDataByColumnIndex.containsKey(columnId) || isMetaField(columnId))
 				.collect(Collectors.toSet());
-		List<ColumnIndex> columns = record.getTableIndex().getColumnIndices().stream().filter(col -> usedColumnIds.contains(col.getMappingId())).collect(Collectors.toList());
-		List<ColumnIndex> sortedColumns = Stream.concat(columns.stream().filter(c -> !isMetaField(c.getName())), columns.stream().filter(c -> isMetaField(c.getName()))).collect(Collectors.toList());
+
+		List<ColumnIndex> metaFields = record.getTableIndex().getColumnIndices().stream().filter(c -> isMetaField(c.getName())).collect(Collectors.toList());
+
+		List<ColumnIndex> sortedColumns = Stream.concat(
+				viewFields.stream().map(RecordVersionViewFieldData::getColumn).filter(c -> usedColumnIds.contains(c.getMappingId())),
+				metaFields.stream().filter(c -> usedColumnIds.contains(c.getMappingId()))
+		).collect(Collectors.toList());
+
+		List<ColumnIndex> columns = Stream.concat(
+				metaFields.stream().filter(c -> usedColumnIds.contains(c.getMappingId())),
+				viewFields.stream().map(RecordVersionViewFieldData::getColumn).filter(c -> usedColumnIds.contains(c.getMappingId()))
+		).collect(Collectors.toList());
+
+
+		Map<ColumnIndex, RecordVersionViewFieldData> viewFieldByColumn = viewFields.stream().collect(Collectors.toMap(RecordVersionViewFieldData::getColumn, c -> c));
 
 		Map<Integer, AbstractField<?>> fieldMap = new HashMap<>();
 		Map<Integer, Function<RecordUpdate, Object>> fieldFunctionMap = new HashMap<>();
@@ -189,7 +213,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 				formField = createFormField(column);
 				fieldValueFunction = createFieldValueFunction(column);
 			} else {
-				RecordVersionViewFieldData fieldData = fieldDataByColumnIndex.get(column.getMappingId());
+				RecordVersionViewFieldData fieldData = viewFieldByColumn.get(column);
 				title = fieldData.getFieldTitle();
 				if (fieldData.isCustomField()) {
 					formField = fieldData.getFormField();
@@ -255,7 +279,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 				tableCol = createTableColumn(column);
 				title = getMetaFieldTitle(column.getName());
 			} else {
-				RecordVersionViewFieldData fieldData = fieldDataByColumnIndex.get(column.getMappingId());
+				RecordVersionViewFieldData fieldData = viewFieldByColumn.get(column);
 				title = fieldData.getFieldTitle();
 				if (fieldData.isCustomField()) {
 					tableCol = createCustomTableColumn(column, fieldData);
@@ -287,8 +311,11 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 	public void showVersionsWindow() {
 		createUi();
 
-		ApplicationWindow window = new ApplicationWindow(ApplicationIcons.INDEX, "Record versions", applicationInstanceData);
+		ApplicationWindow window = new ApplicationWindow(ApplicationIcons.HISTORY, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), applicationInstanceData);
 		window.getWindow().setBodyBackgroundColor(Color.WHITE.withAlpha(0.001f));
+
+		window.addOkButton().onClick.addListener(window::close);
+		window.addButtonGroup();
 
 		window.setContent(responsiveApplication.getUi());
 		window.setWindowRelativeSize(0.7f, 0.7f);
@@ -312,7 +339,6 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 			rightView.setVisible(false);
 		});
 
-		window.addCancelButton();
 		window.show();
 	}
 
