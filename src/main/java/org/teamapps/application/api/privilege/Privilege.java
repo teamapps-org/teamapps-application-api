@@ -29,8 +29,9 @@ public interface Privilege {
 	Privilege READ = create(PrivilegeType.READ, "read", ApplicationIcons.DOCUMENT_TEXT, Dictionary.READ);
 	Privilege UPDATE = create(PrivilegeType.UPDATE, "update", ApplicationIcons.EDIT, Dictionary.UPDATE);
 	Privilege DELETE = create(PrivilegeType.DELETE, "delete", ApplicationIcons.GARBAGE_EMPTY, Dictionary.DELETE);
-	Privilege RESTORE = create(PrivilegeType.RESTORE, "restore", ApplicationIcons.UNDO, Dictionary.RESTORE);
+	Privilege RESTORE = create(PrivilegeType.RESTORE, "restore", ApplicationIcons.GARBAGE_MAKE_EMPTY, Dictionary.RESTORE);
 	Privilege SHOW_RECYCLE_BIN = create(PrivilegeType.SHOW_RECYCLE_BIN, "readRecycleBin", ApplicationIcons.GARBAGE_OVERFLOW, Dictionary.SHOW_RECYCLE_BIN);
+	Privilege SHOW_MODIFICATION_HISTORY = create(PrivilegeType.SHOW_MODIFICATION_HISTORY, "readModificationHistory", ApplicationIcons.HISTORY, Dictionary.SHOW_MODIFICATION_HISTORY);
 	Privilege EXECUTE = create(PrivilegeType.EXECUTE, "execute", ApplicationIcons.GEARWHEEL, Dictionary.EXECUTE);
 	Privilege PRINT = create(PrivilegeType.PRINT, "print", ApplicationIcons.PRINTER, Dictionary.PRINT);
 	Privilege IMPORT = create(PrivilegeType.IMPORT, "import", ApplicationIcons.ARROW_INTO, Dictionary.IMPORT);
