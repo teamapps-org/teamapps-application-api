@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,6 +30,7 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.extract.ValueExtractor;
 import org.teamapps.icons.Icon;
+import org.teamapps.icons.composite.CompositeIcon;
 import org.teamapps.universaldb.index.ColumnIndex;
 import org.teamapps.universaldb.index.ColumnType;
 import org.teamapps.universaldb.index.TableIndex;
@@ -37,6 +38,7 @@ import org.teamapps.universaldb.index.file.FileValue;
 import org.teamapps.universaldb.index.reference.multi.MultiReferenceIndex;
 import org.teamapps.universaldb.index.reference.single.SingleReferenceIndex;
 import org.teamapps.universaldb.index.reference.value.ResolvedMultiReferenceUpdate;
+import org.teamapps.universaldb.index.transaction.resolved.ResolvedTransactionRecordType;
 import org.teamapps.universaldb.index.transaction.resolved.ResolvedTransactionRecordValue;
 import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.universaldb.index.versioning.RecordUpdate;
@@ -86,7 +88,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 	private final ApplicationInstanceData applicationInstanceData;
 	private final AbstractUdbEntity<ENTITY> record;
 	private final TableIndex tableIndex;
-	private final List<RecordUpdate> recordUpdates;
+	private List<RecordUpdate> recordUpdates;
 	private ResponsiveApplication responsiveApplication;
 	private View leftView;
 	private View centerView;
@@ -156,9 +158,19 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 			map.put(BaseTemplate.PROPERTY_IMAGE, values.get(BaseTemplate.PROPERTY_IMAGE));
 			map.put(BaseTemplate.PROPERTY_CAPTION, values.get(BaseTemplate.PROPERTY_CAPTION));
 			map.put(BaseTemplate.PROPERTY_DESCRIPTION, values.get(BaseTemplate.PROPERTY_DESCRIPTION));
-			map.put(BaseTemplate.PROPERTY_BADGE, dateTimeFormatter.format(Instant.ofEpochMilli(recordUpdate.getTimestamp() * 1000L)));
+			map.put(BaseTemplate.PROPERTY_BADGE, dateTimeFormatter.format(Instant.ofEpochMilli(recordUpdate.getTimestamp())));
 			return map;
 		};
+
+		Set<Integer> viewFieldColumnIds = viewFields.stream().map(f -> f.getColumn().getMappingId()).collect(Collectors.toSet());
+		Set<ResolvedTransactionRecordType> fixedUpdateTypes = new HashSet<>(Arrays.asList(ResolvedTransactionRecordType.DELETE, ResolvedTransactionRecordType.RESTORE, ResolvedTransactionRecordType.CREATE, ResolvedTransactionRecordType.CREATE_WITH_ID));
+		List<RecordUpdate> filteredRecordUpdates = new ArrayList<>();
+		for (RecordUpdate recordUpdate : recordUpdates) {
+			if (fixedUpdateTypes.contains(recordUpdate.getRecordType()) || recordUpdate.getRecordValues().stream().anyMatch(recordValue -> viewFieldColumnIds.contains(recordValue.getColumnId()))) {
+				filteredRecordUpdates.add(recordUpdate);
+			}
+		}
+		this.recordUpdates = filteredRecordUpdates;
 
 		Table<RecordUpdate> table = new ListTable<>();
 		table.setModel(new ListTableModel<>(recordUpdates));
@@ -579,6 +591,9 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 				ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
 				Object value = updateValue != null ? updateValue.getValue() : null;
 				ResolvedMultiReferenceUpdate multiReferenceUpdate = (ResolvedMultiReferenceUpdate) value;
+				if (multiReferenceUpdate == null) {
+					return null;
+				}
 				List<BaseTemplateRecord<Integer>> records = new ArrayList<>();
 				switch (multiReferenceUpdate.getType()) {
 					case ADD_REMOVE_REFERENCES -> {
@@ -839,8 +854,8 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 	private Icon getIcon(RecordUpdate update) {
 		switch (update.getRecordType()) {
-			case CREATE -> {
-				return ApplicationIcons.ADD;
+			case CREATE, CREATE_WITH_ID -> {
+				return CompositeIcon.of(ApplicationIcons.DOCUMENT_EMPTY, ApplicationIcons.ADD);
 			}
 			case UPDATE -> {
 				return ApplicationIcons.EDIT;
@@ -849,13 +864,13 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 				return ApplicationIcons.DELETE;
 			}
 			case RESTORE -> {
-				return ApplicationIcons.CLOCK_BACK;
+				return ApplicationIcons.GARBAGE_MAKE_EMPTY;
 			}
 			case ADD_CYCLIC_REFERENCE -> {
-				return ApplicationIcons.ADD;
+				return CompositeIcon.of(ApplicationIcons.GRAPH_CONNECTION_DIRECTED, ApplicationIcons.ADD);
 			}
 			case REMOVE_CYCLIC_REFERENCE -> {
-				return ApplicationIcons.DELETE;
+				return CompositeIcon.of(ApplicationIcons.GRAPH_CONNECTION_DIRECTED, ApplicationIcons.DELETE);
 			}
 		}
 		return null;
