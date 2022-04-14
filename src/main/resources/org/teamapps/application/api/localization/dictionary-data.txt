@@ -8,6 +8,8 @@ Update
 Revert
 Restore
 Restore record
+Modification history
+Show modification history
 Refresh
 Revert changes
 Remove

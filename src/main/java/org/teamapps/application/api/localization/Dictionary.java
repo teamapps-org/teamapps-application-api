@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps Application API
  * ---
- * Copyright (C) 2020 - 2022 TeamApps.org
+ * Copyright (C) 2020 - 2021 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ public class Dictionary {
 	public static final String REVERT = "org.teamapps.dictionary.revert";
 	public static final String RESTORE = "org.teamapps.dictionary.restore";
 	public static final String RESTORE_RECORD = "org.teamapps.dictionary.restoreRecord";
+	public static final String MODIFICATION_HISTORY = "org.teamapps.dictionary.modificationHistory";
+	public static final String SHOW_MODIFICATION_HISTORY = "org.teamapps.dictionary.showModificationHistory";
 	public static final String REFRESH = "org.teamapps.dictionary.refresh";
 	public static final String REVERT_CHANGES = "org.teamapps.dictionary.revertChanges";
 	public static final String REMOVE = "org.teamapps.dictionary.remove";
