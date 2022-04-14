@@ -138,7 +138,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		deleteButton = FormButtonUtils.createDeleteButton(applicationInstanceData);
 		restoreButton = FormButtonUtils.createRestoreButton(applicationInstanceData);
 
-		ToolbarButton versionsButton = ToolbarButton.createSmall(ApplicationIcons.HISTORY, applicationInstanceData.getLocalized(Dictionary.SHOW_MODIFICATION_HISTORY));
+		ToolbarButton versionsButton = ToolbarButton.createSmall(ApplicationIcons.CLOCK_BACK, applicationInstanceData.getLocalized(Dictionary.SHOW_MODIFICATION_HISTORY));
 		versionsButton.onClick.addListener(() -> {
 			ENTITY entity = selectedEntity.get();
 			RecordVersionsView<ENTITY> recordVersionsView = new RecordVersionsView<>(entity, applicationInstanceData);

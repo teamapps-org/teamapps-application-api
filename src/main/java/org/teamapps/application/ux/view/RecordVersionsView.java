@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -139,7 +139,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 	private void createUi() {
 		responsiveApplication = ResponsiveApplication.createApplication();
 		Perspective perspective = Perspective.createPerspective();
-		leftView = perspective.addView(View.createView(StandardLayout.LEFT, ApplicationIcons.HISTORY, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), null));
+		leftView = perspective.addView(View.createView(StandardLayout.LEFT, ApplicationIcons.CLOCK_BACK, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), null));
 		centerView = perspective.addView(View.createView(StandardLayout.CENTER, ApplicationIcons.FORM, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), null));
 		rightView = perspective.addView(View.createView(StandardLayout.RIGHT, ApplicationIcons.TABLE, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), null));
 		rightView.setVisible(false);
@@ -323,7 +323,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 	public void showVersionsWindow() {
 		createUi();
 
-		ApplicationWindow window = new ApplicationWindow(ApplicationIcons.HISTORY, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), applicationInstanceData);
+		ApplicationWindow window = new ApplicationWindow(ApplicationIcons.CLOCK_BACK, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), applicationInstanceData);
 		window.getWindow().setBodyBackgroundColor(Color.WHITE.withAlpha(0.001f));
 
 		window.addOkButton().onClick.addListener(window::close);
