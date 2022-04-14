@@ -154,7 +154,7 @@ public class DevApplicationRolePrivilegeProvider implements ApplicationPrivilege
 			return Collections.emptyList();
 		} else {
 			Set<OrganizationUnitView> organizationUnitViews = organizationalPrivilegeGroupMap.get(organizationalPrivilegeGroup).get(privilege);
-			return new ArrayList<>(organizationUnitViews);
+			return organizationUnitViews != null ? new ArrayList<>(organizationUnitViews) : Collections.emptyList();
 		}
 	}
 
@@ -173,7 +173,7 @@ public class DevApplicationRolePrivilegeProvider implements ApplicationPrivilege
 			return Collections.emptyList();
 		} else {
 			Set<PrivilegeObject> privilegeObjects = customObjectPrivilegeGroupMap.get(customObjectPrivilegeGroup).get(privilege);
-			return new ArrayList<>(privilegeObjects);
+			return privilegeObjects != null ? new ArrayList<>(privilegeObjects) : Collections.emptyList();
 		}
 	}
 
