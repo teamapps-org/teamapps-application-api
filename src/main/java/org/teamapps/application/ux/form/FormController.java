@@ -357,7 +357,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 			return applicationInstanceData.isAllowed(standardPrivilegeGroup, privilege);
 		} else {
 			OrganizationUnitView selectedOrganizationUnit = entityOrganizationUnitSelector.apply(entity);
-			if (entity.isStored() || selectedOrganizationUnit != null) {
+			if (selectedOrganizationUnit != null) { //entity.isStored() ||
 				return applicationInstanceData.isAllowed(organizationalPrivilegeGroup, privilege, selectedOrganizationUnit);
 			} else {
 				return !applicationInstanceData.getAllowedUnits(organizationalPrivilegeGroup, privilege).isEmpty();
