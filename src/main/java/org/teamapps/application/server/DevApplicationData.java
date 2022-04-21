@@ -151,7 +151,7 @@ public class DevApplicationData implements ApplicationInstanceData {
 
 	@Override
 	public <ENTITY> void registerEntity(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener) {
-		throw new RuntimeException("registerEntity not supported");
+
 	}
 
 	@Override
