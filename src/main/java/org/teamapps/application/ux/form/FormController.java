@@ -267,6 +267,9 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 			organizationUnitViewField = applicationInstanceData.getComponentFactory().createOrganizationUnitTemplateField();
 		}
 		organizationUnitViewField.addValidator(organizationUnitView -> {
+			if (organizationUnitViewField.getValue() == null) {
+				return Collections.emptyList();
+			}
 			ENTITY entity = selectedEntity.get();
 			Privilege privilege = entity.isStored() ? Privilege.UPDATE : Privilege.CREATE;
 			if (applicationInstanceData.isAllowed(organizationalPrivilegeGroup, privilege, organizationUnitViewField.getValue())) {

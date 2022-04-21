@@ -11,8 +11,8 @@
         <maven.compiler.target>14</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
-        <teamapps-version>0.9.139</teamapps-version>
-        <universal-db-version>0.5.18</universal-db-version>
+        <teamapps-version>0.9.145</teamapps-version>
+        <universal-db-version>0.5.19</universal-db-version>
     </properties>
 
     <name>TeamApps Application API</name>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>one.util</groupId>
             <artifactId>streamex</artifactId>
-            <version>0.8.0</version>
+            <version>0.8.1</version>
         </dependency>
 
         <dependency>
@@ -152,7 +152,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.32</version>
+            <version>1.7.36</version>
         </dependency>
 
 
@@ -183,19 +183,19 @@
         <dependency>
             <groupId>com.ibm.icu</groupId>
             <artifactId>icu4j</artifactId>
-            <version>70.1</version>
+            <version>71.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-translate</artifactId>
-            <version>2.1.7</version>
+            <version>2.1.12</version>
         </dependency>
 
         <dependency>
             <groupId>de.mkammerer</groupId>
             <artifactId>argon2-jvm</artifactId>
-            <version>2.5</version>
+            <version>2.11</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jna</artifactId>
@@ -207,7 +207,7 @@
         <dependency>
             <groupId>nl.basjes.parse.useragent</groupId>
             <artifactId>yauaa</artifactId>
-            <version>6.3</version>
+            <version>6.12</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-lang3</artifactId>
@@ -229,25 +229,25 @@
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>libphonenumber</artifactId>
-            <version>8.12.38</version>
+            <version>8.12.46</version>
         </dependency>
 
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>prefixmapper</artifactId>
-            <version>2.174</version>
+            <version>2.182</version>
         </dependency>
 
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>carrier</artifactId>
-            <version>1.164</version>
+            <version>1.172</version>
         </dependency>
 
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>geocoder</artifactId>
-            <version>2.174</version>
+            <version>2.182</version>
         </dependency>
 
 
