@@ -35,6 +35,7 @@ import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.universaldb.pojo.AbstractUdbEntity;
 import org.teamapps.universaldb.pojo.Entity;
 import org.teamapps.ux.application.view.View;
+import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.dialogue.Dialogue;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.field.FieldEditingMode;
@@ -359,7 +360,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 			if (entity.isStored() || selectedOrganizationUnit != null) {
 				return applicationInstanceData.isAllowed(organizationalPrivilegeGroup, privilege, selectedOrganizationUnit);
 			} else {
-				return !applicationInstanceData.getAllowedUnits(organizationalPrivilegeGroup, Privilege.CREATE).isEmpty();
+				return !applicationInstanceData.getAllowedUnits(organizationalPrivilegeGroup, privilege).isEmpty();
 			}
 		}
 	}
@@ -372,7 +373,12 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 		if (standardPrivilegeGroup != null) {
 			return applicationInstanceData.isAllowed(standardPrivilegeGroup, privilege);
 		} else {
-			return applicationInstanceData.isAllowed(organizationalPrivilegeGroup, privilege, entityOrganizationUnitSelector.apply(entity));
+			OrganizationUnitView selectedOrganizationUnit = entityOrganizationUnitSelector.apply(entity);
+			if (selectedOrganizationUnit != null) {
+				return applicationInstanceData.isAllowed(organizationalPrivilegeGroup, privilege, entityOrganizationUnitSelector.apply(entity));
+			} else {
+				return !applicationInstanceData.getAllowedUnits(organizationalPrivilegeGroup, privilege).isEmpty();
+			}
 		}
 	}
 
@@ -433,13 +439,10 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 
 	@Override
 	public boolean validate() {
-		boolean validationResult = super.validate();
-		if (validationResult) {
-			validationResult = Fields.validateAll(new ArrayList<>(otherFields));
-			if (validationResult) {
-				ENTITY entity = selectedEntity.get();
-				return isEntityEditable(entity);
-			}
+		Stream<AbstractField<?>> fieldStream = Stream.concat(getFields().stream(), otherFields.stream()).filter(AbstractComponent::isVisible);
+		if (Fields.validateAll(fieldStream)) {
+			ENTITY entity = selectedEntity.get();
+			return isEntityEditable(entity);
 		}
 		return false;
 	}
