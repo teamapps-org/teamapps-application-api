@@ -235,7 +235,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 						return fieldData.getFormFieldDataProvider().apply(value);
 					};
 				} else if (fieldData.getReferencedRecordIdToTemplateRecord() != null) {
-					formField = createReferenceField(column, false);
+					formField = createReferenceField(column, false, fieldData.getTemplate());
 					fieldValueFunction = createReferenceFieldValueFunction(column, fieldData);
 				} else {
 					formField = createFormField(column);
@@ -304,7 +304,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 				} else if (fieldData.getReferencedRecordIdToTemplateRecord() != null) {
 					Function<RecordUpdate, Object> referenceFieldValueFunction = createReferenceFieldValueFunction(column, fieldData);
-					tableCol = new TableColumn<RecordUpdate, Object>(column.getName(), createReferenceField(column, true)).setValueExtractor(referenceFieldValueFunction::apply);
+					tableCol = new TableColumn<RecordUpdate, Object>(column.getName(), createReferenceField(column, true, null)).setValueExtractor(referenceFieldValueFunction::apply);
 				} else {
 					tableCol = createTableColumn(column);
 				}
@@ -511,14 +511,14 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		return null;
 	}
 
-	private AbstractField createReferenceField(ColumnIndex column, boolean table) {
+	private AbstractField createReferenceField(ColumnIndex column, boolean table, Template template) {
 		if (column.getColumnType() == ColumnType.MULTI_REFERENCE) {
 			TagComboBox<BaseTemplateRecord<Integer>> tagComboBox = new TagComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 			if (table) {
 				tagComboBox.setWrappingMode(TagBoxWrappingMode.SINGLE_LINE);
 			} else {
 				tagComboBox.setWrappingMode(TagBoxWrappingMode.SINGLE_TAG_PER_LINE);
-				tagComboBox.setTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
+				tagComboBox.setTemplate(template != null ? template : BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
 			}
 			return tagComboBox;
 		} else {
