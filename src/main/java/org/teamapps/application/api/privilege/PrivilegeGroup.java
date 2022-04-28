@@ -24,7 +24,9 @@ import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.icons.Icon;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -59,6 +61,15 @@ public interface PrivilegeGroup {
 		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
 	}
 
+	static PrivilegeGroup mergeGroups(PrivilegeGroup groupA, PrivilegeGroup groupB) {
+		if (groupA.getType() != groupB.getType()) {
+			throw new RuntimeException("Cannot merge privilege groups of different type:" + groupA);
+		}
+		List<Privilege> privileges = groupA.getPrivileges();
+		Set<Privilege> privilegeSet = new HashSet<>(privileges);
+		groupB.getPrivileges().stream().filter(p -> !privilegeSet.contains(p)).forEach(privileges::add);
+		return groupA.createCopyWithPrivileges(privileges.toArray(new Privilege[0]));
+	}
 
 	PrivilegeGroup createCopyWithPrivileges(Privilege... privileges);
 

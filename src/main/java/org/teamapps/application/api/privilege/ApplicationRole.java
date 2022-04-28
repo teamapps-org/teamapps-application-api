@@ -34,6 +34,8 @@ public interface ApplicationRole {
 		return new ApplicationRoleImpl(name, icon, titleKey, descriptionKey, Arrays.asList(privilegeGroups));
 	}
 
+	void mergeApplicationRole(ApplicationRole role);
+
 	String getName();
 
 	Icon getIcon();
