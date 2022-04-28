@@ -11,8 +11,8 @@
         <maven.compiler.target>14</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
-        <teamapps-version>0.9.145</teamapps-version>
-        <universal-db-version>0.5.19</universal-db-version>
+        <teamapps-version>0.9.148</teamapps-version>
+        <universal-db-version>0.5.20</universal-db-version>
     </properties>
 
     <name>TeamApps Application API</name>
@@ -189,7 +189,7 @@
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-translate</artifactId>
-            <version>2.1.12</version>
+            <version>2.1.13</version>
         </dependency>
 
         <dependency>
@@ -229,7 +229,7 @@
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>libphonenumber</artifactId>
-            <version>8.12.46</version>
+            <version>8.12.47</version>
         </dependency>
 
         <dependency>
@@ -241,13 +241,13 @@
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>carrier</artifactId>
-            <version>1.172</version>
+            <version>1.173</version>
         </dependency>
 
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>geocoder</artifactId>
-            <version>2.182</version>
+            <version>2.183</version>
         </dependency>
 
 

@@ -21,7 +21,7 @@ package org.teamapps.application.api.localization;
 
 import com.ibm.icu.text.Transliterator;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
