@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.application;
 
+import org.slf4j.event.Level;
 import org.teamapps.application.api.application.entity.EntityUpdate;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
@@ -46,12 +47,12 @@ public interface ApplicationInstanceDataMethods {
 		return getApplicationInstanceData().getUser().getSessionContext();
 	}
 
-	default void writeActivityLog(String title, String data) {
-		getApplicationInstanceData().writeActivityLog(title, data);
+	default void writeActivityLog(Level level, String title, String data) {
+		getApplicationInstanceData().writeActivityLog(level, title, data);
 	}
 
-	default void writeExceptionLog(String title, Throwable throwable) {
-		getApplicationInstanceData().writeExceptionLog(title, throwable);
+	default void writeExceptionLog(Level level, String title, Throwable throwable) {
+		getApplicationInstanceData().writeExceptionLog(level, title, throwable);
 	}
 
 	default SessionUser getUser() {

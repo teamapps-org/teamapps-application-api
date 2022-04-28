@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.application;
 
+import org.slf4j.event.Level;
 import org.teamapps.application.api.application.entity.EntityUpdate;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
@@ -74,9 +75,9 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	ApplicationConfig<?> getApplicationConfig();
 
-	void writeActivityLog(String title, String data);
+	void writeActivityLog(Level level, String title, String data);
 
-	void writeExceptionLog(String title, Throwable throwable);
+	void writeExceptionLog(Level level, String title, Throwable throwable);
 
 	Integer getOrganizationUserWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType);
 

@@ -20,6 +20,7 @@
 package org.teamapps.application.server;
 
 import org.apache.http.MethodNotSupportedException;
+import org.slf4j.event.Level;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.application.BaseApplicationBuilder;
 import org.teamapps.application.api.application.entity.EntityUpdate;
@@ -125,12 +126,12 @@ public class DevApplicationData implements ApplicationInstanceData {
 	}
 
 	@Override
-	public void writeActivityLog(String eventTitle, String eventData) {
+	public void writeActivityLog(Level level, String eventTitle, String eventData) {
 		System.out.println("User activity: " + eventTitle + ", " + eventData);
 	}
 
 	@Override
-	public void writeExceptionLog(String title, Throwable throwable) {
+	public void writeExceptionLog(Level level, String title, Throwable throwable) {
 		System.out.println("Exception: " + title + ", " + throwable.getMessage());
 	}
 
