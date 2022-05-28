@@ -24,6 +24,7 @@ import org.slf4j.event.Level;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.application.BaseApplicationBuilder;
 import org.teamapps.application.api.application.entity.EntityUpdate;
+import org.teamapps.application.api.application.perspective.ApplicationPerspective;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
@@ -103,6 +104,11 @@ public class DevApplicationData implements ApplicationInstanceData {
 	@Override
 	public void showPerspective(Perspective perspective) {
 		responsiveApplication.showPerspective(perspective);
+	}
+
+	@Override
+	public ApplicationPerspective showApplicationPerspective(String perspectiveName) {
+		return null;
 	}
 
 	@Override

@@ -21,6 +21,7 @@ package org.teamapps.application.api.application;
 
 import org.slf4j.event.Level;
 import org.teamapps.application.api.application.entity.EntityUpdate;
+import org.teamapps.application.api.application.perspective.ApplicationPerspective;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.privilege.*;
@@ -69,6 +70,10 @@ public interface ApplicationInstanceDataMethods {
 
 	default void showPerspective(Perspective perspective) {
 		getApplicationInstanceData().showPerspective(perspective);
+	}
+
+	default ApplicationPerspective showApplicationPerspective(String perspectiveName) {
+		return getApplicationInstanceData().showApplicationPerspective(perspectiveName);
 	}
 
 	default ApplicationDesktop createApplicationDesktop() {
