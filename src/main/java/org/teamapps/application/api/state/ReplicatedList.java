@@ -1,7 +1,7 @@
 package org.teamapps.application.api.state;
 
-import org.teamapps.cluster.state.DistributedStateMachine;
-import org.teamapps.cluster.state.StateMachineUpdateMessage;
+import org.teamapps.cluster.state.ReplicatedState;
+import org.teamapps.cluster.state.StateUpdateMessage;
 import org.teamapps.event.Event;
 import org.teamapps.protocol.schema.MessageObject;
 import org.teamapps.protocol.schema.ModelCollection;
@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DistributedList<TYPE extends MessageObject> {
+public class ReplicatedList<TYPE extends MessageObject> {
 
-	private final DistributedStateMachine distributedStateMachine;
+	private final ReplicatedState replicatedState;
 	private final String listName;
 	private final Function<TYPE, String> typeToIdFunction;
-	private final List<StateMachineUpdateMessage> preparedUpdates;
+	private final List<StateUpdateMessage> preparedUpdates;
 	private final PojoObjectDecoder<TYPE> messageDecoder;
 
 	public Event<TYPE> onEntryAdded = new Event<>();
@@ -26,10 +26,11 @@ public class DistributedList<TYPE extends MessageObject> {
 	public Event<TYPE> onEntryUpdated = new Event<>();
 	public Event<Void> onAllEntriesRemoved = new Event<>();
 	public Event<Void> onListChanged = new Event<>();
+	public Event<TYPE> onFireAndForget = new Event<>();
 
 
-	protected DistributedList(DistributedStateMachine distributedStateMachine, String listName, String modelUuid, Function<TYPE, String> typeToIdFunction, ModelCollection modelCollection, List<StateMachineUpdateMessage> preparedUpdates) {
-		this.distributedStateMachine = distributedStateMachine;
+	protected ReplicatedList(ReplicatedState replicatedState, String listName, String modelUuid, Function<TYPE, String> typeToIdFunction, ModelCollection modelCollection, List<StateUpdateMessage> preparedUpdates) {
+		this.replicatedState = replicatedState;
 		this.listName = listName;
 		this.typeToIdFunction = typeToIdFunction;
 		this.preparedUpdates = preparedUpdates;
@@ -37,47 +38,60 @@ public class DistributedList<TYPE extends MessageObject> {
 	}
 
 	public void prepareAddEntry(TYPE entry) {
-		preparedUpdates.add(distributedStateMachine.prepareAddEntry(listName, typeToIdFunction.apply(entry), entry));
+		preparedUpdates.add(replicatedState.prepareAddEntry(listName, typeToIdFunction.apply(entry), entry));
 	}
 
 	public void prepareUpdateEntry(TYPE entry) {
-		preparedUpdates.add(distributedStateMachine.prepareUpdateEntry(listName, typeToIdFunction.apply(entry), entry));
+		preparedUpdates.add(replicatedState.prepareUpdateEntry(listName, typeToIdFunction.apply(entry), entry));
 	}
 
 	public void prepareRemoveEntry(String identifier) {
-		preparedUpdates.add(distributedStateMachine.prepareRemoveEntry(listName, identifier));
+		preparedUpdates.add(replicatedState.prepareRemoveEntry(listName, identifier));
 	}
 
 	public void prepareRemoveEntry(TYPE entry) {
-		preparedUpdates.add(distributedStateMachine.prepareRemoveEntry(listName, typeToIdFunction.apply(entry)));
+		preparedUpdates.add(replicatedState.prepareRemoveEntry(listName, typeToIdFunction.apply(entry)));
 	}
 
 	public void prepareRemoveAllEntries() {
-		preparedUpdates.add(distributedStateMachine.prepareRemoveAllEntries(listName));
+		preparedUpdates.add(replicatedState.prepareRemoveAllEntries(listName));
 	}
 
 	public void addEntry(TYPE entry) {
-		distributedStateMachine.addEntry(listName, typeToIdFunction.apply(entry), entry);
+		replicatedState.addEntry(listName, typeToIdFunction.apply(entry), entry);
 	}
 
 	public void updateEntry(TYPE entry) {
-		distributedStateMachine.updateEntry(listName, typeToIdFunction.apply(entry), entry);
+		replicatedState.updateEntry(listName, typeToIdFunction.apply(entry), entry);
 	}
 
 	public void removeEntry(String identifier) {
-		distributedStateMachine.removeEntry(listName, identifier);
+		replicatedState.removeEntry(listName, identifier);
 	}
 
 	public void removeEntry(TYPE entry) {
-		distributedStateMachine.removeEntry(listName, typeToIdFunction.apply(entry));
+		replicatedState.removeEntry(listName, typeToIdFunction.apply(entry));
 	}
 
 	public void removeAllEntries() {
-		distributedStateMachine.removeAllEntries(listName);
+		replicatedState.removeAllEntries(listName);
+	}
+
+	public void fireAndForget(TYPE entry) {
+		replicatedState.fireAndForget(listName, entry);
+	}
+
+	public TYPE getEntry(String identifier) {
+		MessageObject entry = replicatedState.getEntry(listName, identifier);
+		if (entry != null) {
+			return remap(entry);
+		} else {
+			return null;
+		}
 	}
 
 	public List<TYPE> getEntries() {
-		List<MessageObject> entries = distributedStateMachine.getEntries(listName);
+		List<MessageObject> entries = replicatedState.getEntries(listName);
 		if (entries != null) {
 			List<TYPE> list = new ArrayList<>();
 			entries.forEach(e -> list.add(remap(e)));
@@ -88,7 +102,7 @@ public class DistributedList<TYPE extends MessageObject> {
 	}
 
 	public List<TYPE> getEntries(int startIndex, int length) {
-		List<MessageObject> entries = distributedStateMachine.getEntries(listName);
+		List<MessageObject> entries = replicatedState.getEntries(listName);
 		if (entries != null) {
 			return entries.stream()
 					.skip(startIndex)
@@ -101,7 +115,7 @@ public class DistributedList<TYPE extends MessageObject> {
 	}
 
 	public int getEntryCount() {
-		List<MessageObject> entries = distributedStateMachine.getEntries(listName);
+		List<MessageObject> entries = replicatedState.getEntries(listName);
 		if (entries != null) {
 			return entries.size();
 		} else {
@@ -129,8 +143,12 @@ public class DistributedList<TYPE extends MessageObject> {
 		onListChanged.fire();
 	}
 
+	protected void handleFireAndForget(MessageObject message) {
+		onFireAndForget.fire(remap(message));
+	}
+
 	protected TYPE remap(MessageObject message) {
-		return messageDecoder.remap(message);
+		return message != null ? messageDecoder.remap(message) : null;
 	}
 
 }

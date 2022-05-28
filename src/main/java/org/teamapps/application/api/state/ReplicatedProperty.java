@@ -1,7 +1,7 @@
 package org.teamapps.application.api.state;
 
-import org.teamapps.cluster.state.DistributedStateMachine;
-import org.teamapps.cluster.state.StateMachineUpdateMessage;
+import org.teamapps.cluster.state.ReplicatedState;
+import org.teamapps.cluster.state.StateUpdateMessage;
 import org.teamapps.event.Event;
 import org.teamapps.protocol.schema.MessageObject;
 import org.teamapps.protocol.schema.ModelCollection;
@@ -9,19 +9,19 @@ import org.teamapps.protocol.schema.PojoObjectDecoder;
 
 import java.util.List;
 
-public class DistributedState<TYPE extends MessageObject> {
+public class ReplicatedProperty<TYPE extends MessageObject> {
 
-	private final DistributedStateMachine distributedStateMachine;
+	private final ReplicatedState distributedStateMachine;
 	private final String stateName;
 	private final String modelUuid;
 	private final ModelCollection modelCollection;
-	private final List<StateMachineUpdateMessage> preparedUpdates;
+	private final List<StateUpdateMessage> preparedUpdates;
 	private final PojoObjectDecoder<TYPE> messageDecoder;
 
 	public Event<TYPE> onStateChanged = new Event<>();
 
 
-	protected DistributedState(DistributedStateMachine distributedStateMachine, String stateName, String modelUuid, ModelCollection modelCollection, List<StateMachineUpdateMessage> preparedUpdates) {
+	protected ReplicatedProperty(ReplicatedState distributedStateMachine, String stateName, String modelUuid, ModelCollection modelCollection, List<StateUpdateMessage> preparedUpdates) {
 		this.distributedStateMachine = distributedStateMachine;
 		this.stateName = stateName;
 		this.modelUuid = modelUuid;
@@ -35,7 +35,11 @@ public class DistributedState<TYPE extends MessageObject> {
 	}
 
 	public void setState(TYPE state) {
-		distributedStateMachine.setState(stateName, state);
+		distributedStateMachine.setProperty(stateName, state);
+	}
+
+	public TYPE getProperty() {
+		return remap(distributedStateMachine.getProperty(stateName));
 	}
 
 	protected void handleSetState(MessageObject state) {
@@ -43,7 +47,7 @@ public class DistributedState<TYPE extends MessageObject> {
 	}
 
 	protected TYPE remap(MessageObject message) {
-		return messageDecoder.remap(message);
+		return message != null ? messageDecoder.remap(message) : null;
 	}
 
 }
