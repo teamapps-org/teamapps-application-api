@@ -319,8 +319,11 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		rightView.setComponent(versionTable);
 	}
 
-
 	public void showVersionsWindow() {
+		showVersionsWindow(false);
+	}
+
+	public void showVersionsWindow(boolean showTable) {
 		createUi();
 
 		ApplicationWindow window = new ApplicationWindow(ApplicationIcons.CLOCK_BACK, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), applicationInstanceData);
@@ -350,6 +353,14 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 			centerView.setVisible(true);
 			rightView.setVisible(false);
 		});
+
+		if (showTable) {
+			versionTableButton.setVisible(false);
+			versionFormButton.setVisible(true);
+			leftView.setVisible(false);
+			centerView.setVisible(false);
+			rightView.setVisible(true);
+		}
 
 		window.show();
 	}
