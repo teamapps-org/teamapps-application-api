@@ -11,8 +11,8 @@
         <maven.compiler.target>14</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
-        <teamapps-version>0.9.151</teamapps-version>
-        <universal-db-version>0.5.23-SNAPSHOT</universal-db-version>
+        <teamapps-version>0.9.153</teamapps-version>
+        <universal-db-version>0.5.23</universal-db-version>
     </properties>
 
     <name>TeamApps Application API</name>
@@ -64,12 +64,6 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-server-undertow-embedded</artifactId>
-            <version>${teamapps-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.teamapps</groupId>
-            <artifactId>teamapps-server-jetty-embedded</artifactId>
             <version>${teamapps-version}</version>
         </dependency>
 
