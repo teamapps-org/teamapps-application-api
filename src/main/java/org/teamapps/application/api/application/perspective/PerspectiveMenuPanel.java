@@ -38,20 +38,20 @@ import java.util.stream.Collectors;
 public class PerspectiveMenuPanel {
 
 	private final ApplicationInstanceData applicationInstanceData;
-	private final List<AbstractPerspectiveBuilder> perspectiveBuilders;
-	private Tree<AbstractPerspectiveBuilder> tree;
-	private SimpleItemView<AbstractPerspectiveBuilder> buttonMenu;
-	private Map<AbstractPerspectiveBuilder, ApplicationPerspective> perspectiveByBuilderMap;
+	private final List<PerspectiveBuilder> perspectiveBuilders;
+	private Tree<PerspectiveBuilder> tree;
+	private SimpleItemView<PerspectiveBuilder> buttonMenu;
+	private Map<PerspectiveBuilder, ApplicationPerspective> perspectiveByBuilderMap;
 
-	public static PerspectiveMenuPanel createMenuPanel(ApplicationInstanceData applicationInstanceData, AbstractPerspectiveBuilder... perspectiveBuilders) {
+	public static PerspectiveMenuPanel createMenuPanel(ApplicationInstanceData applicationInstanceData, PerspectiveBuilder... perspectiveBuilders) {
 		return createMenuPanel(applicationInstanceData, Arrays.asList(perspectiveBuilders));
 	}
 
-	public static PerspectiveMenuPanel createMenuPanel(ApplicationInstanceData applicationInstanceData, List<AbstractPerspectiveBuilder> perspectiveBuilders) {
+	public static PerspectiveMenuPanel createMenuPanel(ApplicationInstanceData applicationInstanceData, List<PerspectiveBuilder> perspectiveBuilders) {
 		return new PerspectiveMenuPanel(applicationInstanceData, perspectiveBuilders);
 	}
 
-	public PerspectiveMenuPanel(ApplicationInstanceData applicationInstanceData, List<AbstractPerspectiveBuilder> perspectiveBuilders) {
+	public PerspectiveMenuPanel(ApplicationInstanceData applicationInstanceData, List<PerspectiveBuilder> perspectiveBuilders) {
 		this.applicationInstanceData = applicationInstanceData;
 		this.perspectiveBuilders = perspectiveBuilders;
 		init();
@@ -59,14 +59,14 @@ public class PerspectiveMenuPanel {
 
 	private void init() {
 		perspectiveByBuilderMap = new HashMap<>();
-		List<AbstractPerspectiveBuilder> allowedPerspectiveBuilders = perspectiveBuilders.stream().filter(p -> p.isPerspectiveAccessible(applicationInstanceData)).collect(Collectors.toList());
+		List<PerspectiveBuilder> allowedPerspectiveBuilders = perspectiveBuilders.stream().filter(p -> p.isPerspectiveAccessible(applicationInstanceData)).collect(Collectors.toList());
 		createButtonMenu(allowedPerspectiveBuilders);
 		createTree(allowedPerspectiveBuilders);
 	}
 
-	private void createButtonMenu(List<AbstractPerspectiveBuilder> allowedPerspectiveBuilders) {
+	private void createButtonMenu(List<PerspectiveBuilder> allowedPerspectiveBuilders) {
 		buttonMenu = new SimpleItemView<>();
-		SimpleItemGroup<AbstractPerspectiveBuilder> itemGroup = buttonMenu.addSingleColumnGroup(ApplicationIcons.WINDOW_EXPLORER, applicationInstanceData.getLocalized(Dictionary.VIEWS));
+		SimpleItemGroup<PerspectiveBuilder> itemGroup = buttonMenu.addSingleColumnGroup(ApplicationIcons.WINDOW_EXPLORER, applicationInstanceData.getLocalized(Dictionary.VIEWS));
 		itemGroup.setItemTemplate(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES);
 		allowedPerspectiveBuilders.forEach(builder -> {
 			itemGroup
@@ -75,8 +75,8 @@ public class PerspectiveMenuPanel {
 		});
 	}
 
-	private void createTree(List<AbstractPerspectiveBuilder> allowedPerspectiveBuilders) {
-		ListTreeModel<AbstractPerspectiveBuilder> treeModel = new ListTreeModel<>(allowedPerspectiveBuilders);
+	private void createTree(List<PerspectiveBuilder> allowedPerspectiveBuilders) {
+		ListTreeModel<PerspectiveBuilder> treeModel = new ListTreeModel<>(allowedPerspectiveBuilders);
 		tree = new Tree<>(treeModel);
 		tree.setShowExpanders(false);
 		tree.setEntryTemplate(BaseTemplate.LIST_ITEM_VERY_LARGE_ICON_TWO_LINES);
@@ -92,7 +92,7 @@ public class PerspectiveMenuPanel {
 		}
 	}
 
-	public void openPerspective(AbstractPerspectiveBuilder builder) {
+	public void openPerspective(PerspectiveBuilder builder) {
 		ApplicationPerspective applicationPerspective = perspectiveByBuilderMap.get(builder);
 		if (applicationPerspective == null) {
 			applicationPerspective = builder.build(applicationInstanceData, null);
@@ -102,7 +102,7 @@ public class PerspectiveMenuPanel {
 		applicationInstanceData.showPerspective(applicationPerspective.getPerspective());
 	}
 
-	public void addInstantiatedPerspective(AbstractPerspectiveBuilder builder, ApplicationPerspective perspective) {
+	public void addInstantiatedPerspective(PerspectiveBuilder builder, ApplicationPerspective perspective) {
 		perspectiveByBuilderMap.put(builder, perspective);
 		if (tree != null) {
 			tree.setSelectedNode(tree.getModel().getRecords().stream().filter(record -> record.equals(builder)).findAny().orElse(null));
@@ -113,7 +113,7 @@ public class PerspectiveMenuPanel {
 		return tree;
 	}
 
-	public SimpleItemView<AbstractPerspectiveBuilder> getButtonMenu() {
+	public SimpleItemView<PerspectiveBuilder> getButtonMenu() {
 		return buttonMenu;
 	}
 }
