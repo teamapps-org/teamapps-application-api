@@ -165,8 +165,8 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		detailViewRight = perspective.addView(View.createView(ExtendedLayout.RIGHT, entityIcon, entityTitle, null));
 		detailViewBottom = perspective.addView(View.createView(ExtendedLayout.CENTER_BOTTOM, entityIcon, entityTitle, null));
 
-		detailViewRight.getPanel().setBodyBackgroundColor(Color.WHITE.withAlpha(0.9f));
-		detailViewBottom.getPanel().setBodyBackgroundColor(Color.WHITE.withAlpha(0.9f));
+		detailViewRight.getPanel().setBodyBackgroundColor(getUser().isDarkTheme() ? Color.fromRgba(30, 30, 30,.7f) : Color.WHITE.withAlpha(0.9f));
+		detailViewBottom.getPanel().setBodyBackgroundColor(getUser().isDarkTheme() ? Color.fromRgba(30, 30, 30,.7f) : Color.WHITE.withAlpha(0.9f));
 
 		timeGraphView.setVisible(false);
 		detailViewBottom.setVisible(false);

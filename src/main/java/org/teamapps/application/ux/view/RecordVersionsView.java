@@ -145,8 +145,8 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		rightView.setVisible(false);
 		responsiveApplication.showPerspective(perspective);
 
-		leftView.getPanel().setBodyBackgroundColor(Color.WHITE.withAlpha(0.94f));
-		centerView.getPanel().setBodyBackgroundColor(Color.WHITE.withAlpha(0.94f));
+		leftView.getPanel().setBodyBackgroundColor(applicationInstanceData.getUser().isDarkTheme() ? Color.DARK_GRAY.withAlpha(0.05f) : Color.WHITE.withAlpha(0.94f));
+		centerView.getPanel().setBodyBackgroundColor(applicationInstanceData.getUser().isDarkTheme() ? Color.DARK_GRAY.withAlpha(0.05f) : Color.WHITE.withAlpha(0.94f));
 
 		Template template = createItemTemplate(24, 44, VerticalElementAlignment.CENTER, 48, 1, false);
 		PropertyProvider<Integer> propertyProvider = applicationInstanceData.getComponentFactory().createUserTemplateField().getPropertyProvider();
@@ -327,7 +327,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		createUi();
 
 		ApplicationWindow window = new ApplicationWindow(ApplicationIcons.CLOCK_BACK, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), applicationInstanceData);
-		window.getWindow().setBodyBackgroundColor(Color.WHITE.withAlpha(0.001f));
+		window.getWindow().setBodyBackgroundColor(applicationInstanceData.getUser().isDarkTheme() ? Color.DARK_GRAY.withAlpha(0.001f) : Color.WHITE.withAlpha(0.001f));
 
 		window.addOkButton().onClick.addListener(window::close);
 		window.addButtonGroup();

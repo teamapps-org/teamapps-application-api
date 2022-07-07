@@ -86,4 +86,9 @@ public class DevSessionUser implements SessionUser {
 	public List<String> getRankedLanguages() {
 		return Collections.singletonList(locale.getLanguage());
 	}
+
+	@Override
+	public boolean isDarkTheme() {
+		return false;
+	}
 }

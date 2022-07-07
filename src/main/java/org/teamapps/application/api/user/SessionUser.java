@@ -48,4 +48,6 @@ public interface SessionUser extends UserContext {
 
 	List<String> getRankedLanguages();
 
+	boolean isDarkTheme();
+
 }
