@@ -153,6 +153,6 @@ public interface ApplicationInstanceDataMethods {
 	}
 
 	default <ENTITY> void registerEntity(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener) {
-		getApplicationInstanceData().registerEntity(entityBuilder, listener);
+		getApplicationInstanceData().registerEntityUpdateListener(entityBuilder, listener);
 	}
 }

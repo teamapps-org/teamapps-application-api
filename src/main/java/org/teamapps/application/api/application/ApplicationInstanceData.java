@@ -29,6 +29,7 @@ import org.teamapps.application.api.organization.UserRoleType;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.SessionUser;
+import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
@@ -88,5 +89,7 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	List<Integer> getOrganizationUsersWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType);
 
-	<ENTITY> void registerEntity(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener);
+	<ENTITY> void registerEntityUpdateListener(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener);
+
+	<TYPE> Event<TYPE> getApplicationEvent(String name);
 }
