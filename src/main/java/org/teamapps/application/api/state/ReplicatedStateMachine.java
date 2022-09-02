@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class ReplicatedUxState implements ReplicatedStateHandler {
+public class ReplicatedStateMachine implements ReplicatedStateHandler {
 
 	private ReplicatedState replicatedState;
 	private final Map<String, ReplicatedList<? extends MessageObject>> distributedListByName = new HashMap<>();
@@ -58,17 +58,18 @@ public class ReplicatedUxState implements ReplicatedStateHandler {
 		preparedUpdates.clear();
 	}
 
-	private ReplicatedList<? extends MessageObject> getDistributedList(String name) {
+	private ReplicatedList<? extends MessageObject> getReplicatedList(String name) {
 		return distributedListByName.get(name);
 	}
 
-	private ReplicatedProperty<? extends MessageObject> getDistributedState(String name) {
+	private ReplicatedProperty<? extends MessageObject> getReplicatedState(String name) {
 		return distributedStateByName.get(name);
 	}
 
 	public static void main(String[] args) {
-		ReplicatedUxState replicatedUxState = new ReplicatedUxState();
-		replicatedUxState.setReplicatedState(new LocalState("testMachine", replicatedUxState));
+		ReplicatedStateMachine stateMachine = new ReplicatedStateMachine();
+		stateMachine.setReplicatedState(new LocalState("testMachine", stateMachine));
+
 
 //		DistributedList<Participant> participantList = distributedUxState.createList("test", Participant.OBJECT_UUID, participant -> participant.getId() + "", Participant.getModelCollection());
 //
@@ -90,7 +91,7 @@ public class ReplicatedUxState implements ReplicatedStateHandler {
 
 	@Override
 	public void handleStateUpdated(String stateId, MessageObject state) {
-		ReplicatedProperty<? extends MessageObject> replicatedProperty = getDistributedState(stateId);
+		ReplicatedProperty<? extends MessageObject> replicatedProperty = getReplicatedState(stateId);
 		if (replicatedProperty != null) {
 			replicatedProperty.handleSetState(state);
 		}
@@ -98,7 +99,7 @@ public class ReplicatedUxState implements ReplicatedStateHandler {
 
 	@Override
 	public void handleEntryAdded(String list, MessageObject message) {
-		ReplicatedList<? extends MessageObject> replicatedList = getDistributedList(list);
+		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleEntryAdded(message);
 		}
@@ -106,7 +107,7 @@ public class ReplicatedUxState implements ReplicatedStateHandler {
 
 	@Override
 	public void handleEntryRemoved(String list, MessageObject message) {
-		ReplicatedList<? extends MessageObject> replicatedList = getDistributedList(list);
+		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleEntryRemoved(message);
 		}
@@ -114,7 +115,7 @@ public class ReplicatedUxState implements ReplicatedStateHandler {
 
 	@Override
 	public void handleEntryUpdated(String list, MessageObject currentState, MessageObject previousState) {
-		ReplicatedList<? extends MessageObject> replicatedList = getDistributedList(list);
+		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleEntryUpdated(currentState);
 		}
@@ -122,7 +123,7 @@ public class ReplicatedUxState implements ReplicatedStateHandler {
 
 	@Override
 	public void handleAllEntriesRemoved(String list) {
-		ReplicatedList<? extends MessageObject> replicatedList = getDistributedList(list);
+		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleAllEntriesRemoved();
 		}
@@ -131,7 +132,7 @@ public class ReplicatedUxState implements ReplicatedStateHandler {
 
 	@Override
 	public void handleFireAndForget(String list, MessageObject message) {
-		ReplicatedList<? extends MessageObject> replicatedList = getDistributedList(list);
+		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleFireAndForget(message);
 		}

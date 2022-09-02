@@ -25,6 +25,7 @@ import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.field.combobox.TagComboBox;
+import org.teamapps.ux.component.field.richtext.RichTextEditor;
 
 import java.util.Collection;
 import java.util.Set;
@@ -52,5 +53,7 @@ public interface UiComponentFactory {
 	FormMetaFields createFormMetaFields();
 
 	String createUserAvatarLink(int userId, boolean large);
+
+	RichTextEditor createEmbeddedImagesEnabledRichTextEditor(String bucket);
 
 }
