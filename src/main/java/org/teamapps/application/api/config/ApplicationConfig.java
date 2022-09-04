@@ -19,9 +19,11 @@
  */
 package org.teamapps.application.api.config;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.security.AnyTypePermission;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.teamapps.event.Event;
 
 public class ApplicationConfig<CONFIG> {
@@ -43,8 +45,9 @@ public class ApplicationConfig<CONFIG> {
 
 	public void updateConfig(String xml, ClassLoader classLoader) throws Exception {
 		try {
-			XStream xStream = createXStream(classLoader);
-			CONFIG config = (CONFIG) xStream.fromXML(xml);
+			XmlMapper xmlMapper = createXmlMapper(classLoader);
+			Class<?> configClass = config.getClass();
+			CONFIG config = (CONFIG)  xmlMapper.readValue(xml, configClass);
 			setConfig(config);
 			onConfigUpdate.fire(config);
 		} catch (Throwable e) {
@@ -56,15 +59,24 @@ public class ApplicationConfig<CONFIG> {
 		if (getConfig() == null) {
 			return null;
 		}
-		XStream xStream = createXStream(classLoader);
-		return xStream.toXML(getConfig());
+		try {
+			XmlMapper xmlMapper = createXmlMapper(classLoader);
+			return xmlMapper.writeValueAsString(getConfig());
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-
-	private XStream createXStream(ClassLoader classLoader) {
-		XStream xStream = new XStream(new DomDriver());
-		xStream.setClassLoader(classLoader);
-		xStream.addPermission(AnyTypePermission.ANY);
-		return xStream;
+	private XmlMapper createXmlMapper(ClassLoader classLoader) {
+		XmlMapper xmlMapper = new XmlMapper();
+		TypeFactory typeFactory = TypeFactory.defaultInstance().withClassLoader(classLoader);
+		xmlMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		xmlMapper.disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
+		xmlMapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
+		xmlMapper.setTypeFactory(typeFactory);
+		return xmlMapper;
 	}
+
 }
