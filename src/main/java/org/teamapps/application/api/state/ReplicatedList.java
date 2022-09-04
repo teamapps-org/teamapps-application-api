@@ -20,10 +20,11 @@
 package org.teamapps.application.api.state;
 
 import org.teamapps.cluster.state.ReplicatedState;
+import org.teamapps.cluster.state.ReplicatedStateTransactionRule;
 import org.teamapps.cluster.state.StateUpdateMessage;
+import org.teamapps.cluster.state.TransactionCompareRule;
 import org.teamapps.event.Event;
 import org.teamapps.protocol.schema.MessageObject;
-import org.teamapps.protocol.schema.ModelCollection;
 import org.teamapps.protocol.schema.PojoObjectDecoder;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class ReplicatedList<TYPE extends MessageObject> {
 	private final Function<TYPE, String> typeToIdFunction;
 	private final List<StateUpdateMessage> preparedUpdates;
 	private final PojoObjectDecoder<TYPE> messageDecoder;
+	private List<ReplicatedStateTransactionRule> transactionRules;
 
 	public Event<TYPE> onEntryAdded = new Event<>();
 	public Event<TYPE> onEntryRemoved = new Event<>();
@@ -48,19 +50,40 @@ public class ReplicatedList<TYPE extends MessageObject> {
 	public Event<TYPE> onFireAndForget = new Event<>();
 
 
-	protected ReplicatedList(ReplicatedState replicatedState, String listName, String modelUuid, Function<TYPE, String> typeToIdFunction, ModelCollection modelCollection, List<StateUpdateMessage> preparedUpdates) {
+	protected ReplicatedList(ReplicatedState replicatedState, String listName, PojoObjectDecoder<TYPE> messageDecoder, Function<TYPE, String> typeToIdFunction, List<StateUpdateMessage> preparedUpdates, List<ReplicatedStateTransactionRule> transactionRules) {
 		this.replicatedState = replicatedState;
 		this.listName = listName;
 		this.typeToIdFunction = typeToIdFunction;
 		this.preparedUpdates = preparedUpdates;
-		this.messageDecoder = (PojoObjectDecoder<TYPE>) modelCollection.getMessageDecoder(modelUuid);
+		this.messageDecoder = messageDecoder;
+		this.transactionRules = transactionRules;
+	}
+
+	public void addConditionContainsNot(TYPE entry) {
+		transactionRules.add(new ReplicatedStateTransactionRule(listName, typeToIdFunction.apply(entry), TransactionCompareRule.CONTAINS_NOT, 0));
+	}
+
+	public void addConditionContains(TYPE entry) {
+		transactionRules.add(new ReplicatedStateTransactionRule(listName, typeToIdFunction.apply(entry), TransactionCompareRule.CONTAINS, 0));
+	}
+
+	public void addConditionSizeEquals(int size) {
+		transactionRules.add(new ReplicatedStateTransactionRule(listName, null, TransactionCompareRule.LIST_SIZE_EQUALS, size));
+	}
+
+	public void addConditionSizeGreater(int size) {
+		transactionRules.add(new ReplicatedStateTransactionRule(listName, null, TransactionCompareRule.LIST_SIZE_GREATER, size));
+	}
+
+	public void addConditionSizeSmaller(int size) {
+		transactionRules.add(new ReplicatedStateTransactionRule(listName, null, TransactionCompareRule.LIST_SIZE_SMALLER, size));
 	}
 
 	public void prepareAddEntry(TYPE entry) {
 		preparedUpdates.add(replicatedState.prepareAddEntry(listName, typeToIdFunction.apply(entry), entry));
 	}
 
-	public void prepareUpdateEntry(TYPE entry) {
+	public void prepareUpdateOrAddEntry(TYPE entry) {
 		preparedUpdates.add(replicatedState.prepareUpdateEntry(listName, typeToIdFunction.apply(entry), entry));
 	}
 
@@ -80,7 +103,7 @@ public class ReplicatedList<TYPE extends MessageObject> {
 		replicatedState.addEntry(listName, typeToIdFunction.apply(entry), entry);
 	}
 
-	public void updateEntry(TYPE entry) {
+	public void updateOrAddEntry(TYPE entry) {
 		replicatedState.updateEntry(listName, typeToIdFunction.apply(entry), entry);
 	}
 

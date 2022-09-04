@@ -27,6 +27,7 @@ import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.organization.UserRoleType;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
+import org.teamapps.application.api.state.ReplicatedStateMachine;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.event.Event;
@@ -92,4 +93,6 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	<ENTITY> void registerEntityUpdateListener(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener);
 
 	<TYPE> Event<TYPE> getApplicationEvent(String name);
+
+	ReplicatedStateMachine getReplicatedStateMachine(String name);
 }

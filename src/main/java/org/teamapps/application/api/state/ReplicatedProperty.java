@@ -23,7 +23,6 @@ import org.teamapps.cluster.state.ReplicatedState;
 import org.teamapps.cluster.state.StateUpdateMessage;
 import org.teamapps.event.Event;
 import org.teamapps.protocol.schema.MessageObject;
-import org.teamapps.protocol.schema.ModelCollection;
 import org.teamapps.protocol.schema.PojoObjectDecoder;
 
 import java.util.List;
@@ -32,21 +31,17 @@ public class ReplicatedProperty<TYPE extends MessageObject> {
 
 	private final ReplicatedState distributedStateMachine;
 	private final String stateName;
-	private final String modelUuid;
-	private final ModelCollection modelCollection;
 	private final List<StateUpdateMessage> preparedUpdates;
 	private final PojoObjectDecoder<TYPE> messageDecoder;
 
 	public Event<TYPE> onStateChanged = new Event<>();
 
 
-	protected ReplicatedProperty(ReplicatedState distributedStateMachine, String stateName, String modelUuid, ModelCollection modelCollection, List<StateUpdateMessage> preparedUpdates) {
+	protected ReplicatedProperty(ReplicatedState distributedStateMachine, String stateName, PojoObjectDecoder<TYPE> messageDecoder, List<StateUpdateMessage> preparedUpdates) {
 		this.distributedStateMachine = distributedStateMachine;
 		this.stateName = stateName;
-		this.modelUuid = modelUuid;
-		this.modelCollection = modelCollection;
 		this.preparedUpdates = preparedUpdates;
-		this.messageDecoder = (PojoObjectDecoder<TYPE>) modelCollection.getMessageDecoder(modelUuid);
+		this.messageDecoder = messageDecoder;
 	}
 
 	public void prepareUpdateState(TYPE state) {
