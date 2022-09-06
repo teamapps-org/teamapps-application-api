@@ -24,7 +24,9 @@ import org.teamapps.config.TeamAppsConfiguration;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class EmbeddedApplicationServer {
 
@@ -48,8 +50,10 @@ public class EmbeddedApplicationServer {
 	public static void startServerWithApplications(InputStream baseDataInputStream, String login, String password, boolean darkTheme, File basePath, int port, TeamAppsConfiguration teamAppsConfiguration, BaseApplicationBuilder... applicationBuilders) throws Exception {
 		basePath.mkdir();
 		ApplicationServer applicationServer = new ApplicationServer(basePath, teamAppsConfiguration, port);
-		URL resource = EmbeddedApplicationServer.class.getResource("/org/teamapps/application/api/emdedded/embedded-system.jar");
-		SessionHandler sessionHandler = applicationServer.updateSessionHandler(resource);
+		InputStream inputStream = EmbeddedApplicationServer.class.getResourceAsStream("/org/teamapps/application/api/embedded/embedded-system.jar");
+		Path tempFile = Files.createTempFile("temp", ".jar");
+		Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+		SessionHandler sessionHandler = applicationServer.updateSessionHandler(tempFile.toUri().toURL());
 		applicationServer.start();
 		ApplicationLoader applicationLoader = (ApplicationLoader) sessionHandler;
 		if (baseDataInputStream != null) {
