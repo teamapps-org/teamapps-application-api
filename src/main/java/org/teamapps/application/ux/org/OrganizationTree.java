@@ -41,7 +41,7 @@ public class OrganizationTree extends AbstractApplicationView {
 		treeModel = new ListTreeModel<>(Collections.emptyList());
 		tree = new Tree<>(treeModel);
 		treeModel.setTreeNodeInfoFunction(unit -> new TreeNodeInfoImpl<>(unit.getParent() != null && organizationUnits.contains(unit.getParent()) ? unit.getParent() : null, false));
-		tree.setPropertyProvider(OrganizationViewUtils.creatOrganizationUnitViewPropertyProvider(getApplicationInstanceData()));
+		tree.setPropertyProvider(OrganizationViewUtils.creatOrganizationUnitPropertyProvider(getApplicationInstanceData()));
 		tree.setEntryTemplate(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 	}
 

@@ -110,7 +110,7 @@ public class OrganizationViewUtils {
 		ComboBoxModel<OrganizationUnitView> model = createLazyOrgUnitModel(allowedUnitsSupplier, selectableTypes);
 		comboBox.setModel(model);
 		comboBox.setShowExpanders(true);
-		PropertyProvider<OrganizationUnitView> propertyProvider = creatOrganizationUnitViewPropertyProvider(applicationInstanceData);
+		PropertyProvider<OrganizationUnitView> propertyProvider = creatOrganizationUnitWithPathPropertyProvider(applicationInstanceData);
 		comboBox.setPropertyProvider(propertyProvider);
 		Function<OrganizationUnitView, String> recordToStringFunction = unit -> {
 			Map<String, Object> values = propertyProvider.getValues(unit, Collections.singleton(BaseTemplate.PROPERTY_CAPTION));
@@ -182,20 +182,48 @@ public class OrganizationViewUtils {
 		return tagComboBox;
 	}
 
-	public static PropertyProvider<OrganizationUnitView> creatOrganizationUnitViewPropertyProvider(ApplicationInstanceData applicationInstanceData) {
+	public static PropertyProvider<OrganizationUnitView> creatOrganizationUnitPropertyProvider(ApplicationInstanceData applicationInstanceData) {
 		Function<TranslatableText, String> translatableTextExtractor = TranslatableTextUtils.createTranslatableTextExtractor(applicationInstanceData);
 		return (unit, propertyNames) -> {
-			String prefix = "";
-			String abbreviation = translatableTextExtractor.apply(unit.getType().getAbbreviation());
-			if (abbreviation != null) {
-				prefix = abbreviation + "-";
-			}
 			Map<String, Object> map = new HashMap<>();
 			map.put(BaseTemplate.PROPERTY_ICON, unit.getIcon() != null ? IconUtils.decodeIcon(unit.getIcon()) : IconUtils.decodeIcon(unit.getType().getIcon()));
-			map.put(BaseTemplate.PROPERTY_CAPTION, prefix + translatableTextExtractor.apply(unit.getName()));
+			map.put(BaseTemplate.PROPERTY_CAPTION, getOrganizationUnitTitle(unit, translatableTextExtractor, true));
 			map.put(BaseTemplate.PROPERTY_DESCRIPTION, translatableTextExtractor.apply(unit.getType().getName()));
 			return map;
 		};
+	}
+
+	public static PropertyProvider<OrganizationUnitView> creatOrganizationUnitWithPathPropertyProvider(ApplicationInstanceData applicationInstanceData) {
+		Function<TranslatableText, String> translatableTextExtractor = TranslatableTextUtils.createTranslatableTextExtractor(applicationInstanceData);
+		return (unit, propertyNames) -> {
+			Map<String, Object> map = new HashMap<>();
+			map.put(BaseTemplate.PROPERTY_ICON, unit.getIcon() != null ? IconUtils.decodeIcon(unit.getIcon()) : IconUtils.decodeIcon(unit.getType().getIcon()));
+			map.put(BaseTemplate.PROPERTY_CAPTION, getOrganizationUnitTitle(unit, translatableTextExtractor, true));
+			int level = 0;
+			OrganizationUnitView parent = unit.getParent();
+			String path = null;
+			while (parent != null && level < 3) {
+				String parentName = getOrganizationUnitTitle(parent, translatableTextExtractor, true);
+				path = path == null ? parentName : parentName + "/" + path;
+				level++;
+				parent = parent.getParent();
+			}
+			map.put(BaseTemplate.PROPERTY_DESCRIPTION, path);
+			return map;
+		};
+	}
+
+	private static String getOrganizationUnitTitle(OrganizationUnitView unit, Function<TranslatableText, String> translatableTextExtractor, boolean withOrgLevelPrefix) {
+		if (unit == null) {
+			return null;
+		}
+		String prefix = "";
+		String abbreviation = translatableTextExtractor.apply(unit.getType().getAbbreviation());
+		if (withOrgLevelPrefix && abbreviation != null) {
+			prefix = abbreviation + "-";
+		}
+		String title = prefix + translatableTextExtractor.apply(unit.getName());
+		return title;
 	}
 
 
