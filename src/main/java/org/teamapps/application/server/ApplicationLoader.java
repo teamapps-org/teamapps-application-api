@@ -27,8 +27,10 @@ public interface ApplicationLoader {
 
 	boolean installAndLoadApplication(BaseApplicationBuilder baseApplicationBuilder);
 
-	void createInitialLogin(String login, String password, boolean darkTheme);
+	void createInitialLogin(String login, String password, String language, boolean darkTheme);
 
 	void createInitialData(InputStream inputStream);
+
+	void setProxy(String host, int port);
 
 }

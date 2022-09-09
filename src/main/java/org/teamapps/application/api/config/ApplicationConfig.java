@@ -43,6 +43,11 @@ public class ApplicationConfig<CONFIG> {
 		this.config = config;
 	}
 
+	public void updateConfig(CONFIG config) {
+		this.config = config;
+		onConfigUpdate.fire(config);
+	}
+
 	public void updateConfig(String xml, ClassLoader classLoader) throws Exception {
 		try {
 			XmlMapper xmlMapper = createXmlMapper(classLoader);
