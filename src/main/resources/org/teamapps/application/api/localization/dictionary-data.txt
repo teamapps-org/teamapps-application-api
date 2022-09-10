@@ -77,6 +77,12 @@ Reset
 Discard
 Overwrite
 Publish
+Title
+Description
+Notes
+File
+Document
+Folder
 
 ::options
 OK
@@ -130,12 +136,20 @@ Longitude
 ::reports
 Currency
 Max
+Maximum
 Min
+Minimum
 Sum
+Total
 Average
+Page
+Pages
 Full page
 Page width
 Page height
+Size
+Count
+Length
 Width
 Height
 Details
