@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,8 +32,8 @@ import java.util.function.Function;
 public class ReplicatedStateMachine implements ReplicatedStateHandler {
 
 	private final ReplicatedState replicatedState;
-	private final Map<String, ReplicatedList<? extends MessageObject>> distributedListByName = new HashMap<>();
-	private final Map<String, ReplicatedProperty<? extends MessageObject>> distributedStateByName = new HashMap<>();
+	private final Map<String, ReplicatedList<? extends MessageObject>> replicatedListByName = new HashMap<>();
+	private final Map<String, ReplicatedProperty<? extends MessageObject>> replicatedPropertyByName = new HashMap<>();
 	private final List<StateUpdateMessage> preparedUpdates = new ArrayList<>();
 	private final List<ReplicatedStateTransactionRule> transactionRules = new ArrayList<>();
 
@@ -42,16 +42,12 @@ public class ReplicatedStateMachine implements ReplicatedStateHandler {
 		this.replicatedState = replicatedState;
 	}
 
-	public <TYPE extends MessageObject> ReplicatedList<TYPE> createList(String name, PojoObjectDecoder<TYPE> messageDecoder, Function<TYPE, String> typeToIdFunction) {
-		ReplicatedList<TYPE> replicatedList = new ReplicatedList<>(replicatedState, name, messageDecoder, typeToIdFunction, preparedUpdates, transactionRules);
-		distributedListByName.put(name, replicatedList);
-		return replicatedList;
+	public synchronized <TYPE extends MessageObject> ReplicatedList<TYPE> getOrCreateList(String name, PojoObjectDecoder<TYPE> messageDecoder, Function<TYPE, String> typeToIdFunction) {
+		return (ReplicatedList<TYPE>) replicatedListByName.computeIfAbsent(name, s -> new ReplicatedList<>(replicatedState, name, messageDecoder, typeToIdFunction, preparedUpdates, transactionRules));
 	}
 
-	public <TYPE extends MessageObject> ReplicatedProperty<TYPE> createState(String name, PojoObjectDecoder<TYPE> messageDecoder) {
-		ReplicatedProperty<TYPE> replicatedProperty = new ReplicatedProperty<>(replicatedState, name, messageDecoder, preparedUpdates);
-		distributedStateByName.put(name, replicatedProperty);
-		return replicatedProperty;
+	public synchronized <TYPE extends MessageObject> ReplicatedProperty<TYPE> getOrCreateProperty(String name, PojoObjectDecoder<TYPE> messageDecoder) {
+		return (ReplicatedProperty<TYPE>) replicatedPropertyByName.computeIfAbsent(name, s -> new ReplicatedProperty<>(replicatedState, s, messageDecoder, preparedUpdates));
 	}
 
 	public void executePreparedUpdates() {
@@ -61,16 +57,16 @@ public class ReplicatedStateMachine implements ReplicatedStateHandler {
 	}
 
 	private ReplicatedList<? extends MessageObject> getReplicatedList(String name) {
-		return distributedListByName.get(name);
+		return replicatedListByName.get(name);
 	}
 
-	private ReplicatedProperty<? extends MessageObject> getReplicatedState(String name) {
-		return distributedStateByName.get(name);
+	private ReplicatedProperty<? extends MessageObject> getReplicatedProperty(String name) {
+		return replicatedPropertyByName.get(name);
 	}
 
 	@Override
 	public void handleStateUpdated(String stateId, MessageObject state) {
-		ReplicatedProperty<? extends MessageObject> replicatedProperty = getReplicatedState(stateId);
+		ReplicatedProperty<? extends MessageObject> replicatedProperty = getReplicatedProperty(stateId);
 		if (replicatedProperty != null) {
 			replicatedProperty.handleSetState(state);
 		}

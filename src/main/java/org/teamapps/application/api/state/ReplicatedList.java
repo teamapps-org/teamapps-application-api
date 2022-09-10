@@ -63,8 +63,16 @@ public class ReplicatedList<TYPE extends MessageObject> {
 		transactionRules.add(new ReplicatedStateTransactionRule(listName, typeToIdFunction.apply(entry), TransactionCompareRule.CONTAINS_NOT, 0));
 	}
 
+	public void addConditionContainsNot(String identifier) {
+		transactionRules.add(new ReplicatedStateTransactionRule(listName, identifier, TransactionCompareRule.CONTAINS_NOT, 0));
+	}
+
 	public void addConditionContains(TYPE entry) {
 		transactionRules.add(new ReplicatedStateTransactionRule(listName, typeToIdFunction.apply(entry), TransactionCompareRule.CONTAINS, 0));
+	}
+
+	public void addConditionContains(String identifier) {
+		transactionRules.add(new ReplicatedStateTransactionRule(listName, identifier, TransactionCompareRule.CONTAINS, 0));
 	}
 
 	public void addConditionSizeEquals(int size) {
@@ -130,6 +138,19 @@ public class ReplicatedList<TYPE extends MessageObject> {
 		} else {
 			return null;
 		}
+	}
+
+	public boolean contains(TYPE entry) {
+		if (entry == null) {
+			return false;
+		} else {
+			String identifier = typeToIdFunction.apply(entry);
+			return replicatedState.getEntry(listName, identifier) != null;
+		}
+	}
+
+	public boolean contains(String identifier) {
+		return replicatedState.getEntry(listName, identifier) != null;
 	}
 
 	public List<TYPE> getEntries() {
