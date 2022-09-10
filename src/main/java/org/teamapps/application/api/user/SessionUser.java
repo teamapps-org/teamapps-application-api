@@ -20,6 +20,7 @@
 package org.teamapps.application.api.user;
 
 import com.ibm.icu.util.ULocale;
+import org.teamapps.event.Event;
 import org.teamapps.universaldb.context.UserContext;
 import org.teamapps.ux.session.SessionContext;
 
@@ -49,5 +50,7 @@ public interface SessionUser extends UserContext {
 	List<String> getRankedLanguages();
 
 	boolean isDarkTheme();
+
+	Event<Void> onUserLogout();
 
 }
