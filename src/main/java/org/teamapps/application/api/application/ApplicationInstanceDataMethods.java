@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface ApplicationInstanceDataMethods {
@@ -102,6 +103,10 @@ public interface ApplicationInstanceDataMethods {
 
 	default String getLocalized(TranslatableText translatableText) {
 		return getApplicationInstanceData().getLocalized(translatableText);
+	}
+
+	default Function<TranslatableText, String> getTranslatableTextExtractor() {
+		return getApplicationInstanceData().getTranslatableTextExtractor();
 	}
 
 	default boolean isAllowed(SimplePrivilege simplePrivilege) {

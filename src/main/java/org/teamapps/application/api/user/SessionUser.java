@@ -33,9 +33,15 @@ public interface SessionUser extends UserContext {
 
 	String getFirstName();
 
+	String getFirstNameTranslated();
+
 	String getLastName();
 
+	String getLastNameTranslated();
+
 	String getName(boolean lastNameFirst);
+
+	String getDescription();
 
 	String getProfilePictureLink();
 

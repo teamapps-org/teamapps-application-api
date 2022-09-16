@@ -24,6 +24,7 @@ import org.teamapps.universaldb.index.translation.TranslatableText;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 
 public interface ApplicationLocalizationProvider {
 
@@ -40,4 +41,7 @@ public interface ApplicationLocalizationProvider {
 	}
 
 	String getLocalized(TranslatableText translatableText);
+
+	Function<TranslatableText, String> getTranslatableTextExtractor();
+
 }

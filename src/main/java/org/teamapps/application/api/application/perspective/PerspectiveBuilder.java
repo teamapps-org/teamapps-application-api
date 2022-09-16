@@ -38,7 +38,7 @@ public interface PerspectiveBuilder {
 	boolean isPerspectiveAccessible(ApplicationPrivilegeProvider privilegeProvider);
 
 	default boolean autoProvisionPerspective() {
-		return false;
+		return true;
 	}
 
 	default boolean useToolbarPerspectiveMenu() {
