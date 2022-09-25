@@ -29,6 +29,7 @@ import org.teamapps.application.api.organization.UserRoleType;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.state.ReplicatedStateMachine;
 import org.teamapps.application.api.ui.UiComponentFactory;
+import org.teamapps.application.api.user.LocalizedFormatter;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
@@ -55,6 +56,10 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	DocumentConverter getDocumentConverter();
 
 	MultiProgressDisplay getMultiProgressDisplay();
+
+	default LocalizedFormatter getLocalizedFormatter() {
+		return getUser().getLocalizedFormatter();
+	}
 
 	default <RESULT> void runTaskAsync(Icon icon, String title, Supplier<RESULT> task, Consumer<RESULT> uiResultTask) {
 		SessionContext context = SessionContext.current();

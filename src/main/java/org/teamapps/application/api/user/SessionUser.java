@@ -57,6 +57,8 @@ public interface SessionUser extends UserContext {
 
 	boolean isDarkTheme();
 
+	LocalizedFormatter getLocalizedFormatter();
+
 	Event<Void> onUserLogout();
 
 }

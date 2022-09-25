@@ -25,9 +25,13 @@ import org.teamapps.application.api.application.perspective.ApplicationPerspecti
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.privilege.*;
+import org.teamapps.application.api.ui.UiComponentFactory;
+import org.teamapps.application.api.user.LocalizedFormatter;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.icons.Icon;
+import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
+import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.universaldb.record.EntityBuilder;
 import org.teamapps.ux.application.perspective.Perspective;
@@ -44,7 +48,23 @@ import java.util.function.Supplier;
 public interface ApplicationInstanceDataMethods {
 
 	ApplicationInstanceData getApplicationInstanceData();
-	
+
+	default OrganizationFieldView getOrganizationFieldView() {
+		return getApplicationInstanceData().getOrganizationField();
+	}
+
+	default int getManagedApplicationId() {
+		return getApplicationInstanceData().getManagedApplicationId();
+	}
+
+	default DocumentConverter getDocumentConverter() {
+		return getApplicationInstanceData().getDocumentConverter();
+	}
+
+	default UiComponentFactory getComponentFactory() {
+		return getApplicationInstanceData().getComponentFactory();
+	}
+
 	default SessionContext getContext() {
 		return getApplicationInstanceData().getUser().getSessionContext();
 	}
@@ -63,6 +83,10 @@ public interface ApplicationInstanceDataMethods {
 
 	default MultiProgressDisplay getMultiProgressDisplay() {
 		return getApplicationInstanceData().getMultiProgressDisplay();
+	}
+
+	default LocalizedFormatter getLocalizedFormatter() {
+		return getApplicationInstanceData().getLocalizedFormatter();
 	}
 
 	default <RESULT> void runTaskAsync(Icon icon, String title, Supplier<RESULT> task, Consumer<RESULT> uiResultTask) {
