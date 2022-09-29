@@ -26,7 +26,7 @@ import org.teamapps.application.tools.RecordModelBuilder;
 import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.absolutelayout.Length;
-import org.teamapps.ux.component.field.TextField;
+import org.teamapps.ux.component.form.ResponsiveFormLayout;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.table.Table;
 import org.teamapps.ux.component.toolbar.Toolbar;
@@ -42,7 +42,7 @@ public class FormPanel {
 	private ToolbarButton addButton;
 	private ToolbarButton editButton;
 	private ToolbarButton deleteButton;
-	private int topSpace = 50;
+	private int topSpace = 90;
 	private int maxHeight = 300;
 
 	public FormPanel(ApplicationInstanceData applicationInstanceData) {
@@ -66,6 +66,14 @@ public class FormPanel {
 
 	public void setHeight(int height) {
 		panel.setCssStyle("height", Length.ofPixels(height).toCssString());
+	}
+
+	public void addToFormAsSection(ResponsiveFormLayout formLayout, Icon icon, String caption) {
+		panel.setIcon(icon);
+		panel.setTitle(caption);
+		panel.setHideTitleBar(false);
+		formLayout.addSection().setCollapsible(false).setDrawHeaderLine(false);
+		formLayout.addLabelAndComponent(panel);
 	}
 
 	public <RECORD> void setTable(Table<RECORD> table, RecordModelBuilder<RECORD> recordModelBuilder, Icon panelIcon, String panelTitle, boolean autoHeight, boolean autoEditButtonVisibility, boolean addAllEditButtons) {
