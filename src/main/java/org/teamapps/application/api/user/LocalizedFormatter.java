@@ -20,6 +20,7 @@ public class LocalizedFormatter {
 	private final NumberFormat decimalFormat;
 	private final DateTimeFormatter dateTimeFormat;
 	private final DateTimeFormatter dateTimeFormatLong;
+	private final DateTimeFormatter timeFormatter;
 
 	public LocalizedFormatter(Locale locale, ZoneId timezone) {
 		this.locale = locale;
@@ -29,8 +30,9 @@ public class LocalizedFormatter {
 		compactNumberFormat = NumberFormat.getCompactNumberInstance(locale, NumberFormat.Style.LONG);
 		decimalFormat = DecimalFormat.getInstance(locale);
 		decimalFormat.setMaximumFractionDigits(2);
-		dateTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT);
-		dateTimeFormatLong = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM);
+		dateTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).withLocale(locale);
+		dateTimeFormatLong = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM).withLocale(locale);
+		timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale);
 	}
 
 	public String formatFileSize(long length) {
@@ -72,4 +74,9 @@ public class LocalizedFormatter {
 			return ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), timezone).format(dateTimeFormatLong);
 		}
 	}
+
+	public String formatTimeOnly(Instant instant) {
+		return ZonedDateTime.ofInstant(instant, timezone).format(timeFormatter);
+	}
+
 }
