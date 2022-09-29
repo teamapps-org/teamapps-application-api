@@ -43,7 +43,7 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 	private Panel parentPanel;
 	private View targetView;
 	private Window targetWindow;
-	private boolean created;
+	protected boolean created;
 	private List<AbstractLazyRenderingApplicationView> peerViewsToHideWhenVisible = Collections.emptyList();
 	private List<AbstractLazyRenderingApplicationView> peerViewsToShowWhenVisible = Collections.emptyList();
 	private ViewSize ensureViewSize;
@@ -97,6 +97,15 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 
 	public abstract Component getViewComponent();
 
+
+	protected void handleViewComponentChange() {
+		if (parentView != null) {
+			parentView.setComponent(getViewComponent());
+		} else if (parentPanel != null) {
+			parentPanel.setContent(getViewComponent());
+		}
+	}
+
 	public void handleModelDataChanged() {
 		if (isVisible()) {
 			onViewRedrawRequired.fire();
@@ -119,11 +128,13 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 			if (select) {
 				parentView.focus();
 			}
-		} else if (parentWindow != null) {
-			if (parentWindow.getContent() == null || !parentWindow.getContent().equals(getViewComponent())) {
-				parentWindow.setContent(getViewComponent());
+		} else if (parentPanel != null) {
+			if (parentPanel.getContent() == null || !parentPanel.getContent().equals(getViewComponent())) {
+				parentPanel.setContent(getViewComponent());
 			}
-			parentWindow.show();
+			if (parentWindow != null) {
+				parentWindow.show();
+			}
 		}
 		visible.set(true);
 		peerViewsToHideWhenVisible.forEach(v -> {
@@ -137,6 +148,8 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 			}
 		});
 	}
+
+
 
 	public void hide() {
 		visible.set(false);
