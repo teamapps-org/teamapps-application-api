@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.Instant;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +22,7 @@ public class LocalizedFormatter {
 	private final DateTimeFormatter dateTimeFormat;
 	private final DateTimeFormatter dateTimeFormatLong;
 	private final DateTimeFormatter timeFormatter;
+	private final DateTimeFormatter durationFormatter;
 
 	public LocalizedFormatter(Locale locale, ZoneId timezone) {
 		this.locale = locale;
@@ -31,8 +33,9 @@ public class LocalizedFormatter {
 		decimalFormat = DecimalFormat.getInstance(locale);
 		decimalFormat.setMaximumFractionDigits(2);
 		dateTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).withLocale(locale);
-		dateTimeFormatLong = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM).withLocale(locale);
+		dateTimeFormatLong = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT).withLocale(locale);
 		timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale);
+		durationFormatter = DateTimeFormatter.ofPattern("mm:ss");
 	}
 
 	public String formatFileSize(long length) {
@@ -77,6 +80,11 @@ public class LocalizedFormatter {
 
 	public String formatTimeOnly(Instant instant) {
 		return ZonedDateTime.ofInstant(instant, timezone).format(timeFormatter);
+	}
+
+	public String formatDurationInSeconds(int seconds) {
+		LocalTime timeOfDay = LocalTime.ofSecondOfDay(seconds);
+		return durationFormatter.format(timeOfDay);
 	}
 
 }
