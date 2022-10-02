@@ -137,7 +137,7 @@ public class MasterDetailController<ENTITY extends Entity<ENTITY>> implements Ap
 		timeGraph = entityModelBuilder.createTimeGraph();
 		timeGraphFieldSelectionCombobox = entityModelBuilder.createTimeGraphFieldSelectionCombobox(timeGraph);
 
-		registerEntity(entityModelBuilder.getEntityBuilder(), entityUpdate -> {
+		registerEntityUpdateListener(entityModelBuilder.getEntityBuilder(), entityUpdate -> {
 			if (entityModelBuilder.matchesQuery(entityUpdate.getEntity())) {
 				entityModelBuilder.updateModels();
 			}
