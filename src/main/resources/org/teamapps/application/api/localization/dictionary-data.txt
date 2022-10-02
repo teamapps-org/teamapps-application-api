@@ -260,7 +260,6 @@ By months
 By weeks
 By days
 Values
-Count
 Filter
 Empty
 
@@ -304,6 +303,13 @@ Preferences
 Optional
 Location
 Database
+File-Hash
+Hash-Value
+Install
+Uninstall
+Full screen mode
+This text has been machine translated.
+Machine translated
 
 ::password check
 pwd.default.suggestions.useFewWords=Use a few words, avoid common phrases.

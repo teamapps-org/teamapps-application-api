@@ -2,7 +2,7 @@
  * ========================LICENSE_START=================================
  * TeamApps Application API
  * ---
- * Copyright (C) 2020 - 2022 TeamApps.org
+ * Copyright (C) 2020 - 2021 TeamApps.org
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,6 +99,12 @@ public class Dictionary {
 	public static final String DISCARD = "org.teamapps.dictionary.discard";
 	public static final String OVERWRITE = "org.teamapps.dictionary.overwrite";
 	public static final String PUBLISH = "org.teamapps.dictionary.publish";
+	public static final String TITLE = "org.teamapps.dictionary.title";
+	public static final String DESCRIPTION = "org.teamapps.dictionary.description";
+	public static final String NOTES = "org.teamapps.dictionary.notes";
+	public static final String FILE = "org.teamapps.dictionary.file";
+	public static final String DOCUMENT = "org.teamapps.dictionary.document";
+	public static final String FOLDER = "org.teamapps.dictionary.folder";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";
@@ -147,12 +153,20 @@ public class Dictionary {
 	//reports
 	public static final String CURRENCY = "org.teamapps.dictionary.currency";
 	public static final String MAX = "org.teamapps.dictionary.max";
+	public static final String MAXIMUM = "org.teamapps.dictionary.maximum";
 	public static final String MIN = "org.teamapps.dictionary.min";
+	public static final String MINIMUM = "org.teamapps.dictionary.minimum";
 	public static final String SUM = "org.teamapps.dictionary.sum";
+	public static final String TOTAL = "org.teamapps.dictionary.total";
 	public static final String AVERAGE = "org.teamapps.dictionary.average";
+	public static final String PAGE = "org.teamapps.dictionary.page";
+	public static final String PAGES = "org.teamapps.dictionary.pages";
 	public static final String FULL_PAGE = "org.teamapps.dictionary.fullPage";
 	public static final String PAGE_WIDTH = "org.teamapps.dictionary.pageWidth";
 	public static final String PAGE_HEIGHT = "org.teamapps.dictionary.pageHeight";
+	public static final String SIZE = "org.teamapps.dictionary.size";
+	public static final String COUNT = "org.teamapps.dictionary.count";
+	public static final String LENGTH = "org.teamapps.dictionary.length";
 	public static final String WIDTH = "org.teamapps.dictionary.width";
 	public static final String HEIGHT = "org.teamapps.dictionary.height";
 	public static final String DETAILS = "org.teamapps.dictionary.details";
@@ -258,7 +272,6 @@ public class Dictionary {
 	public static final String BY_WEEKS = "org.teamapps.dictionary.byWeeks";
 	public static final String BY_DAYS = "org.teamapps.dictionary.byDays";
 	public static final String VALUES = "org.teamapps.dictionary.values";
-	public static final String COUNT = "org.teamapps.dictionary.count";
 	public static final String FILTER = "org.teamapps.dictionary.filter";
 	public static final String EMPTY = "org.teamapps.dictionary.empty";
 	//base system
@@ -300,6 +313,13 @@ public class Dictionary {
 	public static final String OPTIONAL = "org.teamapps.dictionary.optional";
 	public static final String LOCATION = "org.teamapps.dictionary.location";
 	public static final String DATABASE = "org.teamapps.dictionary.database";
+	public static final String FILE_HASH = "org.teamapps.dictionary.fileHash";
+	public static final String HASH_VALUE = "org.teamapps.dictionary.hashValue";
+	public static final String INSTALL = "org.teamapps.dictionary.install";
+	public static final String UNINSTALL = "org.teamapps.dictionary.uninstall";
+	public static final String FULL_SCREEN_MODE = "org.teamapps.dictionary.fullScreenMode";
+	public static final String SENTENCE_THIS_TEXT_HAS_BEEN_MACHINE_TRANSLAT__ = "org.teamapps.dictionary.thisTextHasBeenMachineTranslated";
+	public static final String MACHINE_TRANSLATED = "org.teamapps.dictionary.machineTranslated";
 	//password check
 	public static final String PWD_DEFAULT_SUGGESTIONS_USEFEWWORDS = "org.teamapps.dictionary.pwd.default.suggestions.useFewWords";
 	public static final String PWD_DEFAULT_SUGGESTIONS_NONEEDSYMBOLS = "org.teamapps.dictionary.pwd.default.suggestions.noNeedSymbols";
