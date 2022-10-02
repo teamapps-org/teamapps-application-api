@@ -79,7 +79,7 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 	public ResponsiveFormSection addMetaFields(ResponsiveFormLayout formLayout, boolean withIcons) {
 		Icon dateIcon = withIcons ? ApplicationIcons.CALENDAR_CLOCK : null;
 		Icon userIcon = withIcons ? ApplicationIcons.USER : null;
-		ResponsiveFormSection formSection = formLayout.addSection(ApplicationIcons.WINDOW_SIDEBAR, applicationInstanceData.getLocalized(Dictionary.META_DATA)).setCollapsed(true);
+		ResponsiveFormSection formSection = formLayout.addSection(ApplicationIcons.WINDOW_SIDEBAR, applicationInstanceData.getLocalized(Dictionary.META_DATA)).setCollapsed(false);
 		formLayout.addLabelAndField(userIcon, applicationInstanceData.getLocalized(Dictionary.CREATION), creationDateField).field.getColumnDefinition().setWidthPolicy(SizingPolicy.AUTO);
 		formLayout.addLabelAndField(null, null, createdByField, false).field.getColumnDefinition().setWidthPolicy(SizingPolicy.FRACTION);
 		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.MODIFICATION), modificationDateField);
