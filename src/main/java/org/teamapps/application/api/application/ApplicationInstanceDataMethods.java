@@ -36,8 +36,10 @@ import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.universaldb.record.EntityBuilder;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
+import org.teamapps.ux.resource.Resource;
 import org.teamapps.ux.session.SessionContext;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -181,7 +183,11 @@ public interface ApplicationInstanceDataMethods {
 		return getApplicationInstanceData().getAllowedPrivilegeObjects(group, privilege);
 	}
 
-	default <ENTITY> void registerEntity(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener) {
+	default <ENTITY> void registerEntityUpdateListener(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener) {
 		getApplicationInstanceData().registerEntityUpdateListener(entityBuilder, listener);
+	}
+
+	default String createPublicLinkForResource(Resource resource, Duration availabilityDuration) {
+		return getApplicationInstanceData().createPublicLinkForResource(resource, availabilityDuration);
 	}
 }

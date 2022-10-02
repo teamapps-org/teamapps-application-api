@@ -39,8 +39,10 @@ import org.teamapps.reporting.convert.DocumentConverter;
 import org.teamapps.universaldb.record.EntityBuilder;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
+import org.teamapps.ux.resource.Resource;
 import org.teamapps.ux.session.SessionContext;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -97,7 +99,9 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	<ENTITY> void registerEntityUpdateListener(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener);
 
-	<TYPE> Event<TYPE> getApplicationEvent(String name);
+	<TYPE> Event<TYPE> getUserSessionEvent(String name);
 
 	ReplicatedStateMachine getReplicatedStateMachine(String name);
+
+	String createPublicLinkForResource(Resource resource, Duration availabilityDuration);
 }
