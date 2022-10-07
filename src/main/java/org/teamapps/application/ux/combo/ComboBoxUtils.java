@@ -55,11 +55,15 @@ public class ComboBoxUtils {
 	}
 
 	public static <RECORD> ComboBox<RECORD> createRecordComboBox(Supplier<List<RECORD>> records, PropertyProvider<RECORD> propertyProvider, Template template) {
+		return createRecordComboBox(records, 50, propertyProvider, template);
+	}
+
+	public static <RECORD> ComboBox<RECORD> createRecordComboBox(Supplier<List<RECORD>> records, int limit, PropertyProvider<RECORD> propertyProvider, Template template) {
 		ComboBox<RECORD> comboBox = new ComboBox<>(template);
 		comboBox.setPropertyProvider(propertyProvider);
 		Function<RECORD, String> recordToStringFunction = UiUtils.createRecordToStringFunction(propertyProvider);
 		comboBox.setRecordToStringFunction(recordToStringFunction);
-		comboBox.setModel(query -> query == null || query.isBlank() ? records.get() : records.get().stream().filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList()));
+		comboBox.setModel(query -> query == null || query.isBlank() ? records.get().stream().limit(limit).collect(Collectors.toList()) : records.get().stream().filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(query.toLowerCase())).limit(limit).collect(Collectors.toList()));
 		return comboBox;
 	}
 
@@ -72,11 +76,15 @@ public class ComboBoxUtils {
 	}
 
 	public static <RECORD> TagComboBox<RECORD> createTagComboBox(Supplier<List<RECORD>> records, PropertyProvider<RECORD> propertyProvider, Template template) {
+		return createTagComboBox(records, 50, propertyProvider, template);
+	}
+
+	public static <RECORD> TagComboBox<RECORD> createTagComboBox(Supplier<List<RECORD>> records, int limit, PropertyProvider<RECORD> propertyProvider, Template template) {
 		TagComboBox<RECORD> tagComboBox = new TagComboBox<>(template);
 		tagComboBox.setPropertyProvider(propertyProvider);
 		Function<RECORD, String> recordToStringFunction = UiUtils.createRecordToStringFunction(propertyProvider);
 		tagComboBox.setRecordToStringFunction(recordToStringFunction);
-		tagComboBox.setModel(query -> query == null || query.isBlank() ? records.get() : records.get().stream().filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList()));
+		tagComboBox.setModel(query -> query == null || query.isBlank() ? records.get().stream().limit(limit).collect(Collectors.toList()) : records.get().stream().filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(query.toLowerCase())).limit(limit).collect(Collectors.toList()));
 		return tagComboBox;
 
 	}
