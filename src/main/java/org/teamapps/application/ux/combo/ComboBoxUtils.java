@@ -21,6 +21,7 @@ package org.teamapps.application.ux.combo;
 
 import org.teamapps.application.ux.UiUtils;
 import org.teamapps.data.extract.PropertyProvider;
+import org.teamapps.icons.Icon;
 import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.field.combobox.TagComboBox;
 import org.teamapps.ux.component.template.BaseTemplate;
@@ -28,6 +29,7 @@ import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.ComboBoxModel;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -74,6 +76,17 @@ public class ComboBoxUtils {
 			return records != null ? records.stream().filter(record -> recordFilterFunction.apply(record, query)).limit(limit).collect(Collectors.toList()) : Collections.emptyList();
 		};
 	}
+
+	public static <RECORD> ComboBox<RECORD> createRecordComboBox(List<RECORD> records, Function<RECORD, String> toStringFunction, Function<RECORD, Icon> toIconFunction, Template template) {
+		PropertyProvider<RECORD> propertyProvider = (record, collection) -> {
+			Map<String, Object> map = new HashMap<>();
+			map.put(BaseTemplate.PROPERTY_ICON, toIconFunction.apply(record));
+			map.put(BaseTemplate.PROPERTY_CAPTION, toStringFunction.apply(record));
+			return map;
+		};
+		return createRecordComboBox(() -> records, propertyProvider, template);
+	}
+
 
 	public static <RECORD> TagComboBox<RECORD> createTagComboBox(Supplier<List<RECORD>> records, PropertyProvider<RECORD> propertyProvider, Template template) {
 		return createTagComboBox(records, 50, propertyProvider, template);
