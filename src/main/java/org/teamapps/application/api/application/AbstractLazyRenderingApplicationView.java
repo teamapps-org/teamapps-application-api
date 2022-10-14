@@ -29,6 +29,7 @@ import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
 import org.teamapps.ux.component.window.Window;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +47,9 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 	protected boolean created;
 	private List<AbstractLazyRenderingApplicationView> peerViewsToHideWhenVisible = Collections.emptyList();
 	private List<AbstractLazyRenderingApplicationView> peerViewsToShowWhenVisible = Collections.emptyList();
+	private List<AbstractLazyRenderingApplicationView> peerWithSameParent = Collections.emptyList();
 	private ViewSize ensureViewSize;
+	private List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
 
 	public AbstractLazyRenderingApplicationView(ApplicationInstanceData applicationInstanceData) {
 		super(applicationInstanceData);
@@ -93,6 +96,11 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 		return this;
 	}
 
+	public AbstractLazyRenderingApplicationView setPeersWithSameParent(AbstractLazyRenderingApplicationView... views) {
+		peerWithSameParent = Arrays.stream(views).filter(v -> !v.equals(this)).collect(Collectors.toList());
+		return this;
+	}
+
 	public abstract void createUi();
 
 	public abstract Component getViewComponent();
@@ -113,6 +121,8 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 	}
 
 	public void show(boolean select) {
+		buttonGroups.forEach(bg -> bg.setVisible(true));
+		peerWithSameParent.forEach(AbstractLazyRenderingApplicationView::unsetView);
 		if (parentView != null && ensureViewSize != null) {
 			parentView.setSize(ensureViewSize);
 		}
@@ -149,6 +159,9 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 		});
 	}
 
+	public void unsetView() {
+		buttonGroups.forEach(bg -> bg.setVisible(false));
+	}
 
 
 	public void hide() {
@@ -190,17 +203,19 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 	}
 
 	public ToolbarButtonGroup createToolbarButtonGroup(boolean local, ToolbarButtonGroup buttonGroup) {
+		ToolbarButtonGroup group = buttonGroup != null ? buttonGroup : new ToolbarButtonGroup();
+		buttonGroups.add(group);
 		if (parentView != null) {
 			if (local) {
-				return parentView.addLocalButtonGroup(new ToolbarButtonGroup());
+				return parentView.addLocalButtonGroup(group);
 			} else {
-				return parentView.addWorkspaceButtonGroup(new ToolbarButtonGroup());
+				return parentView.addWorkspaceButtonGroup(group);
 			}
 		} else if (parentPanel != null) {
 			if (parentPanel.getToolbar() == null) {
 				parentPanel.setToolbar(new Toolbar());
 			}
-			return parentPanel.getToolbar().addButtonGroup(new ToolbarButtonGroup());
+			return parentPanel.getToolbar().addButtonGroup(group);
 		}
 		return null;
 	}
