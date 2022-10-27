@@ -22,11 +22,16 @@ package org.teamapps.application.api.application;
 import org.teamapps.application.api.application.perspective.PerspectiveBuilder;
 import org.teamapps.ux.application.ResponsiveApplication;
 
+import java.util.Collections;
 import java.util.List;
 
 public interface ApplicationBuilder extends BaseApplicationBuilder {
 
 	List<PerspectiveBuilder> getPerspectiveBuilders();
+
+	default List<String> getRequiredPerspectives() {
+		return Collections.emptyList();
+	}
 
 	@Override
 	default void build(ResponsiveApplication application, ApplicationInstanceData applicationInstanceData) {

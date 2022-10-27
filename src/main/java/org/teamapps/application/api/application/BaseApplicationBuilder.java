@@ -52,6 +52,10 @@ public interface BaseApplicationBuilder {
 		return false;
 	}
 
+	default ApplicationGroup getPreferredApplicationGroup() {
+		return null;
+	}
+
 	List<ApplicationRole> getApplicationRoles();
 
 	List<PrivilegeGroup> getPrivilegeGroups();
