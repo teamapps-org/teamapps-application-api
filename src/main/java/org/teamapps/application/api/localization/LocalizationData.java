@@ -117,21 +117,21 @@ public interface LocalizationData {
 	static LocalizationData createDictionaryData(ClassLoader classLoader) {
 		return createFromPropertyFiles("org.teamapps.application.api.localization.dictionary", classLoader,
 				new LocalizationLanguages(
-						Locale.ENGLISH
+						Locale.forLanguageTag("en")
 				).setMachineTranslatedLanguages(
-						Locale.GERMAN,
-						Locale.FRENCH,
-						Locale.ITALIAN,
-						Locale.JAPANESE,
-						Locale.CHINESE,
 						Locale.forLanguageTag("bg"),
 						Locale.forLanguageTag("cs"),
 						Locale.forLanguageTag("da"),
+						Locale.forLanguageTag("de"),
 						Locale.forLanguageTag("el"),
 						Locale.forLanguageTag("es"),
 						Locale.forLanguageTag("et"),
 						Locale.forLanguageTag("fi"),
+						Locale.forLanguageTag("fr"),
 						Locale.forLanguageTag("hu"),
+						Locale.forLanguageTag("in"), //id
+						Locale.forLanguageTag("it"),
+						Locale.forLanguageTag("ja"),
 						Locale.forLanguageTag("lt"),
 						Locale.forLanguageTag("lv"),
 						Locale.forLanguageTag("nl"),
@@ -142,17 +142,10 @@ public interface LocalizationData {
 						Locale.forLanguageTag("sk"),
 						Locale.forLanguageTag("sl"),
 						Locale.forLanguageTag("sv"),
-						Locale.forLanguageTag("fa"),
-						Locale.forLanguageTag("iw"), //he
-						Locale.forLanguageTag("hi"),
-						Locale.forLanguageTag("hr"),
-						Locale.forLanguageTag("in"), //id
-						Locale.forLanguageTag("ko"),
-						Locale.forLanguageTag("mk"),
-						Locale.forLanguageTag("mn"),
-						Locale.forLanguageTag("sr"),
 						Locale.forLanguageTag("tr"),
-						Locale.forLanguageTag("vi")				)
+						Locale.forLanguageTag("uk"),
+						Locale.forLanguageTag("zh")
+				)
 		);
 	}
 

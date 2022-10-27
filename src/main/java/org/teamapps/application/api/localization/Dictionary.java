@@ -105,6 +105,7 @@ public class Dictionary {
 	public static final String FILE = "org.teamapps.dictionary.file";
 	public static final String DOCUMENT = "org.teamapps.dictionary.document";
 	public static final String FOLDER = "org.teamapps.dictionary.folder";
+	public static final String POSITION = "org.teamapps.dictionary.position";
 	//options
 	public static final String O_K = "org.teamapps.dictionary.oK";
 	public static final String YES = "org.teamapps.dictionary.yes";
@@ -166,6 +167,8 @@ public class Dictionary {
 	public static final String PAGE_HEIGHT = "org.teamapps.dictionary.pageHeight";
 	public static final String SIZE = "org.teamapps.dictionary.size";
 	public static final String COUNT = "org.teamapps.dictionary.count";
+	public static final String QUANTITY = "org.teamapps.dictionary.quantity";
+	public static final String AMOUNT = "org.teamapps.dictionary.amount";
 	public static final String LENGTH = "org.teamapps.dictionary.length";
 	public static final String WIDTH = "org.teamapps.dictionary.width";
 	public static final String HEIGHT = "org.teamapps.dictionary.height";

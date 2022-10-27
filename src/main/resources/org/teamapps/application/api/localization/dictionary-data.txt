@@ -83,6 +83,7 @@ Notes
 File
 Document
 Folder
+Position
 
 ::options
 OK
@@ -149,6 +150,8 @@ Page width
 Page height
 Size
 Count
+Quantity
+Amount
 Length
 Width
 Height
@@ -469,7 +472,7 @@ country.LI_LIECHTENSTEIN=Liechtenstein
 country.LT_LITHUANIA=Lithuania
 country.LU_LUXEMBOURG=Luxembourg
 country.MO_MACAO=Macao
-country.MK_MACEDONIA_THE_FORMER_YUGOSLAV_REPUBLIC_OF=Macedonia, the Former Yugoslav Republic of
+country.MK_MACEDONIA_THE_FORMER_YUGOSLAV_REPUBLIC_OF=Macedonia
 country.MG_MADAGASCAR=Madagascar
 country.MW_MALAWI=Malawi
 country.MY_MALAYSIA=Malaysia
@@ -507,7 +510,7 @@ country.NO_NORWAY=Norway
 country.OM_OMAN=Oman
 country.PK_PAKISTAN=Pakistan
 country.PW_PALAU=Palau
-country.PS_PALESTINE_STATE_OF=Palestine, State of
+country.PS_PALESTINE_STATE_OF=Palestine
 country.PA_PANAMA=Panama
 country.PG_PAPUA_NEW_GUINEA=Papua New Guinea
 country.PY_PARAGUAY=Paraguay
@@ -520,7 +523,7 @@ country.PR_PUERTO_RICO=Puerto Rico
 country.QA_QATAR=Qatar
 country.RE_REUNION=Réunion
 country.RO_ROMANIA=Romania
-country.RU_RUSSIAN_FEDERATION=Russian Federation
+country.RU_RUSSIAN_FEDERATION=Russia
 country.RW_RWANDA=Rwanda
 country.BL_SAINT_BARTHELEMY=Saint Barthélemy
 country.SH_SAINT_HELENA_ASCENSION_AND_TRISTAN_DA_CUNHA=Saint Helena, Ascension and Tristan da Cunha
@@ -646,7 +649,7 @@ language.HE_HEBREW=Hebrew
 language.HI_HINDI=Hindi
 language.HO_HIRI_MOTU=Hiri Motu
 language.HR_CROATIAN=Croatian
-language.HT_HAITIAN_HAITIAN_CREOLE=Haitian; Haitian Creole
+language.HT_HAITIAN_HAITIAN_CREOLE=Haitian
 language.HU_HUNGARIAN=Hungarian
 language.HY_ARMENIAN=Armenian
 language.HZ_HERERO=Herero
@@ -662,10 +665,10 @@ language.JA_JAPANESE=Japanese
 language.JV_JAVANESE=Javanese
 language.KA_GEORGIAN=Georgian
 language.KG_KONGO=Kongo
-language.KI_KIKUYU_GIKUYU=Kikuyu; Gikuyu
-language.KJ_KUANYAMA_KWANYAMA=Kuanyama; Kwanyama
+language.KI_KIKUYU_GIKUYU=Kikuyu
+language.KJ_KUANYAMA_KWANYAMA=Kwanyama
 language.KK_KAZAKH=Kazakh
-language.KL_KALAALLISUT_GREENLANDIC=Kalaallisut; Greenlandic
+language.KL_KALAALLISUT_GREENLANDIC=Greenlandic
 language.KM_CENTRAL_KHMER=Central Khmer
 language.KN_KANNADA=Kannada
 language.KO_KOREAN=Korean
@@ -674,7 +677,7 @@ language.KS_KASHMIRI=Kashmiri
 language.KU_KURDISH=Kurdish
 language.KV_KOMI=Komi
 language.KW_CORNISH=Cornish
-language.KY_KIRGHIZ_KYRGYZ=Kirghiz; Kyrgyz
+language.KY_KIRGHIZ_KYRGYZ=Kyrgyz
 language.LG_GANDA=Ganda
 language.LN_LINGALA=Lingala
 language.LO_LAO=Lao
@@ -692,23 +695,23 @@ language.MS_MALAY=Malay
 language.MT_MALTESE=Maltese
 language.MY_BURMESE=Burmese
 language.NA_NAURU=Nauru
-language.ND_NDEBELE_NORTH=Ndebele, North
+language.ND_NDEBELE_NORTH=Ndebele
 language.NE_NEPALI=Nepali
 language.NG_NDONGA=Ndonga
 language.NL_DUTCH=Dutch
 language.NO_NORWEGIAN=Norwegian
 language.NR_NDEBELE_SOUTH=Ndebele, South
 language.NV_NAVAJO_NAVAHO=Navajo; Navaho
-language.NY_CHICHEWA_CHEWA_NYANJA=Chichewa; Chewa; Nyanja
+language.NY_CHICHEWA_CHEWA_NYANJA=Chewa
 language.OC_OCCITAN=Occitan
 language.OJ_OJIBWA=Ojibwa
 language.OM_OROMO=Oromo
 language.OR_ORIYA=Oriya
-language.OS_OSSETIAN_OSSETIC=Ossetian; Ossetic
-language.PA_PANJABI_PUNJABI=Panjabi; Punjabi
+language.OS_OSSETIAN_OSSETIC=Ossetian
+language.PA_PANJABI_PUNJABI=Punjabi
 language.PI_PALI=Pali
 language.PL_POLISH=Polish
-language.PS_PUSHTO_PASHTO=Pushto; Pashto
+language.PS_PUSHTO_PASHTO=Pashto
 language.PT_PORTUGUESE=Portuguese
 language.QU_QUECHUA=Quechua
 language.RM_ROMANSH=Romansh
@@ -721,7 +724,7 @@ language.SC_SARDINIAN=Sardinian
 language.SD_SINDHI=Sindhi
 language.SE_NORTHERN_SAMI=Northern Sami
 language.SG_SANGO=Sango
-language.SI_SINHALA_SINHALESE=Sinhala; Sinhalese
+language.SI_SINHALA_SINHALESE=Sinhalese
 language.SK_SLOVAK=Slovak
 language.SL_SLOVENIAN=Slovenian
 language.SM_SAMOAN=Samoan
@@ -730,7 +733,7 @@ language.SO_SOMALI=Somali
 language.SQ_ALBANIAN=Albanian
 language.SR_SERBIAN=Serbian
 language.SS_SWATI=Swati
-language.ST_SOTHO_SOUTHERN=Sotho, Southern
+language.ST_SOTHO_SOUTHERN=Sotho
 language.SU_SUNDANESE=Sundanese
 language.SV_SWEDISH=Swedish
 language.SW_SWAHILI=Swahili
@@ -748,7 +751,7 @@ language.TS_TSONGA=Tsonga
 language.TT_TATAR=Tatar
 language.TW_TWI=Twi
 language.TY_TAHITIAN=Tahitian
-language.UG_UIGHUR_UYGHUR=Uighur; Uyghur
+language.UG_UIGHUR_UYGHUR=Uighur
 language.UK_UKRAINIAN=Ukrainian
 language.UR_URDU=Urdu
 language.UZ_UZBEK=Uzbek
@@ -760,7 +763,7 @@ language.WO_WOLOF=Wolof
 language.XH_XHOSA=Xhosa
 language.YI_YIDDISH=Yiddish
 language.YO_YORUBA=Yoruba
-language.ZA_ZHUANG_CHUANG=Zhuang; Chuang
+language.ZA_ZHUANG_CHUANG=Zhuang
 language.ZH_CHINESE=Chinese
 language.ZU_ZULU=Zulu
 language.PAP_PAPIAMENTO=Papiamento
