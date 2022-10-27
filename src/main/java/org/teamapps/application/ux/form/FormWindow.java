@@ -48,7 +48,7 @@ public class FormWindow extends ApplicationWindow {
 	}
 
 	public void addSection() {
-		formLayout.addSection().setDrawHeaderLine(false);
+		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false);
 	}
 
 	public void addSection(Icon icon, String title) {
