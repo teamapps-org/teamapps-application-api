@@ -76,6 +76,7 @@ public class ApplicationConfig<CONFIG> {
 	private XmlMapper createXmlMapper(ClassLoader classLoader) {
 		XmlMapper xmlMapper = new XmlMapper();
 		TypeFactory typeFactory = TypeFactory.defaultInstance().withClassLoader(classLoader);
+		xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
 		xmlMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		xmlMapper.disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
