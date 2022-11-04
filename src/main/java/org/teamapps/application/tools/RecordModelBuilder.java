@@ -233,8 +233,8 @@ public abstract class RecordModelBuilder<RECORD> {
 		Table<RECORD> table = createTable();
 		table.setDisplayAsList(true);
 		table.setForceFitWidth(forceFitWidth);
-		table.setStripedRows(false);
-		table.setRowHeight(28);
+		table.setStripedRows(true);
+		table.setRowHeight(32);
 		return table;
 	}
 
