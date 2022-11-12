@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -121,7 +123,31 @@ public class KeyCompare<A, B> {
 		return inA;
 	}
 
+	public void processExisting(BiConsumer<A, B> sameKeyConsumer) {
+		for (A a : getAEntriesInB()) {
+			B b = getB(a);
+			sameKeyConsumer.accept(a, b);
+		}
+	}
+
+	public void processNew(Consumer<B> newKeyConsumer) {
+		for (B b : getBEntriesNotInA()) {
+			newKeyConsumer.accept(b);
+		}
+	}
+
+	public void processRemoved(Consumer<A> removedKeyConsumer) {
+		for (A a : getAEntriesNotInB()) {
+			removedKeyConsumer.accept(a);
+		}
+	}
+
 	public boolean isDifferent() {
 		return !notInA.isEmpty() || !notInB.isEmpty();
+	}
+
+	@Override
+	public String toString() {
+		return "KeyCompare: existing:" + getAEntriesInB().size() + ", removed:" + getAEntriesNotInB() + ", added:" + getBEntriesNotInA().size();
 	}
 }
