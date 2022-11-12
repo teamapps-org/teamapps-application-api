@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractLazyRenderingApplicationView extends AbstractApplicationView {
 
 	public final Event<Void> onViewRedrawRequired = new Event<>();
-	private final TwoWayBindableValue<Boolean> visible = TwoWayBindableValue.create(true);
+	private final TwoWayBindableValue<Boolean> visible = TwoWayBindableValue.create(false);
 	private View parentView;
 	private Window parentWindow;
 	private Panel parentPanel;
