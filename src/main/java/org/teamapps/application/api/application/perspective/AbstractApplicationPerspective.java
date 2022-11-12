@@ -21,6 +21,7 @@ package org.teamapps.application.api.application.perspective;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.application.ApplicationInstanceDataMethods;
+import org.teamapps.application.api.application.layout.ApplicationLayout;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.privilege.*;
@@ -52,7 +53,7 @@ public abstract class AbstractApplicationPerspective implements ApplicationPersp
 	public AbstractApplicationPerspective(ApplicationInstanceData applicationInstanceData, MutableValue<String> perspectiveInfoBadgeValue) {
 		this.applicationInstanceData = applicationInstanceData;
 		this.perspectiveInfoBadgeValue = perspectiveInfoBadgeValue;
-		perspective = Perspective.createPerspective();
+		perspective = Perspective.createPerspective(new ApplicationLayout().getRootItem());
 	}
 
 	@Override
