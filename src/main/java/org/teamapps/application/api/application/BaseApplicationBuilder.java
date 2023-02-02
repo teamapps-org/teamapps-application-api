@@ -86,7 +86,7 @@ public interface BaseApplicationBuilder {
 
 	Event<Void> getOnApplicationInstalled();
 
-	Event<Void> getOnApplicationLoaded();
+	Event<ApplicationInitializer> getOnApplicationLoaded();
 
 	Event<Void> getOnApplicationUnloaded();
 

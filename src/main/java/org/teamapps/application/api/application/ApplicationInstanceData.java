@@ -33,9 +33,11 @@ import org.teamapps.application.api.user.LocalizedFormatter;
 import org.teamapps.application.api.user.SessionUser;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
+import org.teamapps.message.protocol.message.Message;
 import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.reporting.convert.DocumentConverter;
+import org.teamapps.universaldb.message.MessageStore;
 import org.teamapps.universaldb.record.EntityBuilder;
 import org.teamapps.ux.application.perspective.Perspective;
 import org.teamapps.ux.component.progress.MultiProgressDisplay;
@@ -104,4 +106,6 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	ReplicatedStateMachine getReplicatedStateMachine(String name);
 
 	String createPublicLinkForResource(Resource resource, Duration availabilityDuration);
+
+	<MESSAGE extends Message> MessageStore<MESSAGE> getMessageStore(String name);
 }

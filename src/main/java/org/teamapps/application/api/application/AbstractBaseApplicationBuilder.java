@@ -25,7 +25,7 @@ import org.teamapps.icons.Icon;
 public abstract class AbstractBaseApplicationBuilder implements BaseApplicationBuilder {
 
 	public final Event<Void> onApplicationInstalled = new Event<>();
-	public final Event<Void> onApplicationLoaded = new Event<>();
+	public final Event<ApplicationInitializer> onApplicationLoaded = new Event<>();
 	public final Event<Void> onApplicationUnloaded = new Event<>();
 	public final Event<Void> onApplicationUninstalled = new Event<>();
 
@@ -67,7 +67,7 @@ public abstract class AbstractBaseApplicationBuilder implements BaseApplicationB
 	}
 
 	@Override
-	public Event<Void> getOnApplicationLoaded() {
+	public Event<ApplicationInitializer> getOnApplicationLoaded() {
 		return onApplicationLoaded;
 	}
 

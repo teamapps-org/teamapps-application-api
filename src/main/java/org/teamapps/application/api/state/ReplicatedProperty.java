@@ -22,12 +22,12 @@ package org.teamapps.application.api.state;
 import org.teamapps.cluster.state.ReplicatedState;
 import org.teamapps.cluster.state.StateUpdateMessage;
 import org.teamapps.event.Event;
-import org.teamapps.protocol.schema.MessageObject;
-import org.teamapps.protocol.schema.PojoObjectDecoder;
+import org.teamapps.message.protocol.message.Message;
+import org.teamapps.message.protocol.model.PojoObjectDecoder;
 
 import java.util.List;
 
-public class ReplicatedProperty<TYPE extends MessageObject> {
+public class ReplicatedProperty<TYPE extends Message> {
 
 	private final ReplicatedState distributedStateMachine;
 	private final String stateName;
@@ -56,11 +56,11 @@ public class ReplicatedProperty<TYPE extends MessageObject> {
 		return remap(distributedStateMachine.getProperty(stateName));
 	}
 
-	protected void handleSetState(MessageObject state) {
+	protected void handleSetState(Message state) {
 		onStateChanged.fire(remap(state));
 	}
 
-	protected TYPE remap(MessageObject message) {
+	protected TYPE remap(Message message) {
 		return message != null ? messageDecoder.remap(message) : null;
 	}
 

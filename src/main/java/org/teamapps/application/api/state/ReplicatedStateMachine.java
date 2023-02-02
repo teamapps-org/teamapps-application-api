@@ -20,8 +20,8 @@
 package org.teamapps.application.api.state;
 
 import org.teamapps.cluster.state.*;
-import org.teamapps.protocol.schema.MessageObject;
-import org.teamapps.protocol.schema.PojoObjectDecoder;
+import org.teamapps.message.protocol.message.Message;
+import org.teamapps.message.protocol.model.PojoObjectDecoder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +32,8 @@ import java.util.function.Function;
 public class ReplicatedStateMachine implements ReplicatedStateHandler {
 
 	private final ReplicatedState replicatedState;
-	private final Map<String, ReplicatedList<? extends MessageObject>> replicatedListByName = new HashMap<>();
-	private final Map<String, ReplicatedProperty<? extends MessageObject>> replicatedPropertyByName = new HashMap<>();
+	private final Map<String, ReplicatedList<? extends Message>> replicatedListByName = new HashMap<>();
+	private final Map<String, ReplicatedProperty<? extends Message>> replicatedPropertyByName = new HashMap<>();
 	private final List<StateUpdateMessage> preparedUpdates = new ArrayList<>();
 	private final List<ReplicatedStateTransactionRule> transactionRules = new ArrayList<>();
 
@@ -42,11 +42,11 @@ public class ReplicatedStateMachine implements ReplicatedStateHandler {
 		this.replicatedState = replicatedState;
 	}
 
-	public synchronized <TYPE extends MessageObject> ReplicatedList<TYPE> getOrCreateList(String name, PojoObjectDecoder<TYPE> messageDecoder, Function<TYPE, String> typeToIdFunction) {
+	public synchronized <TYPE extends Message> ReplicatedList<TYPE> getOrCreateList(String name, PojoObjectDecoder<TYPE> messageDecoder, Function<TYPE, String> typeToIdFunction) {
 		return (ReplicatedList<TYPE>) replicatedListByName.computeIfAbsent(name, s -> new ReplicatedList<>(replicatedState, name, messageDecoder, typeToIdFunction, preparedUpdates, transactionRules));
 	}
 
-	public synchronized <TYPE extends MessageObject> ReplicatedProperty<TYPE> getOrCreateProperty(String name, PojoObjectDecoder<TYPE> messageDecoder) {
+	public synchronized <TYPE extends Message> ReplicatedProperty<TYPE> getOrCreateProperty(String name, PojoObjectDecoder<TYPE> messageDecoder) {
 		return (ReplicatedProperty<TYPE>) replicatedPropertyByName.computeIfAbsent(name, s -> new ReplicatedProperty<>(replicatedState, s, messageDecoder, preparedUpdates));
 	}
 
@@ -56,41 +56,41 @@ public class ReplicatedStateMachine implements ReplicatedStateHandler {
 		transactionRules.clear();
 	}
 
-	private ReplicatedList<? extends MessageObject> getReplicatedList(String name) {
+	private ReplicatedList<? extends Message> getReplicatedList(String name) {
 		return replicatedListByName.get(name);
 	}
 
-	private ReplicatedProperty<? extends MessageObject> getReplicatedProperty(String name) {
+	private ReplicatedProperty<? extends Message> getReplicatedProperty(String name) {
 		return replicatedPropertyByName.get(name);
 	}
 
 	@Override
-	public void handleStateUpdated(String stateId, MessageObject state) {
-		ReplicatedProperty<? extends MessageObject> replicatedProperty = getReplicatedProperty(stateId);
+	public void handleStateUpdated(String stateId, Message state) {
+		ReplicatedProperty<? extends Message> replicatedProperty = getReplicatedProperty(stateId);
 		if (replicatedProperty != null) {
 			replicatedProperty.handleSetState(state);
 		}
 	}
 
 	@Override
-	public void handleEntryAdded(String list, MessageObject message) {
-		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
+	public void handleEntryAdded(String list, Message message) {
+		ReplicatedList<? extends Message> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleEntryAdded(message);
 		}
 	}
 
 	@Override
-	public void handleEntryRemoved(String list, MessageObject message) {
-		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
+	public void handleEntryRemoved(String list, Message message) {
+		ReplicatedList<? extends Message> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleEntryRemoved(message);
 		}
 	}
 
 	@Override
-	public void handleEntryUpdated(String list, MessageObject currentState, MessageObject previousState) {
-		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
+	public void handleEntryUpdated(String list, Message currentState, Message previousState) {
+		ReplicatedList<? extends Message> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleEntryUpdated(currentState);
 		}
@@ -98,7 +98,7 @@ public class ReplicatedStateMachine implements ReplicatedStateHandler {
 
 	@Override
 	public void handleAllEntriesRemoved(String list) {
-		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
+		ReplicatedList<? extends Message> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleAllEntriesRemoved();
 		}
@@ -106,8 +106,8 @@ public class ReplicatedStateMachine implements ReplicatedStateHandler {
 	}
 
 	@Override
-	public void handleFireAndForget(String list, MessageObject message) {
-		ReplicatedList<? extends MessageObject> replicatedList = getReplicatedList(list);
+	public void handleFireAndForget(String list, Message message) {
+		ReplicatedList<? extends Message> replicatedList = getReplicatedList(list);
 		if (replicatedList != null) {
 			replicatedList.handleFireAndForget(message);
 		}

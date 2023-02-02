@@ -22,7 +22,7 @@ package org.teamapps.application.api.state;
 import org.teamapps.cluster.state.LocalState;
 import org.teamapps.cluster.state.ReplicatedState;
 import org.teamapps.cluster.state.ReplicatedStateHandler;
-import org.teamapps.protocol.schema.MessageObject;
+import org.teamapps.message.protocol.message.Message;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.ArrayList;
@@ -53,22 +53,22 @@ public class MultiStateHandler implements ReplicatedStateHandler {
 	}
 
 	@Override
-	public synchronized void handleStateUpdated(String stateId, MessageObject state) {
+	public synchronized void handleStateUpdated(String stateId, Message state) {
 		stateHandlers.forEach(stateHandler -> stateHandler.handleStateUpdated(stateId, state));
 	}
 
 	@Override
-	public synchronized void handleEntryAdded(String list, MessageObject message) {
+	public synchronized void handleEntryAdded(String list, Message message) {
 		stateHandlers.forEach(stateHandler -> stateHandler.handleEntryAdded(list, message));
 	}
 
 	@Override
-	public synchronized void handleEntryRemoved(String list, MessageObject message) {
+	public synchronized void handleEntryRemoved(String list, Message message) {
 		stateHandlers.forEach(stateHandler -> stateHandler.handleEntryRemoved(list, message));
 	}
 
 	@Override
-	public synchronized void handleEntryUpdated(String list, MessageObject currentState, MessageObject previousState) {
+	public synchronized void handleEntryUpdated(String list, Message currentState, Message previousState) {
 		stateHandlers.forEach(stateHandler -> stateHandler.handleEntryUpdated(list, currentState, previousState));
 	}
 
@@ -78,7 +78,7 @@ public class MultiStateHandler implements ReplicatedStateHandler {
 	}
 
 	@Override
-	public synchronized void handleFireAndForget(String list, MessageObject message) {
+	public synchronized void handleFireAndForget(String list, Message message) {
 		stateHandlers.forEach(stateHandler -> stateHandler.handleFireAndForget(list, message));
 	}
 

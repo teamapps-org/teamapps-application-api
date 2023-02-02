@@ -24,8 +24,8 @@ import org.teamapps.cluster.state.ReplicatedStateTransactionRule;
 import org.teamapps.cluster.state.StateUpdateMessage;
 import org.teamapps.cluster.state.TransactionCompareRule;
 import org.teamapps.event.Event;
-import org.teamapps.protocol.schema.MessageObject;
-import org.teamapps.protocol.schema.PojoObjectDecoder;
+import org.teamapps.message.protocol.message.Message;
+import org.teamapps.message.protocol.model.PojoObjectDecoder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ReplicatedList<TYPE extends MessageObject> {
+public class ReplicatedList<TYPE extends Message> {
 
 	private final ReplicatedState replicatedState;
 	private final String listName;
@@ -132,7 +132,7 @@ public class ReplicatedList<TYPE extends MessageObject> {
 	}
 
 	public TYPE getEntry(String identifier) {
-		MessageObject entry = replicatedState.getEntry(listName, identifier);
+		Message entry = replicatedState.getEntry(listName, identifier);
 		if (entry != null) {
 			return remap(entry);
 		} else {
@@ -154,7 +154,7 @@ public class ReplicatedList<TYPE extends MessageObject> {
 	}
 
 	public List<TYPE> getEntries() {
-		List<MessageObject> entries = replicatedState.getEntries(listName);
+		List<Message> entries = replicatedState.getEntries(listName);
 		if (entries != null) {
 			List<TYPE> list = new ArrayList<>();
 			entries.forEach(e -> list.add(remap(e)));
@@ -165,7 +165,7 @@ public class ReplicatedList<TYPE extends MessageObject> {
 	}
 
 	public List<TYPE> getEntries(int startIndex, int length) {
-		List<MessageObject> entries = replicatedState.getEntries(listName);
+		List<Message> entries = replicatedState.getEntries(listName);
 		if (entries != null) {
 			return entries.stream()
 					.skip(startIndex)
@@ -178,7 +178,7 @@ public class ReplicatedList<TYPE extends MessageObject> {
 	}
 
 	public int getEntryCount() {
-		List<MessageObject> entries = replicatedState.getEntries(listName);
+		List<Message> entries = replicatedState.getEntries(listName);
 		if (entries != null) {
 			return entries.size();
 		} else {
@@ -186,17 +186,17 @@ public class ReplicatedList<TYPE extends MessageObject> {
 		}
 	}
 
-	protected void handleEntryAdded(MessageObject message) {
+	protected void handleEntryAdded(Message message) {
 		onEntryAdded.fire(remap(message));
 		onListChanged.fire();
 	}
 
-	protected void handleEntryUpdated(MessageObject message) {
+	protected void handleEntryUpdated(Message message) {
 		onEntryUpdated.fire(remap(message));
 		onListChanged.fire();
 	}
 
-	protected void handleEntryRemoved(MessageObject message) {
+	protected void handleEntryRemoved(Message message) {
 		onEntryRemoved.fire(remap(message));
 		onListChanged.fire();
 	}
@@ -206,11 +206,11 @@ public class ReplicatedList<TYPE extends MessageObject> {
 		onListChanged.fire();
 	}
 
-	protected void handleFireAndForget(MessageObject message) {
+	protected void handleFireAndForget(Message message) {
 		onFireAndForget.fire(remap(message));
 	}
 
-	protected TYPE remap(MessageObject message) {
+	protected TYPE remap(Message message) {
 		return message != null ? messageDecoder.remap(message) : null;
 	}
 
