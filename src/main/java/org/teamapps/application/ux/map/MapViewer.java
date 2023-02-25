@@ -153,7 +153,7 @@ public class MapViewer<ENTITY> extends AbstractLazyRenderingApplicationView {
 	}
 
 	private MapView2<MapMarkerData<ENTITY>> createVectorMap() {
-		MapView2<MapMarkerData<ENTITY>> mapView = new MapView2<>(mapServer, "ac", mapStyle + "/styles/" + mapStyle + "/style.json?key=" + mapKey);
+		MapView2<MapMarkerData<ENTITY>> mapView = new MapView2<>(mapServer, "ac", mapServer + "/styles/" + mapStyle + "/style.json?key=" + mapKey);
 		mapView.setMarkerTemplateDecider(marker -> marker.getData().getTemplate());
 		mapView.setZoomLevel(6);
 		mapView.setMarkerPropertyProvider((mapMarkerData, propertyNames) -> mapMarkerData.getTemplateData());
