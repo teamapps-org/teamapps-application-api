@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,7 @@
  */
 package org.teamapps.application.ux.view;
 
-import org.teamapps.universaldb.index.ColumnIndex;
+import org.teamapps.universaldb.index.FieldIndex;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.template.BaseTemplateRecord;
 import org.teamapps.ux.component.template.Template;
@@ -27,7 +27,7 @@ import org.teamapps.ux.component.template.Template;
 import java.util.function.Function;
 
 public class RecordVersionViewFieldData {
-	private final ColumnIndex column;
+	private final FieldIndex fieldIndex;
 	private final String fieldName;
 	private final String fieldTitle;
 	private Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord;
@@ -40,29 +40,29 @@ public class RecordVersionViewFieldData {
 
 	private int tableColumnWidth = 200;
 
-	public RecordVersionViewFieldData(ColumnIndex column, String fieldName, String fieldTitle) {
-		this.column = column;
+	public RecordVersionViewFieldData(FieldIndex fieldIndex, String fieldName, String fieldTitle) {
+		this.fieldIndex = fieldIndex;
 		this.fieldName = fieldName;
 		this.fieldTitle = fieldTitle;
 	}
 
-	public RecordVersionViewFieldData(ColumnIndex column, String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
-		this.column = column;
+	public RecordVersionViewFieldData(FieldIndex fieldIndex, String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
+		this.fieldIndex = fieldIndex;
 		this.fieldName = fieldName;
 		this.fieldTitle = fieldTitle;
 		this.referencedRecordIdToTemplateRecord = referencedRecordIdToTemplateRecord;
 	}
 
-	public RecordVersionViewFieldData(ColumnIndex column, String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord, Template template) {
-		this.column = column;
+	public RecordVersionViewFieldData(FieldIndex fieldIndex, String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord, Template template) {
+		this.fieldIndex = fieldIndex;
 		this.fieldName = fieldName;
 		this.fieldTitle = fieldTitle;
 		this.referencedRecordIdToTemplateRecord = referencedRecordIdToTemplateRecord;
 		this.template = template;
 	}
 
-	public RecordVersionViewFieldData(ColumnIndex column, String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
-		this.column = column;
+	public RecordVersionViewFieldData(FieldIndex fieldIndex, String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
+		this.fieldIndex = fieldIndex;
 		this.fieldName = fieldName;
 		this.fieldTitle = fieldTitle;
 		this.formField = formField;
@@ -72,8 +72,8 @@ public class RecordVersionViewFieldData {
 		this.customField = true;
 	}
 
-	public ColumnIndex getColumn() {
-		return column;
+	public FieldIndex getFieldIndex() {
+		return fieldIndex;
 	}
 
 	public String getFieldName() {

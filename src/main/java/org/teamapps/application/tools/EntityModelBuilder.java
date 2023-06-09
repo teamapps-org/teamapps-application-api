@@ -27,14 +27,14 @@ import org.teamapps.application.ux.combo.ComboBoxUtils;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
-import org.teamapps.universaldb.index.ColumnIndex;
-import org.teamapps.universaldb.index.ColumnType;
+import org.teamapps.universaldb.index.FieldIndex;
 import org.teamapps.universaldb.index.IndexType;
 import org.teamapps.universaldb.index.TableIndex;
 import org.teamapps.universaldb.index.numeric.IntegerIndex;
 import org.teamapps.universaldb.index.numeric.LongIndex;
 import org.teamapps.universaldb.index.numeric.NumericFilter;
 import org.teamapps.universaldb.index.reference.single.SingleReferenceIndex;
+import org.teamapps.universaldb.model.FieldType;
 import org.teamapps.universaldb.pojo.AbstractUdbEntity;
 import org.teamapps.universaldb.pojo.AbstractUdbQuery;
 import org.teamapps.universaldb.pojo.Entity;
@@ -88,7 +88,7 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 	public List<ENTITY> queryRecords(String fullTextQuery, TimeIntervalFilter timeIntervalFilter) {
 		AbstractUdbQuery<ENTITY> query = (AbstractUdbQuery<ENTITY>) querySupplier.get();
 		if (timeIntervalFilter != null) {
-			NumericFilter numericFilter = tableIndex.getColumnIndex(timeIntervalFilter.getFieldName()).getType() == IndexType.INT ? timeIntervalFilter.getIntFilter() : timeIntervalFilter.getFilter();
+			NumericFilter numericFilter = tableIndex.getFieldIndex(timeIntervalFilter.getFieldName()).getType() == IndexType.INT ? timeIntervalFilter.getIntFilter() : timeIntervalFilter.getFilter();
 			query.addNumericFilter(timeIntervalFilter.getFieldName(), numericFilter);
 		}
 		if (getCustomFullTextFilter() == null && fullTextQuery != null && !fullTextQuery.isBlank()) {
@@ -117,9 +117,9 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 	}
 
 	public ComboBox<String> createTimeGraphFieldSelectionCombobox(TimeGraph timeGraph) {
-		Supplier<List<String>> timeFieldsSupplier = () -> tableIndex.getColumnIndices().stream()
-				.filter(col -> col.getColumnType() == ColumnType.TIMESTAMP || col.getColumnType() == ColumnType.DATE_TIME)
-				.map(ColumnIndex::getName)
+		Supplier<List<String>> timeFieldsSupplier = () -> tableIndex.getFieldIndices().stream()
+				.filter(col -> col.getFieldType() == FieldType.TIMESTAMP || col.getFieldType() == FieldType.DATE_TIME)
+				.map(FieldIndex::getName)
 				.filter(name -> !Table.FIELD_DELETION_DATE.equals(name) || showDeletedRecords)
 				.collect(Collectors.toList());
 		PropertyProvider<String> propertyProvider = (s, propertyNames) -> {
@@ -139,9 +139,9 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 	}
 
 	private Function<ENTITY, Long> createEntityFieldTimeFunction(String fieldName) {
-		ColumnIndex columnIndex = tableIndex.getColumnIndex(fieldName);
+		FieldIndex columnIndex = tableIndex.getFieldIndex(fieldName);
 		Function<ENTITY, Long> recordTimeFunction;
-		if (columnIndex.getColumnType() == ColumnType.DATE_TIME) {
+		if (columnIndex.getFieldType() == FieldType.DATE_TIME) {
 			LongIndex longIndex = (LongIndex) columnIndex;
 			recordTimeFunction = entity -> {
 				AbstractUdbEntity<ENTITY> udbEntity = (AbstractUdbEntity<ENTITY>) entity;
@@ -181,8 +181,8 @@ public class EntityModelBuilder<ENTITY extends Entity<ENTITY>> extends RecordMod
 
 	public Function<ENTITY, OrganizationUnitView> createEntityOrganizationUnitViewFunction() {
 		SingleReferenceIndex referenceIndex = null;
-		for (ColumnIndex columnIndex : tableIndex.getColumnIndices()) {
-			if (columnIndex.getColumnType() == ColumnType.SINGLE_REFERENCE) {
+		for (FieldIndex columnIndex : tableIndex.getFieldIndices()) {
+			if (columnIndex.getFieldType() == FieldType.SINGLE_REFERENCE) {
 				SingleReferenceIndex singleReferenceIndex = (SingleReferenceIndex) columnIndex;
 				String fqn = singleReferenceIndex.getReferencedTable().getFQN();
 				if (fqn.equals("controlCenter.organizationUnitView") || fqn.equals("controlCenter.organizationUnit")) {

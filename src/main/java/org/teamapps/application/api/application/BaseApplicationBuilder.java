@@ -27,7 +27,7 @@ import org.teamapps.application.api.privilege.PrivilegeGroup;
 import org.teamapps.application.api.versioning.ApplicationVersion;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
-import org.teamapps.universaldb.schema.SchemaInfoProvider;
+import org.teamapps.universaldb.schema.ModelProvider;
 import org.teamapps.ux.application.ResponsiveApplication;
 
 import java.util.List;
@@ -62,7 +62,7 @@ public interface BaseApplicationBuilder {
 
 	LocalizationData getLocalizationData();
 
-	SchemaInfoProvider getDatabaseModel();
+	ModelProvider getDatabaseModel();
 
 	default boolean useToolbarApplicationMenu() {
 		return false;

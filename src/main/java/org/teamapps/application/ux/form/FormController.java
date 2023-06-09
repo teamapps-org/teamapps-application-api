@@ -144,7 +144,7 @@ public class FormController<ENTITY extends Entity<?>> extends FormValidator {
 			ENTITY entity = selectedEntity.get();
 			RecordVersionsView<ENTITY> recordVersionsView = new RecordVersionsView<>(entity, applicationInstanceData);
 			AbstractUdbEntity<ENTITY> udbEntity = (AbstractUdbEntity<ENTITY>) entity;
-			udbEntity.getTableIndex().getColumnIndices().forEach(col -> recordVersionsView.addField(col.getName(), null));
+			udbEntity.getTableIndex().getFieldIndices().forEach(col -> recordVersionsView.addField(col.getName(), null));
 			recordVersionsView.showVersionsWindow();
 		});
 

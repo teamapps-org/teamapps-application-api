@@ -25,7 +25,7 @@ import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.api.ui.FormMetaFields;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
-import org.teamapps.universaldb.index.ColumnIndex;
+import org.teamapps.universaldb.index.FieldIndex;
 import org.teamapps.universaldb.index.TableIndex;
 import org.teamapps.universaldb.index.numeric.IntegerIndex;
 import org.teamapps.universaldb.pojo.AbstractUdbEntity;
@@ -96,14 +96,14 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		if (entity instanceof AbstractUdbEntity) {
 			AbstractUdbEntity<?> udbEntity = (AbstractUdbEntity<?>) entity;
 			TableIndex tableIndex = udbEntity.getTableIndex();
-			ColumnIndex<?, ?> createdByIndex = tableIndex.getColumnIndex(Table.FIELD_CREATED_BY);
-			ColumnIndex<?, ?> modifiedByIndex = tableIndex.getColumnIndex(Table.FIELD_MODIFIED_BY);
-			ColumnIndex<?, ?> deletedByIndex = tableIndex.getColumnIndex(Table.FIELD_DELETED_BY);
-			ColumnIndex<?, ?> restoredByIndex = tableIndex.getColumnIndex(Table.FIELD_RESTORED_BY);
-			ColumnIndex<?, ?> creationDateIndex = tableIndex.getColumnIndex(Table.FIELD_CREATION_DATE);
-			ColumnIndex<?, ?> modificationDateIndex = tableIndex.getColumnIndex(Table.FIELD_MODIFICATION_DATE);
-			ColumnIndex<?, ?> deletionDateIndex = tableIndex.getColumnIndex(Table.FIELD_DELETION_DATE);
-			ColumnIndex<?, ?> restoreDateIndex = tableIndex.getColumnIndex(Table.FIELD_RESTORE_DATE);
+			FieldIndex<?, ?> createdByIndex = tableIndex.getFieldIndex(Table.FIELD_CREATED_BY);
+			FieldIndex<?, ?> modifiedByIndex = tableIndex.getFieldIndex(Table.FIELD_MODIFIED_BY);
+			FieldIndex<?, ?> deletedByIndex = tableIndex.getFieldIndex(Table.FIELD_DELETED_BY);
+			FieldIndex<?, ?> restoredByIndex = tableIndex.getFieldIndex(Table.FIELD_RESTORED_BY);
+			FieldIndex<?, ?> creationDateIndex = tableIndex.getFieldIndex(Table.FIELD_CREATION_DATE);
+			FieldIndex<?, ?> modificationDateIndex = tableIndex.getFieldIndex(Table.FIELD_MODIFICATION_DATE);
+			FieldIndex<?, ?> deletionDateIndex = tableIndex.getFieldIndex(Table.FIELD_DELETION_DATE);
+			FieldIndex<?, ?> restoreDateIndex = tableIndex.getFieldIndex(Table.FIELD_RESTORE_DATE);
 
 			createdByField.setValue(createdByIndex != null ? udbEntity.getIntValue((IntegerIndex) createdByIndex) : 0);
 			modifiedByField.setValue(modifiedByIndex != null ? udbEntity.getIntValue((IntegerIndex) modifiedByIndex) : 0);

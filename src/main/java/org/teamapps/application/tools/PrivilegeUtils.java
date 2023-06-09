@@ -39,7 +39,7 @@ public class PrivilegeUtils {
 
 	public static <ENTITY extends Entity<ENTITY>> void createOrgUnitFilter(Query<ENTITY> query, String orgUnitFieldName, OrganizationalPrivilegeGroup privilegeGroup, Privilege privilege, ApplicationInstanceData applicationInstanceData) {
 		AbstractUdbQuery<ENTITY> abstractUdbQuery = (AbstractUdbQuery<ENTITY>) query;
-		SingleReferenceIndex singleReferenceIndex = (SingleReferenceIndex) abstractUdbQuery.getTableIndex().getColumnIndex(orgUnitFieldName);
+		SingleReferenceIndex singleReferenceIndex = (SingleReferenceIndex) abstractUdbQuery.getTableIndex().getFieldIndex(orgUnitFieldName);
 
 		List<OrganizationUnitView> allowedUnits = applicationInstanceData.getAllowedUnits(privilegeGroup, privilege);
 		List<Number> allowedUnitIds = allowedUnits.stream().map(unit -> (Number) unit.getId()).collect(Collectors.toList());

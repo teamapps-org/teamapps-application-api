@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,8 +31,7 @@ import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.extract.ValueExtractor;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.composite.CompositeIcon;
-import org.teamapps.universaldb.index.ColumnIndex;
-import org.teamapps.universaldb.index.ColumnType;
+import org.teamapps.universaldb.index.FieldIndex;
 import org.teamapps.universaldb.index.TableIndex;
 import org.teamapps.universaldb.index.file.FileValue;
 import org.teamapps.universaldb.index.reference.multi.MultiReferenceIndex;
@@ -42,6 +41,8 @@ import org.teamapps.universaldb.index.transaction.resolved.ResolvedTransactionRe
 import org.teamapps.universaldb.index.transaction.resolved.ResolvedTransactionRecordValue;
 import org.teamapps.universaldb.index.translation.TranslatableText;
 import org.teamapps.universaldb.index.versioning.RecordUpdate;
+import org.teamapps.universaldb.model.EnumFieldModel;
+import org.teamapps.universaldb.model.FieldType;
 import org.teamapps.universaldb.pojo.AbstractUdbEntity;
 import org.teamapps.universaldb.pojo.Entity;
 import org.teamapps.ux.application.ResponsiveApplication;
@@ -105,35 +106,54 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 
 	}
 
+	public static String getFirstUpper(String s) {
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
+	}
+
+	public static String createTitleFromCamelCase(String s) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (i < 3) {
+				sb.append(c);
+			} else {
+				if (Character.isUpperCase(c)) {
+					sb.append(" ");
+				}
+				sb.append(c);
+			}
+		}
+		return getFirstUpper(sb.toString());
+	}
+
 	public RecordVersionsView addField(String fieldName, String fieldTitle) {
-		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle));
+		viewFields.add(new RecordVersionViewFieldData(getField(fieldName), fieldName, fieldTitle));
 		return this;
 	}
 
 	public RecordVersionsView addReferenceField(String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord) {
 
-		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle, referencedRecordIdToTemplateRecord));
+		viewFields.add(new RecordVersionViewFieldData(getField(fieldName), fieldName, fieldTitle, referencedRecordIdToTemplateRecord));
 		return this;
 	}
 
 	public RecordVersionsView addReferenceField(String fieldName, String fieldTitle, Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord, Template template) {
-		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle, referencedRecordIdToTemplateRecord, template));
+		viewFields.add(new RecordVersionViewFieldData(getField(fieldName), fieldName, fieldTitle, referencedRecordIdToTemplateRecord, template));
 		return this;
 	}
 
-
 	public RecordVersionsView addCustomField(String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> formFieldDataProvider, AbstractField<?> tableField, Function<Object, Object> tableFieldDataProvider) {
-		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle, formField, formFieldDataProvider, tableField, tableFieldDataProvider));
+		viewFields.add(new RecordVersionViewFieldData(getField(fieldName), fieldName, fieldTitle, formField, formFieldDataProvider, tableField, tableFieldDataProvider));
 		return this;
 	}
 
 	public RecordVersionsView addCustomField(String fieldName, String fieldTitle, AbstractField<?> formField, Function<Object, Object> fieldDataProvider, AbstractField<?> tableField) {
-		viewFields.add(new RecordVersionViewFieldData(getColumn(fieldName), fieldName, fieldTitle, formField, fieldDataProvider, tableField, fieldDataProvider));
+		viewFields.add(new RecordVersionViewFieldData(getField(fieldName), fieldName, fieldTitle, formField, fieldDataProvider, tableField, fieldDataProvider));
 		return this;
 	}
 
-	private ColumnIndex getColumn(String fieldName) {
-		return tableIndex.getColumnIndex(fieldName);
+	private FieldIndex getField(String fieldName) {
+		return tableIndex.getFieldIndex(fieldName);
 	}
 
 	private void createUi() {
@@ -162,7 +182,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 			return map;
 		};
 
-		Set<Integer> viewFieldColumnIds = viewFields.stream().map(f -> f.getColumn().getMappingId()).collect(Collectors.toSet());
+		Set<Integer> viewFieldColumnIds = viewFields.stream().map(f -> f.getFieldIndex().getMappingId()).collect(Collectors.toSet());
 		Set<ResolvedTransactionRecordType> fixedUpdateTypes = new HashSet<>(Arrays.asList(ResolvedTransactionRecordType.DELETE, ResolvedTransactionRecordType.RESTORE, ResolvedTransactionRecordType.CREATE, ResolvedTransactionRecordType.CREATE_WITH_ID));
 		List<RecordUpdate> filteredRecordUpdates = new ArrayList<>();
 		for (RecordUpdate recordUpdate : recordUpdates) {
@@ -192,25 +212,25 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 				.map(ResolvedTransactionRecordValue::getColumnId)
 				.collect(Collectors.toSet());
 
-		List<ColumnIndex> metaFields = record.getTableIndex().getColumnIndices().stream().filter(c -> isMetaField(c.getName())).collect(Collectors.toList());
+		List<FieldIndex> metaFields = record.getTableIndex().getFieldIndices().stream().filter(c -> isMetaField(c.getName())).toList();
 
-		List<ColumnIndex> sortedColumns = Stream.concat(
-				viewFields.stream().map(RecordVersionViewFieldData::getColumn).filter(c -> usedColumnIds.contains(c.getMappingId())),
+		List<FieldIndex> sortedColumns = Stream.concat(
+				viewFields.stream().map(RecordVersionViewFieldData::getFieldIndex).filter(c -> usedColumnIds.contains(c.getMappingId())),
 				metaFields.stream().filter(c -> usedColumnIds.contains(c.getMappingId()))
-		).collect(Collectors.toList());
+		).toList();
 
-		List<ColumnIndex> columns = Stream.concat(
+		List<FieldIndex> columns = Stream.concat(
 				metaFields.stream().filter(c -> usedColumnIds.contains(c.getMappingId())),
-				viewFields.stream().map(RecordVersionViewFieldData::getColumn).filter(c -> usedColumnIds.contains(c.getMappingId()))
-		).collect(Collectors.toList());
+				viewFields.stream().map(RecordVersionViewFieldData::getFieldIndex).filter(c -> usedColumnIds.contains(c.getMappingId()))
+		).toList();
 
 
-		Map<ColumnIndex, RecordVersionViewFieldData> viewFieldByColumn = viewFields.stream().collect(Collectors.toMap(RecordVersionViewFieldData::getColumn, c -> c));
+		Map<FieldIndex, RecordVersionViewFieldData> viewFieldByColumn = viewFields.stream().collect(Collectors.toMap(RecordVersionViewFieldData::getFieldIndex, c -> c));
 
 		Map<Integer, AbstractField<?>> fieldMap = new HashMap<>();
 		Map<Integer, Function<RecordUpdate, Object>> fieldFunctionMap = new HashMap<>();
 		boolean metaSection = false;
-		for (ColumnIndex column : sortedColumns) {
+		for (FieldIndex column : sortedColumns) {
 			boolean metaField = isMetaField(column.getName());
 			if (!metaSection && metaField) {
 				metaSection = true;
@@ -284,7 +304,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		versionTable.setRowHeight(30);
 
 
-		for (ColumnIndex column : columns) {
+		for (FieldIndex column : columns) {
 			TableColumn<RecordUpdate, ?> tableCol = null;
 			String title = null;
 			if (isMetaField(column.getName())) {
@@ -365,7 +385,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		window.show();
 	}
 
-	private TableColumn<RecordUpdate, ? extends Object> createCustomTableColumn(ColumnIndex column, RecordVersionViewFieldData fieldData) {
+	private TableColumn<RecordUpdate, ? extends Object> createCustomTableColumn(FieldIndex column, RecordVersionViewFieldData fieldData) {
 		TableColumn<RecordUpdate, ? extends Object> tableColumn = new TableColumn<RecordUpdate, Object>(column.getName(), fieldData.getTableField()).setValueExtractor(recordUpdate -> {
 			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
 			Object value = updateValue != null ? updateValue.getValue() : null;
@@ -376,16 +396,16 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		return tableColumn;
 	}
 
-	private TableColumn<RecordUpdate, ? extends Object> createTableColumn(ColumnIndex column) {
-		String fieldName = column.getName();
+	private TableColumn<RecordUpdate, ? extends Object> createTableColumn(FieldIndex fieldIndex) {
+		String fieldName = fieldIndex.getName();
 		TableColumn<RecordUpdate, ? extends Object> tableColumn;
-		Function<RecordUpdate, Object> fieldValueFunction = createFieldValueFunction(column);
+		Function<RecordUpdate, Object> fieldValueFunction = createFieldValueFunction(fieldIndex);
 		ValueExtractor<RecordUpdate, Object> valueExtractor = fieldValueFunction::apply;
 		Function<RecordUpdate, Object> valueFunction = recordUpdate -> {
-			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
+			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(fieldIndex.getMappingId());
 			return updateValue != null ? updateValue.getValue() : null;
 		};
-		if (isMetaUserColumn(column)) {
+		if (isMetaUserColumn(fieldIndex)) {
 			return new TableColumn<RecordUpdate, Integer>(fieldName, applicationInstanceData.getComponentFactory().createUserTemplateField())
 					.setDefaultWidth(250)
 					.setValueExtractor(recordUpdate -> {
@@ -393,8 +413,8 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 						return value != null ? (int) value : null;
 					});
 		} else {
-			switch (column.getColumnType()) {
-				case BOOLEAN, BITSET_BOOLEAN -> {
+			switch (fieldIndex.getFieldType()) {
+				case BOOLEAN -> {
 					return new TableColumn<RecordUpdate, Boolean>(fieldName, new CheckBox())
 							.setDefaultWidth(70)
 							.setValueExtractor(recordUpdate -> {
@@ -502,8 +522,9 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 							.setDefaultWidth(175)
 							.setValueExtractor(recordUpdate -> {
 								Short value = (Short) valueFunction.apply(recordUpdate);
-								List<String> enumValues = column.getTable().getTable().getColumn(column.getName()).getEnumValues();
-								return value == null || value == 0 ? null : enumValues.get(value - 1);
+								EnumFieldModel enumFieldModel = (EnumFieldModel) fieldIndex.getFieldModel().getTableModel().getField(fieldIndex.getName());
+								List<String> enumTitles = enumFieldModel.getEnumModel().getEnumTitles();
+								return value == null || value == 0 ? null : enumTitles.get(value - 1);
 							});
 				}
 				case BINARY -> {
@@ -522,8 +543,8 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		return null;
 	}
 
-	private AbstractField createReferenceField(ColumnIndex column, boolean table, Template template) {
-		if (column.getColumnType() == ColumnType.MULTI_REFERENCE) {
+	private AbstractField createReferenceField(FieldIndex column, boolean table, Template template) {
+		if (column.getFieldType() == FieldType.MULTI_REFERENCE) {
 			TagComboBox<BaseTemplateRecord<Integer>> tagComboBox = new TagComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 			if (table) {
 				tagComboBox.setWrappingMode(TagBoxWrappingMode.SINGLE_LINE);
@@ -538,12 +559,12 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		}
 	}
 
-	private AbstractField<?> createFormField(ColumnIndex column) {
+	private AbstractField<?> createFormField(FieldIndex column) {
 		if (isMetaUserColumn(column)) {
 			return applicationInstanceData.getComponentFactory().createUserTemplateField();
 		} else {
-			switch (column.getColumnType()) {
-				case BOOLEAN, BITSET_BOOLEAN -> {
+			switch (column.getFieldType()) {
+				case BOOLEAN -> {
 					return new CheckBox(createTitleFromCamelCase(column.getName()));
 				}
 				case SHORT, INT, LONG -> {
@@ -595,9 +616,9 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		return null;
 	}
 
-	private Function<RecordUpdate, Object> createReferenceFieldValueFunction(ColumnIndex column, RecordVersionViewFieldData fieldData) {
+	private Function<RecordUpdate, Object> createReferenceFieldValueFunction(FieldIndex column, RecordVersionViewFieldData fieldData) {
 		Function<Integer, BaseTemplateRecord<Integer>> referencedRecordIdToTemplateRecord = fieldData.getReferencedRecordIdToTemplateRecord();
-		if (column.getColumnType() == ColumnType.MULTI_REFERENCE) {
+		if (column.getFieldType() == FieldType.MULTI_REFERENCE) {
 			return recordUpdate -> {
 				ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
 				Object value = updateValue != null ? updateValue.getValue() : null;
@@ -624,7 +645,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 				}
 				return records;
 			};
-		} else if (column.getColumnType() == ColumnType.SINGLE_REFERENCE) {
+		} else if (column.getFieldType() == FieldType.SINGLE_REFERENCE) {
 			return recordUpdate -> {
 				ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
 				Object value = updateValue != null ? updateValue.getValue() : null;
@@ -638,19 +659,19 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		return null;
 	}
 
-	private Function<RecordUpdate, Object> createFieldValueFunction(ColumnIndex column) {
+	private Function<RecordUpdate, Object> createFieldValueFunction(FieldIndex fieldIndex) {
 		Function<RecordUpdate, Object> valueFunction = recordUpdate -> {
-			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(column.getMappingId());
+			ResolvedTransactionRecordValue updateValue = recordUpdate.getValue(fieldIndex.getMappingId());
 			return updateValue != null ? updateValue.getValue() : null;
 		};
-		if (isMetaUserColumn(column)) {
+		if (isMetaUserColumn(fieldIndex)) {
 			return recordUpdate -> {
 				Object value = valueFunction.apply(recordUpdate);
 				return value != null ? (int) value : null;
 			};
 		} else {
-			switch (column.getColumnType()) {
-				case BOOLEAN, BITSET_BOOLEAN -> {
+			switch (fieldIndex.getFieldType()) {
+				case BOOLEAN -> {
 					return recordUpdate -> {
 						Object value = valueFunction.apply(recordUpdate);
 						return value != null ? (Boolean) value : null;
@@ -696,18 +717,18 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 						if (value == null) {
 							return null;
 						}
-						SingleReferenceIndex singleReferenceIndex = (SingleReferenceIndex) column;
-						List<ColumnIndex> textIndices = singleReferenceIndex.getReferencedTable().getColumnIndices().stream()
-								.filter(c -> c.getColumnType() == ColumnType.TEXT || c.getColumnType() == ColumnType.TRANSLATABLE_TEXT)
+						SingleReferenceIndex singleReferenceIndex = (SingleReferenceIndex) fieldIndex;
+						List<FieldIndex> textIndices = singleReferenceIndex.getReferencedTable().getFieldIndices().stream()
+								.filter(c -> c.getFieldType() == FieldType.TEXT || c.getFieldType() == FieldType.TRANSLATABLE_TEXT)
 								.limit(5)
 								.collect(Collectors.toList());
 						return textIndices.stream().map(idx -> idx.getStringValue(value)).filter(s -> !"NULL".equals(s)).filter(Objects::nonNull).collect(Collectors.joining(" "));
 					};
 				}
 				case MULTI_REFERENCE -> {
-					MultiReferenceIndex multiReferenceIndex = (MultiReferenceIndex) column;
-					List<ColumnIndex> textIndices = multiReferenceIndex.getReferencedTable().getColumnIndices().stream()
-							.filter(c -> c.getColumnType() == ColumnType.TEXT || c.getColumnType() == ColumnType.TRANSLATABLE_TEXT)
+					MultiReferenceIndex multiReferenceIndex = (MultiReferenceIndex) fieldIndex;
+					List<FieldIndex> textIndices = multiReferenceIndex.getReferencedTable().getFieldIndices().stream()
+							.filter(c -> c.getFieldType() == FieldType.TEXT || c.getFieldType() == FieldType.TRANSLATABLE_TEXT)
 							.limit(5)
 							.collect(Collectors.toList());
 
@@ -772,8 +793,9 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 				case ENUM -> {
 					return recordUpdate -> {
 						Short value = (Short) valueFunction.apply(recordUpdate);
-						List<String> enumValues = column.getTable().getTable().getColumn(column.getName()).getEnumValues();
-						return value == null || value == 0 ? null : enumValues.get(value - 1);
+						EnumFieldModel enumFieldModel = (EnumFieldModel) fieldIndex.getFieldModel().getTableModel().getField(fieldIndex.getName());
+						List<String> enumTitles = enumFieldModel.getEnumModel().getEnumTitles();
+						return value == null || value == 0 ? null : enumTitles.get(value - 1);
 					};
 				}
 				case BINARY -> {
@@ -790,29 +812,9 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		return null;
 	}
 
-	public static String getFirstUpper(String s) {
-		return s.substring(0, 1).toUpperCase() + s.substring(1);
-	}
-
-	public static String createTitleFromCamelCase(String s) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			if (i < 3) {
-				sb.append(c);
-			} else {
-				if (Character.isUpperCase(c)) {
-					sb.append(" ");
-				}
-				sb.append(c);
-			}
-		}
-		return getFirstUpper(sb.toString());
-	}
-
-	private boolean isMetaUserColumn(ColumnIndex<?, ?> columnIndex) {
-		String fieldName = columnIndex.getName();
-		if (columnIndex.getColumnType() == ColumnType.INT && isMetaField(fieldName)) {
+	private boolean isMetaUserColumn(FieldIndex<?, ?> FieldIndex) {
+		String fieldName = FieldIndex.getName();
+		if (FieldIndex.getFieldType() == FieldType.INT && isMetaField(fieldName)) {
 			if (
 					fieldName.equals(org.teamapps.universaldb.schema.Table.FIELD_CREATED_BY) ||
 							fieldName.equals(org.teamapps.universaldb.schema.Table.FIELD_MODIFIED_BY) ||
@@ -840,7 +842,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 	}
 
 	private boolean isMetaField(int columnId) {
-		ColumnIndex column = tableIndex.getColumnIndices().stream().filter(col -> col.getMappingId() == columnId).findFirst().orElse(null);
+		FieldIndex column = tableIndex.getFieldIndices().stream().filter(col -> col.getMappingId() == columnId).findFirst().orElse(null);
 		return isMetaField(column.getName());
 	}
 
