@@ -45,7 +45,9 @@ public class MultiStateHandler implements ReplicatedStateHandler {
 
 	public synchronized void addStateHandler(ReplicatedStateHandler stateHandler, SessionContext context) {
 		stateHandlers.add(stateHandler);
-		context.onDestroyed.addListener(() -> removeStateHandler(stateHandler));
+		if (context != null) {
+			context.onDestroyed.addListener(() -> removeStateHandler(stateHandler));
+		}
 	}
 
 	private synchronized void removeStateHandler(ReplicatedStateHandler stateHandler) {
