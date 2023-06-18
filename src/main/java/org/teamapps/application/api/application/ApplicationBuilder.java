@@ -33,6 +33,10 @@ public interface ApplicationBuilder extends BaseApplicationBuilder {
 		return Collections.emptyList();
 	}
 
+	default String getOrganizationField() {
+		return null;
+	}
+
 	@Override
 	default void build(ResponsiveApplication application, ApplicationInstanceData applicationInstanceData) {
 	}
