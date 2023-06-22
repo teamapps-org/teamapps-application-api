@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.application;
 
+import org.teamapps.application.api.application.theme.ApplicationTheme;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.localization.LocalizationData;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
@@ -48,11 +49,11 @@ public interface BaseApplicationBuilder {
 
 	String getApplicationDescriptionKey();
 
-	default boolean isDarkTheme() {
-		return false;
+	default ApplicationGroup getPreferredApplicationGroup() {
+		return null;
 	}
 
-	default ApplicationGroup getPreferredApplicationGroup() {
+	default ApplicationTheme getApplicationTheme() {
 		return null;
 	}
 
