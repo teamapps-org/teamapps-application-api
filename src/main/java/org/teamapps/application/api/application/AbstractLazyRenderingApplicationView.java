@@ -120,6 +120,10 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 		}
 	}
 
+	public void show() {
+		show(true);
+	}
+
 	public void show(boolean select) {
 		buttonGroups.forEach(bg -> bg.setVisible(true));
 		peerWithSameParent.forEach(AbstractLazyRenderingApplicationView::unsetView);
