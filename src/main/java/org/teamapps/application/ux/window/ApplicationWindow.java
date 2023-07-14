@@ -49,6 +49,7 @@ public class ApplicationWindow implements ApplicationInstanceDataMethods {
 		window.setMaximizable(true);
 		window.setCloseable(true);
 		window.setCloseOnEscape(true);
+		window.enableAutoHeight();
 		currentButtonGroup = toolbar.addButtonGroup(new ToolbarButtonGroup());
 	}
 
