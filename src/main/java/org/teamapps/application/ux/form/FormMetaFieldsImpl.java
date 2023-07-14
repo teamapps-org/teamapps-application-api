@@ -21,6 +21,7 @@ package org.teamapps.application.ux.form;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.localization.Dictionary;
+import org.teamapps.application.api.privilege.SimplePrivilegeImpl;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.api.ui.FormMetaFields;
 import org.teamapps.event.Event;
@@ -33,6 +34,7 @@ import org.teamapps.universaldb.pojo.Entity;
 import org.teamapps.universaldb.schema.Table;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.TemplateField;
+import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.field.datetime.InstantDateTimeField;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
 import org.teamapps.ux.component.form.ResponsiveFormSection;
@@ -50,6 +52,8 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 	private final InstantDateTimeField deletionDateField;
 	private final InstantDateTimeField restoreDateField;
 
+	private final TextField idField;
+
 	public FormMetaFieldsImpl(ApplicationInstanceData applicationInstanceData) {
 		this.applicationInstanceData = applicationInstanceData;
 
@@ -63,10 +67,13 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		deletionDateField = new InstantDateTimeField();
 		restoreDateField = new InstantDateTimeField();
 
+		idField = new TextField();
+
 		creationDateField.setEditingMode(FieldEditingMode.READONLY);
 		modificationDateField.setEditingMode(FieldEditingMode.READONLY);
 		deletionDateField.setEditingMode(FieldEditingMode.READONLY);
 		restoreDateField.setEditingMode(FieldEditingMode.READONLY);
+		idField.setEditingMode(FieldEditingMode.READONLY);
 	}
 
 	@Override
@@ -88,6 +95,9 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		formLayout.addLabelAndField(null, null, deletedByField, false);
 		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.RESTORED), restoreDateField);
 		formLayout.addLabelAndField(null, null, restoredByField, false);
+		if (applicationInstanceData.isAllowed(new SimplePrivilegeImpl("any", null, null, null))) {
+			formLayout.addLabelAndField(null, "ID", idField);
+		}
 		return formSection;
 	}
 
@@ -124,6 +134,7 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 			modificationDateField.setVisible(showModification);
 			deletionDateField.setVisible(deletedByField.getValue() != 0);
 			restoreDateField.setVisible(restoredByField.getValue() != 0);
+			idField.setValue("" + entity.getId());
 		}
 	}
 }
