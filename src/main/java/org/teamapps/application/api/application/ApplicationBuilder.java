@@ -20,10 +20,12 @@
 package org.teamapps.application.api.application;
 
 import org.teamapps.application.api.application.perspective.PerspectiveBuilder;
+import org.teamapps.application.api.application.perspective.PerspectiveData;
 import org.teamapps.ux.application.ResponsiveApplication;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public interface ApplicationBuilder extends BaseApplicationBuilder {
 
@@ -32,6 +34,11 @@ public interface ApplicationBuilder extends BaseApplicationBuilder {
 	default List<String> getRequiredPerspectives() {
 		return Collections.emptyList();
 	}
+
+	default Map<String, PerspectiveData> getRequiredPerspectivesData() {
+		return null;
+	}
+
 
 	default String getOrganizationField() {
 		return null;
