@@ -20,6 +20,7 @@
 package org.teamapps.application.api.ui;
 
 import org.teamapps.application.ux.localize.TranslatableField;
+import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationUnitTypeView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 import org.teamapps.ux.component.field.TemplateField;
@@ -55,5 +56,9 @@ public interface UiComponentFactory {
 	String createUserAvatarLink(int userId, boolean large);
 
 	RichTextEditor createEmbeddedImagesEnabledRichTextEditor(String bucket);
+
+	void showDeleteQuestion(Runnable onConfirmation);
+
+	void showQuestion(Icon icon, String title, String text, Runnable onConfirmation);
 
 }

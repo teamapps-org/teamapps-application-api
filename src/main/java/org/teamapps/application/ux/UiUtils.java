@@ -22,8 +22,10 @@ package org.teamapps.application.ux;
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
+import org.teamapps.application.ux.window.BaseDialogue;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.icons.Icon;
+import org.teamapps.ux.component.dialogue.Dialogue;
 import org.teamapps.ux.component.field.DisplayField;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.TemplateField;
@@ -50,6 +52,18 @@ public class UiUtils {
 				success ? ApplicationIcons.OK : ApplicationIcons.ERROR,
 				success ? applicationInstanceData.getLocalized(Dictionary.RECORD_SUCCESSFULLY_SAVED) : applicationInstanceData.getLocalized(Dictionary.ERROR_WHEN_SAVING)
 		);
+	}
+
+	public static void showDeleteQuestion(Runnable onConfirmation, ApplicationInstanceData applicationInstanceData) {
+		showQuestion(ApplicationIcons.DELETE, applicationInstanceData.getLocalized(Dictionary.DELETE), applicationInstanceData.getLocalized(Dictionary.SENTENCE_DO_YOU_REALLY_WANT_TO_DELETE_THE_RE__), onConfirmation, applicationInstanceData);
+	}
+
+	public static void showQuestion(Icon icon, String title, String text, Runnable onConfirmation, ApplicationInstanceData applicationInstanceData) {
+		BaseDialogue.showOkCancel(icon, title, text, applicationInstanceData).addListener(result -> {
+			if (result) {
+				onConfirmation.run();
+			}
+		});
 	}
 
 	public static <TYPE> TemplateField<TYPE> createTemplateField(Template template, PropertyProvider<TYPE> propertyProvider) {
