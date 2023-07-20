@@ -347,6 +347,8 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		createUi();
 
 		ApplicationWindow window = new ApplicationWindow(ApplicationIcons.CLOCK_BACK, applicationInstanceData.getLocalized(Dictionary.MODIFICATION_HISTORY), applicationInstanceData);
+		window.setWindowSize(800, 900);
+		window.getWindow().setStretchContent(true);
 		window.getWindow().setBodyBackgroundColor(applicationInstanceData.getUser().isDarkTheme() ? Color.DARK_GRAY.withAlpha(0.001f) : Color.WHITE.withAlpha(0.001f));
 
 		window.addOkButton().onClick.addListener(window::close);
