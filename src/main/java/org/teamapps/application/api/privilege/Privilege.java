@@ -22,6 +22,7 @@ package org.teamapps.application.api.privilege;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.icons.Icon;
+import org.teamapps.icons.composite.CompositeIcon;
 
 public interface Privilege {
 
@@ -32,6 +33,11 @@ public interface Privilege {
 	Privilege RESTORE = create(PrivilegeType.RESTORE, "restore", ApplicationIcons.GARBAGE_MAKE_EMPTY, Dictionary.RESTORE);
 	Privilege SHOW_RECYCLE_BIN = create(PrivilegeType.SHOW_RECYCLE_BIN, "readRecycleBin", ApplicationIcons.GARBAGE_OVERFLOW, Dictionary.SHOW_RECYCLE_BIN);
 	Privilege SHOW_MODIFICATION_HISTORY = create(PrivilegeType.SHOW_MODIFICATION_HISTORY, "readModificationHistory", ApplicationIcons.CLOCK_BACK, Dictionary.SHOW_MODIFICATION_HISTORY);
+
+	Privilege READ_OWN_DATA = create(PrivilegeType.READ, "readOwnData", CompositeIcon.of(ApplicationIcons.DOCUMENT_TEXT, ApplicationIcons.USER), Dictionary.READ);
+	Privilege UPDATE_OWN_DATA = create(PrivilegeType.UPDATE, "updateOwnData", CompositeIcon.of(ApplicationIcons.EDIT, ApplicationIcons.USER), Dictionary.UPDATE);
+	Privilege DELETE_OWN_DATA = create(PrivilegeType.DELETE, "deleteOwnData", CompositeIcon.of(ApplicationIcons.GARBAGE_EMPTY, ApplicationIcons.USER), Dictionary.DELETE);
+
 	Privilege EXECUTE = create(PrivilegeType.EXECUTE, "execute", ApplicationIcons.GEARWHEEL, Dictionary.EXECUTE);
 	Privilege PRINT = create(PrivilegeType.PRINT, "print", ApplicationIcons.PRINTER, Dictionary.PRINT);
 	Privilege IMPORT = create(PrivilegeType.IMPORT, "import", ApplicationIcons.ARROW_INTO, Dictionary.IMPORT);
@@ -47,7 +53,7 @@ public interface Privilege {
 	}
 
 	static Privilege[] getAll() {
-		return new Privilege[]{CREATE, READ, UPDATE, DELETE, RESTORE, SHOW_RECYCLE_BIN, EXECUTE, PRINT, IMPORT, EXPORT};
+		return new Privilege[]{CREATE, READ, UPDATE, DELETE, RESTORE, SHOW_RECYCLE_BIN, READ_OWN_DATA, UPDATE_OWN_DATA, DELETE_OWN_DATA, EXECUTE, PRINT, IMPORT, EXPORT};
 	}
 
 	PrivilegeType getType();
