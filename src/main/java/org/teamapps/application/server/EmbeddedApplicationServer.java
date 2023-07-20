@@ -21,6 +21,7 @@ package org.teamapps.application.server;
 
 import org.teamapps.application.api.application.BaseApplicationBuilder;
 import org.teamapps.config.TeamAppsConfiguration;
+import org.teamapps.model.controlcenter.OrganizationUnitView;
 
 import java.io.File;
 import java.io.InputStream;

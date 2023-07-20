@@ -26,6 +26,7 @@ import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.field.AbstractField;
 import org.teamapps.ux.component.form.ResponsiveForm;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
+import org.teamapps.ux.component.form.ResponsiveFormSection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,23 +48,24 @@ public class FormWindow extends ApplicationWindow {
 		setContent(responsiveForm);
 	}
 
-	public void addSection() {
-		formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false);
+	public ResponsiveFormSection addSection() {
+		return formLayout.addSection().setDrawHeaderLine(false).setCollapsible(false);
 	}
 
-	public void addSection(Icon icon, String title) {
-		formLayout.addSection(icon, title);
+	public ResponsiveFormSection addSection(Icon icon, String title) {
+		return formLayout.addSection(icon, title);
 	}
 
 	public void addField(String label, Component field) {
 		addField(null, label, field);
 	}
 
-	public void addField(Icon icon, String label, Component field) {
-		formLayout.addLabelAndComponent(icon, label, field);
+	public ResponsiveFormLayout.LabelAndField addField(Icon icon, String label, Component field) {
+		ResponsiveFormLayout.LabelAndField labelAndField = formLayout.addLabelAndComponent(icon, label, field);
 		if (field instanceof AbstractField) {
 			fields.add((AbstractField) field);
 		}
+		return labelAndField;
 	}
 
 	public ResponsiveForm getResponsiveForm() {
