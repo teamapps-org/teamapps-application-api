@@ -198,6 +198,7 @@ public class RecordVersionsView<ENTITY extends Entity<?>> {
 		table.setRowHeight(54);
 		table.setForceFitWidth(true);
 		TableColumn<RecordUpdate, RecordUpdate> tableColumn = new TableColumn<>("col", "Versions", UiUtils.<RecordUpdate>createTemplateField(template, recordUpdatePropertyProvider));
+		table.setHideHeaders(true);
 		tableColumn.setValueExtractor(object -> object);
 		table.addColumn(tableColumn);
 
