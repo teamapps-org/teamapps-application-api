@@ -327,13 +327,13 @@ public enum Country {
 		return "org.teamapps.dictionary.country." + name();
 	}
 
-	public String getLocalized(ApplicationInstanceData applicationInstanceData) {
-		return applicationInstanceData.getLocalized(getKey());
+	public String getLocalized(ApplicationLocalizationProvider localizationProvider) {
+		return localizationProvider.getLocalized(getKey());
 	}
 
-	private boolean matchCountry(String query, ApplicationInstanceData applicationInstanceData) {
+	private boolean matchCountry(String query, ApplicationLocalizationProvider localizationProvider) {
 		query = query.toLowerCase();
-		String localized = getLocalized(applicationInstanceData);
+		String localized = getLocalized(localizationProvider);
 		if ((localized != null && localized.toLowerCase().contains(query)) || query.equals(getIsoCode().toLowerCase())) {
 			return true;
 		} else {
@@ -341,13 +341,13 @@ public enum Country {
 		}
 	}
 
-	public static PropertyExtractor<Country> getPropertyExtractor(ApplicationInstanceData applicationInstanceData) {
+	public static PropertyExtractor<Country> getPropertyExtractor(ApplicationLocalizationProvider localizationProvider) {
 		return (country, s) -> {
 			switch (s) {
 				case BaseTemplate.PROPERTY_ICON:
 					return country.getIcon();
 				case BaseTemplate.PROPERTY_CAPTION:
-					return country.getLocalized(applicationInstanceData);
+					return country.getLocalized(localizationProvider);
 				case BaseTemplate.PROPERTY_DESCRIPTION:
 					return country.getIsoCode();
 			}
@@ -355,35 +355,35 @@ public enum Country {
 		};
 	}
 
-	public static ComboBox<Country> createComboBox(ApplicationInstanceData applicationInstanceData) {
+	public static ComboBox<Country> createComboBox(ApplicationLocalizationProvider localizationProvider) {
 		ComboBox<Country> comboBox = new ComboBox<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 		comboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
 		List<Country> countries = Arrays.asList(Country.values());
-		comboBox.setModel(getCountryComboBoxModel(applicationInstanceData, countries));
-		comboBox.setPropertyExtractor(getPropertyExtractor(applicationInstanceData));
-		comboBox.setRecordToStringFunction(country -> country.getLocalized(applicationInstanceData));
+		comboBox.setModel(getCountryComboBoxModel(localizationProvider, countries));
+		comboBox.setPropertyExtractor(getPropertyExtractor(localizationProvider));
+		comboBox.setRecordToStringFunction(country -> country.getLocalized(localizationProvider));
 		return comboBox;
 	}
 
-	public static TagComboBox<Country> createTagComboBox(ApplicationInstanceData applicationInstanceData) {
+	public static TagComboBox<Country> createTagComboBox(ApplicationLocalizationProvider localizationProvider) {
 		TagComboBox<Country> tagComboBox = new TagComboBox<>();
 		tagComboBox.setTemplate(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 		tagComboBox.setDropDownTemplate(BaseTemplate.LIST_ITEM_MEDIUM_ICON_TWO_LINES);
 		List<Country> countries = Arrays.asList(Country.values());
-		tagComboBox.setModel(getCountryComboBoxModel(applicationInstanceData, countries));
-		tagComboBox.setPropertyExtractor(getPropertyExtractor(applicationInstanceData));
-		tagComboBox.setRecordToStringFunction(country -> country.getLocalized(applicationInstanceData));
+		tagComboBox.setModel(getCountryComboBoxModel(localizationProvider, countries));
+		tagComboBox.setPropertyExtractor(getPropertyExtractor(localizationProvider));
+		tagComboBox.setRecordToStringFunction(country -> country.getLocalized(localizationProvider));
 		return tagComboBox;
 	}
 
-	private static ComboBoxModel<Country> getCountryComboBoxModel(ApplicationInstanceData applicationInstanceData, List<Country> countries) {
+	private static ComboBoxModel<Country> getCountryComboBoxModel(ApplicationLocalizationProvider localizationProvider, List<Country> countries) {
 		return s -> {
 			if (s == null || s.isBlank()) {
 				return countries;
 			} else {
 				final String query = s.toLowerCase();
 				return countries.stream()
-						.filter(language -> language.matchCountry(query, applicationInstanceData))
+						.filter(language -> language.matchCountry(query, localizationProvider))
 						.collect(Collectors.toList());
 			}
 		};
