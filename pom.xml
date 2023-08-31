@@ -4,7 +4,7 @@
 
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps-application-api</artifactId>
-    <version>0.89</version>
+    <version>0.90-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -49,7 +49,7 @@
         <url>https://github.com/teamapps-org/teamapps-application-api</url>
         <connection>scm:git:git@github.com:teamapps-org/teamapps-application-api.git</connection>
         <developerConnection>scm:git:git@github.com:teamapps-org/teamapps-application-api.git</developerConnection>
-        <tag>v0.89</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
