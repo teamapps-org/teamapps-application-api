@@ -32,10 +32,6 @@ public interface ApplicationLocalizationProvider {
 
 	String getLocalized(String key, List<String> languagePriorityOrder, Object... parameters);
 
-	default String getLocalized(String key, String language, Object... parameters) {
-		return getLocalized(key, Collections.singletonList(language), parameters);
-	}
-
 	default String getLocalized(String key, Locale locale, Object... parameters) {
 		return getLocalized(key, Collections.singletonList(locale.getLanguage()), parameters);
 	}
