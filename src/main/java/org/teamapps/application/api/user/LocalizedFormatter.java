@@ -98,7 +98,13 @@ public class LocalizedFormatter {
 	}
 
 	public String formatTimeOnly(Instant instant) {
+		if (instant == null) return null;
 		return ZonedDateTime.ofInstant(instant, timezone).format(timeFormatter);
+	}
+
+	public String formatDateTime(Instant instant) {
+		if (instant == null) return null;
+		return ZonedDateTime.ofInstant(instant, timezone).format(dateTimeFormat);
 	}
 
 	public String formatDurationInSeconds(int seconds) {
