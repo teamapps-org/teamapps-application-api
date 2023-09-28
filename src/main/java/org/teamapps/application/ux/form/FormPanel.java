@@ -115,6 +115,14 @@ public class FormPanel {
 				deleteButton.setVisible(true);
 			}
 		});
+		table.getModel().onAllDataChanged().addListener(() -> {
+			if (editButton != null) {
+				editButton.setVisible(false);
+			}
+			if (deleteButton != null) {
+				deleteButton.setVisible(false);
+			}
+		});
 		table.getCount().onChanged().addListener(count -> {
 			if (count == 0) {
 				if (editButton != null) {
