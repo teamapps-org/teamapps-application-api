@@ -23,12 +23,11 @@ import org.apache.commons.io.FileUtils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class LocalizedFormatter {
@@ -38,6 +37,7 @@ public class LocalizedFormatter {
 	private final NumberFormat percentFormat;
 	private final NumberFormat compactNumberFormat;
 	private final NumberFormat decimalFormat;
+	private final DateTimeFormatter dateFormat;
 	private final DateTimeFormatter dateTimeFormat;
 	private final DateTimeFormatter dateTimeFormatLong;
 	private final DateTimeFormatter timeFormatter;
@@ -52,6 +52,7 @@ public class LocalizedFormatter {
 		decimalFormat = DecimalFormat.getInstance(locale);
 		decimalFormat.setMaximumFractionDigits(2);
 		dateTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).withLocale(locale);
+		dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(locale);
 		dateTimeFormatLong = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.SHORT).withLocale(locale);
 		timeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale);
 		durationFormatter = DateTimeFormatter.ofPattern("mm:ss");
@@ -100,6 +101,11 @@ public class LocalizedFormatter {
 	public String formatTimeOnly(Instant instant) {
 		if (instant == null) return null;
 		return ZonedDateTime.ofInstant(instant, timezone).format(timeFormatter);
+	}
+
+	public String formatDateOnlyLong(Instant instant) {
+		if (instant == null) return null;
+		return ZonedDateTime.ofInstant(instant, timezone).format(dateFormat);
 	}
 
 	public String formatDateTime(Instant instant) {
