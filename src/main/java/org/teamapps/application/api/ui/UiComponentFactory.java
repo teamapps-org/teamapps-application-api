@@ -23,6 +23,7 @@ import org.teamapps.application.ux.localize.TranslatableField;
 import org.teamapps.icons.Icon;
 import org.teamapps.model.controlcenter.OrganizationUnitTypeView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
+import org.teamapps.model.controlcenter.UserView;
 import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.component.field.combobox.ComboBox;
 import org.teamapps.ux.component.field.combobox.TagComboBox;
@@ -42,6 +43,8 @@ public interface UiComponentFactory {
 	TemplateField<OrganizationUnitView> createOrganizationUnitTemplateField();
 
 	TemplateField<Integer> createUserTemplateField();
+
+	ComboBox<UserView> createUserSelectionComboBox();
 
 	TranslatableField createTranslatableField();
 
