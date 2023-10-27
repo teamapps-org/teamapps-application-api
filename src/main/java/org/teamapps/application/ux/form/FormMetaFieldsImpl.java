@@ -87,6 +87,7 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		Icon dateIcon = withIcons ? ApplicationIcons.CALENDAR_CLOCK : null;
 		Icon userIcon = withIcons ? ApplicationIcons.USER : null;
 		ResponsiveFormSection formSection = formLayout.addSection(ApplicationIcons.WINDOW_SIDEBAR, applicationInstanceData.getLocalized(Dictionary.META_DATA)).setCollapsed(false);
+		formSection.setHideWhenNoVisibleFields(true);
 		formLayout.addLabelAndField(userIcon, applicationInstanceData.getLocalized(Dictionary.CREATION), creationDateField).field.getColumnDefinition().setWidthPolicy(SizingPolicy.AUTO);
 		formLayout.addLabelAndField(null, null, createdByField, false).field.getColumnDefinition().setWidthPolicy(SizingPolicy.FRACTION);
 		formLayout.addLabelAndField(dateIcon, applicationInstanceData.getLocalized(Dictionary.MODIFICATION), modificationDateField);
@@ -135,6 +136,7 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 			deletionDateField.setVisible(deletedByField.getValue() != 0);
 			restoreDateField.setVisible(restoredByField.getValue() != 0);
 			idField.setValue("" + entity.getId());
+			idField.setVisible(entity.getId() != 0);
 		}
 	}
 }
