@@ -25,10 +25,15 @@ import java.nio.charset.StandardCharsets;
 
 public class ApplicationThemeBuilder {
 
-	public static ApplicationThemeBuilder create() {
-		return new ApplicationThemeBuilder();
+	public ApplicationThemeBuilder(ClassLoader classLoader) {
+		this.classLoader = classLoader;
 	}
 
+	public static ApplicationThemeBuilder create(ClassLoader classLoader) {
+		return new ApplicationThemeBuilder(classLoader);
+	}
+
+	private final ClassLoader classLoader;
 	private boolean darkThemePreferred;
 	private CustomApplicationThemeImpl darkTheme = new CustomApplicationThemeImpl();
 	private CustomApplicationThemeImpl brightTheme = new CustomApplicationThemeImpl();
@@ -105,17 +110,18 @@ public class ApplicationThemeBuilder {
 	}
 
 
-	public static String readStringResource(String resourceName) {
+	public String readStringResource(String resourceName) {
 		try {
-			return Resources.toString(Resources.getResource(resourceName), StandardCharsets.UTF_8);
+			return Resources.toString(classLoader.getResource(resourceName), StandardCharsets.UTF_8);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public static byte[] readByteArrayResource(String resourceName) {
+	public byte[] readByteArrayResource(String resourceName) {
 		try {
-			return Resources.toByteArray(Resources.getResource(resourceName));
+
+			return Resources.toByteArray(classLoader.getResource(resourceName));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
