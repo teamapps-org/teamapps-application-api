@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,8 +24,12 @@ import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.privilege.SimplePrivilegeImpl;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.api.ui.FormMetaFields;
+import org.teamapps.application.ux.UiUtils;
+import org.teamapps.application.ux.org.OrganizationViewUtils;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
+import org.teamapps.model.controlcenter.OrganizationUnitView;
+import org.teamapps.model.controlcenter.UserView;
 import org.teamapps.universaldb.index.FieldIndex;
 import org.teamapps.universaldb.index.TableIndex;
 import org.teamapps.universaldb.index.numeric.IntegerIndex;
@@ -39,6 +43,7 @@ import org.teamapps.ux.component.field.datetime.InstantDateTimeField;
 import org.teamapps.ux.component.form.ResponsiveFormLayout;
 import org.teamapps.ux.component.form.ResponsiveFormSection;
 import org.teamapps.ux.component.format.SizingPolicy;
+import org.teamapps.ux.component.template.BaseTemplate;
 
 public class FormMetaFieldsImpl implements FormMetaFields {
 
@@ -51,8 +56,8 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 	private final InstantDateTimeField modificationDateField;
 	private final InstantDateTimeField deletionDateField;
 	private final InstantDateTimeField restoreDateField;
-
 	private final TextField idField;
+	private final Event<Integer> onClicked = new Event<>();
 
 	public FormMetaFieldsImpl(ApplicationInstanceData applicationInstanceData) {
 		this.applicationInstanceData = applicationInstanceData;
@@ -74,6 +79,34 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		deletionDateField.setEditingMode(FieldEditingMode.READONLY);
 		restoreDateField.setEditingMode(FieldEditingMode.READONLY);
 		idField.setEditingMode(FieldEditingMode.READONLY);
+
+		createdByField.onClicked.addListener(() -> onClicked.fire(createdByField.getValue()));
+		modifiedByField.onClicked.addListener(() -> onClicked.fire(modifiedByField.getValue()));
+		deletedByField.onClicked.addListener(() -> onClicked.fire(deletedByField.getValue()));
+		restoredByField.onClicked.addListener(() -> onClicked.fire(restoredByField.getValue()));
+
+		onClicked.addListener(id -> {
+			if (id > 0) {
+				UserView userView = UserView.getById(id);
+				FormWindow formWindow = new FormWindow(ApplicationIcons.USER, userView.getFirstName() + " " + userView.getLastName(), applicationInstanceData);
+				formWindow.getWindow().setWidth(550);
+				formWindow.addOkButton().onClick.addListener(formWindow::close);
+				TemplateField<Integer> userTemplateField = applicationInstanceData.getComponentFactory().createUserTemplateField();
+				userTemplateField.setTemplate(BaseTemplate.LIST_ITEM_LARGE_ICON_TWO_LINES);
+				userTemplateField.setValue(id);
+				TextField idField = new TextField();
+				idField.setValue(id + "");
+				idField.setEditingMode(FieldEditingMode.READONLY);
+				OrganizationUnitView unit = userView.getOrganizationUnit();
+				TemplateField<OrganizationUnitView> unitViewTemplateField = UiUtils.createTemplateField(BaseTemplate.LIST_ITEM_LARGE_ICON_TWO_LINES, OrganizationViewUtils.creatOrganizationUnitWithPathPropertyProvider(applicationInstanceData));
+				unitViewTemplateField.setValue(unit);
+				formWindow.addSection();
+				formWindow.addField(applicationInstanceData.getLocalized(Dictionary.USER_ID), idField);
+				formWindow.addField(applicationInstanceData.getLocalized(Dictionary.USER_NAME), userTemplateField);
+				formWindow.addField(applicationInstanceData.getLocalized(Dictionary.ORGANIZATION), unitViewTemplateField);
+				formWindow.show();
+			}
+		});
 	}
 
 	@Override
