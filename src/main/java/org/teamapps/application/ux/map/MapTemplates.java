@@ -167,7 +167,6 @@ public enum MapTemplates implements Template {
 
 	private static Template createMarkerTemplate(int iconSize, int maxWidth, Color backgroundColor, Color borderColor, float borderWidth, float borderRadius) {
 		GridTemplate tpl = new GridTemplate()
-				.setMaxHeight(0)
 				.setPadding(new Spacing(0))
 				.addColumn(SizingPolicy.AUTO)
 				.addColumn(SizingPolicy.FRACTION)
