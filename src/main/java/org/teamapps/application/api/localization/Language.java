@@ -28,6 +28,7 @@ import org.teamapps.ux.component.field.combobox.TagComboBox;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.model.ComboBoxModel;
 
+import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -259,13 +260,25 @@ public enum Language {
 	}
 
 	private boolean matchLanguage(String query, ApplicationLocalizationProvider localizationProvider) {
-		query = query.toLowerCase();
-		String localized = getLanguageLocalized(localizationProvider);
-		if ((localized != null && localized.toLowerCase().contains(query)) || query.equals(getIsoCode().toLowerCase())) {
+		query = normalize(query);
+		String localized = normalize(getLanguageLocalized(localizationProvider));
+		if ((localized != null && localized.contains(query)) || query.equals(getIsoCode().toLowerCase())) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	private static String normalize(String s) {
+		return s == null ? null : Normalizer.normalize(s, Normalizer.Form.NFD)
+				.replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+				.replace("ß", "ss")
+				.toLowerCase()
+				.replace("—", "-")
+				.replace("œ", "oe")
+				.replace("æ", "ae")
+				.replace('đ', 'd')
+				.replace('ø', 'o');
 	}
 
 	public static String getLocalizedLanguageNameByIsoCode(String isoCode, ApplicationLocalizationProvider localizationProvider) {
