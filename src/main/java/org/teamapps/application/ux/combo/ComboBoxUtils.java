@@ -28,6 +28,7 @@ import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
 import org.teamapps.ux.model.ComboBoxModel;
 
+import java.text.Normalizer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -63,9 +64,19 @@ public class ComboBoxUtils {
 	public static <RECORD> ComboBox<RECORD> createRecordComboBox(Supplier<List<RECORD>> records, int limit, PropertyProvider<RECORD> propertyProvider, Template template) {
 		ComboBox<RECORD> comboBox = new ComboBox<>(template);
 		comboBox.setPropertyProvider(propertyProvider);
-		Function<RECORD, String> recordToStringFunction = UiUtils.createRecordToStringFunction(propertyProvider);
+		Function<RECORD, String> recordToStringFunction = createRecordToNormalizedStringFunction(propertyProvider); //UiUtils.createRecordToStringFunction(propertyProvider);
 		comboBox.setRecordToStringFunction(recordToStringFunction);
-		comboBox.setModel(query -> query == null || query.isBlank() ? records.get().stream().limit(limit).collect(Collectors.toList()) : records.get().stream().filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(query.toLowerCase())).limit(limit).collect(Collectors.toList()));
+		comboBox.setModel(query -> {
+			String normalizedQuery = getNormalized(query);
+			return query == null || query.isBlank() ?
+					records.get().stream()
+							.limit(limit)
+							.collect(Collectors.toList()) :
+					records.get().stream()
+							.filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(normalizedQuery))
+							.limit(limit)
+							.collect(Collectors.toList());
+		});
 		return comboBox;
 	}
 
@@ -95,11 +106,54 @@ public class ComboBoxUtils {
 	public static <RECORD> TagComboBox<RECORD> createTagComboBox(Supplier<List<RECORD>> records, int limit, PropertyProvider<RECORD> propertyProvider, Template template) {
 		TagComboBox<RECORD> tagComboBox = new TagComboBox<>(template);
 		tagComboBox.setPropertyProvider(propertyProvider);
-		Function<RECORD, String> recordToStringFunction = UiUtils.createRecordToStringFunction(propertyProvider);
+		Function<RECORD, String> recordToStringFunction = createRecordToNormalizedStringFunction(propertyProvider); // UiUtils.createRecordToStringFunction(propertyProvider);
 		tagComboBox.setRecordToStringFunction(recordToStringFunction);
-		tagComboBox.setModel(query -> query == null || query.isBlank() ? records.get().stream().limit(limit).collect(Collectors.toList()) : records.get().stream().filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(query.toLowerCase())).limit(limit).collect(Collectors.toList()));
+		tagComboBox.setModel(query -> {
+			String normalizedQuery = getNormalized(query);
+			return query == null || query.isBlank() ?
+					records.get().stream()
+							.limit(limit)
+							.collect(Collectors.toList()) :
+					records.get().stream()
+							.filter(record -> recordToStringFunction.apply(record).toLowerCase().contains(normalizedQuery))
+							.limit(limit)
+							.collect(Collectors.toList());
+		});
 		return tagComboBox;
 
+	}
+
+	public static <RECORD> Function<RECORD, String> createRecordToNormalizedStringFunction(PropertyProvider<RECORD> propertyProvider) {
+		return record -> {
+			Map<String, Object> map = propertyProvider.getValues(record, Collections.emptyList());
+			String s1 = (String) map.get(BaseTemplate.PROPERTY_CAPTION);
+			String s2 = (String) map.get(BaseTemplate.PROPERTY_DESCRIPTION);
+			if (s1 != null) {
+				String s = s2 == null ? s1 : s1 + " " + s2;
+				return getNormalized(s);
+			} else {
+				StringBuilder sb = new StringBuilder();
+				for (Object value : map.values()) {
+					if (value instanceof String) {
+						String s = (String) value;
+						sb.append(s).append(" ");
+					}
+				}
+				return getNormalized(sb.toString()).trim();
+			}
+		};
+	}
+
+	public static String getNormalized(String s) {
+		return s == null ? null : Normalizer.normalize(s, Normalizer.Form.NFD)
+				.replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+				.replace("ß", "ss")
+				.toLowerCase()
+				.replace("—", "-")
+				.replace("œ", "oe")
+				.replace("æ", "ae")
+				.replace('đ', 'd')
+				.replace('ø', 'o');
 	}
 
 }
