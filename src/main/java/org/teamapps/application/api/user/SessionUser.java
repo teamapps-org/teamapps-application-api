@@ -43,6 +43,8 @@ public interface SessionUser extends UserContext {
 
 	String getDescription();
 
+	String getCountry();
+
 	String getProfilePictureLink();
 
 	String getLargeProfilePictureLink();

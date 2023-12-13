@@ -19,7 +19,7 @@
  */
 package org.teamapps.application.ux.window;
 
-import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.icons.Icon;
@@ -42,17 +42,28 @@ public class WindowUtils {
 		return window;
 	}
 
-	public static void addCancelCloseButton(Window window, ApplicationInstanceData applicationInstanceData) {
+	public static void addCancelCloseButton(Window window, ApplicationLocalizationProvider localizationProvider) {
 		Toolbar toolbar = window.getToolbar();
 		if (toolbar == null) {
 			toolbar = new Toolbar();
 			window.setToolbar(toolbar);
 		}
 		ToolbarButtonGroup buttonGroup = toolbar.addButtonGroup(new ToolbarButtonGroup());
-		ToolbarButton closeButton = ToolbarButton.create(ApplicationIcons.ERROR, applicationInstanceData.getLocalized(Dictionary.CANCEL), applicationInstanceData.getLocalized(Dictionary.CANCEL_AND_CLOSE_WINDOW));
+		ToolbarButton closeButton = ToolbarButton.create(ApplicationIcons.ERROR, localizationProvider.getLocalized(Dictionary.CANCEL), localizationProvider.getLocalized(Dictionary.CANCEL_AND_CLOSE_WINDOW));
 		closeButton.onClick.addListener((Runnable) window::close);
 		buttonGroup.addButton(closeButton);
+	}
 
+	public static void addOkButton(Window window, ApplicationLocalizationProvider localizationProvider) {
+		Toolbar toolbar = window.getToolbar();
+		if (toolbar == null) {
+			toolbar = new Toolbar();
+			window.setToolbar(toolbar);
+		}
+		ToolbarButtonGroup buttonGroup = toolbar.addButtonGroup(new ToolbarButtonGroup());
+		ToolbarButton closeButton = ToolbarButton.create(ApplicationIcons.OK, localizationProvider.getLocalized(Dictionary.O_K), localizationProvider.getLocalized(Dictionary.O_K));
+		closeButton.onClick.addListener((Runnable) window::close);
+		buttonGroup.addButton(closeButton);
 	}
 
 }

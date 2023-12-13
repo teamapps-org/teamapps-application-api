@@ -72,7 +72,7 @@ public class FormPanel {
 		panel.setIcon(icon);
 		panel.setTitle(caption);
 		panel.setHideTitleBar(false);
-		formLayout.addSection().setCollapsible(false).setDrawHeaderLine(false);
+		formLayout.addSection().setCollapsible(false).setDrawHeaderLine(false).setHideWhenNoVisibleFields(true);
 		formLayout.addLabelAndComponent(panel);
 	}
 
