@@ -28,6 +28,8 @@ public interface ApplicationDesktop {
 
 	void showApplication(Icon icon, String title, boolean select, boolean closable);
 
+	void setDarkTheme(boolean darkTheme);
+
 	void close();
 
 }
