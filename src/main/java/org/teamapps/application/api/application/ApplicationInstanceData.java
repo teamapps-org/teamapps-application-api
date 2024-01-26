@@ -27,6 +27,7 @@ import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
 import org.teamapps.application.api.organization.UserRoleType;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
+import org.teamapps.application.api.search.UserSearch;
 import org.teamapps.application.api.state.ReplicatedStateMachine;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.LocalizedFormatter;
@@ -63,6 +64,14 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	default LocalizedFormatter getLocalizedFormatter() {
 		return getUser().getLocalizedFormatter();
+	}
+
+	default void runTaskAsync(Icon icon, String title, Runnable task) {
+		MultiProgressDisplay multiProgressDisplay = getMultiProgressDisplay();
+		multiProgressDisplay.addTask(icon, title, progressMonitor -> {
+			task.run();
+			progressMonitor.markCompleted();
+		});
 	}
 
 	default <RESULT> void runTaskAsync(Icon icon, String title, Supplier<RESULT> task, Consumer<RESULT> uiResultTask) {
@@ -108,4 +117,6 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	String createPublicLinkForResource(Resource resource, Duration availabilityDuration);
 
 	<MESSAGE extends Message> MessageStore<MESSAGE> getMessageStore(String name);
+
+	UserSearch createUserSearch(String authCode);
 }

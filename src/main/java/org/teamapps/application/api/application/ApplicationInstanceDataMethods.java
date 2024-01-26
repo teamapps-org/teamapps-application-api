@@ -93,6 +93,10 @@ public interface ApplicationInstanceDataMethods {
 		return getApplicationInstanceData().getLocalizedFormatter();
 	}
 
+	default void runTaskAsync(Icon icon, String title, Runnable task) {
+		getApplicationInstanceData().runTaskAsync(icon, title, task);
+	}
+
 	default <RESULT> void runTaskAsync(Icon icon, String title, Supplier<RESULT> task, Consumer<RESULT> uiResultTask) {
 		getApplicationInstanceData().runTaskAsync(icon, title, task, uiResultTask);
 	}
