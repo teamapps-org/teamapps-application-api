@@ -33,6 +33,10 @@ public class StandardPrivilegeGroupImpl extends AbstractPrivilegeGroup implement
 		super(name, icon, titleKey, descriptionKey, privileges);
 	}
 
+	public StandardPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Privilege... privileges) {
+		super(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privileges);
+	}
+
 	@Override
 	public PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
 		return new StandardPrivilegeGroupImpl(getName(), getIcon(), getTitleKey(), getDescriptionKey(), privileges);

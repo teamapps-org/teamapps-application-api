@@ -38,6 +38,11 @@ public class RoleAssignmentDelegatedCustomPrivilegeGroupImpl extends AbstractPri
 		this.privilegeObjectByIdFunction = privilegeObjectByIdFunction;
 	}
 
+	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
+		super(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privileges);
+		this.privilegeObjectByIdFunction = privilegeObjectByIdFunction;
+	}
+
 	@Override
 	public PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
 		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(getName(), getIcon(), getTitleKey(), getDescriptionKey(), privilegeObjectByIdFunction, privileges);

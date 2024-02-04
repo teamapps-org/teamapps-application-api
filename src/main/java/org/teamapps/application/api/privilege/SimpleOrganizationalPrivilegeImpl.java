@@ -28,6 +28,10 @@ public class SimpleOrganizationalPrivilegeImpl extends AbstractPrivilegeGroup im
 		super(name, icon, titleKey, descriptionKey);
 	}
 
+	public SimpleOrganizationalPrivilegeImpl(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden) {
+		super(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden);
+	}
+
 	@Override
 	public PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
 		return new SimpleOrganizationalPrivilegeImpl(getName(), getIcon(), getTitleKey(), getDescriptionKey());

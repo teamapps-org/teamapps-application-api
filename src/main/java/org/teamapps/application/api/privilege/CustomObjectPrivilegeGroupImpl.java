@@ -31,6 +31,10 @@ public class CustomObjectPrivilegeGroupImpl extends AbstractPrivilegeGroup imple
 		super(name, icon, titleKey, descriptionKey, privileges, privilegeObjectsSupplier);
 	}
 
+	public CustomObjectPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, List<Privilege> privileges, Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
+		super(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privileges, privilegeObjectsSupplier);
+	}
+
 	@Override
 	public PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
 		return new CustomObjectPrivilegeGroupImpl(getName(), getIcon(), getTitleKey(), getDescriptionKey(), Arrays.asList(privileges), getPrivilegeObjectsSupplier());

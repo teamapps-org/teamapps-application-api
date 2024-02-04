@@ -33,6 +33,8 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 	private final Icon icon;
 	private final String titleKey;
 	private final String descriptionKey;
+	private final boolean multiFactorAuthenticationRequired;
+	private final boolean inheritanceForbidden;
 	private final List<Privilege> privileges;
 	private Supplier<List<PrivilegeObject>> privilegeObjectsSupplier;
 
@@ -42,6 +44,18 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 		this.titleKey = titleKey;
 		this.descriptionKey = descriptionKey;
 		this.privileges = Collections.emptyList();
+		this.multiFactorAuthenticationRequired = false;
+		this.inheritanceForbidden = false;
+	}
+
+	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden) {
+		this.name = name;
+		this.icon = icon;
+		this.titleKey = titleKey;
+		this.descriptionKey = descriptionKey;
+		this.multiFactorAuthenticationRequired = multiFactorAuthenticationRequired;
+		this.inheritanceForbidden = inheritanceForbidden;
+		this.privileges = Collections.emptyList();
 	}
 
 	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, List<Privilege> privileges) {
@@ -50,6 +64,8 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 		this.titleKey = titleKey;
 		this.descriptionKey = descriptionKey;
 		this.privileges = privileges;
+		this.multiFactorAuthenticationRequired = false;
+		this.inheritanceForbidden = false;
 	}
 
 	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Privilege... privileges) {
@@ -58,6 +74,28 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 		this.titleKey = titleKey;
 		this.descriptionKey = descriptionKey;
 		this.privileges = Arrays.asList(privileges);
+		this.multiFactorAuthenticationRequired = false;
+		this.inheritanceForbidden = false;
+	}
+
+	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Privilege... privileges) {
+		this.name = name;
+		this.icon = icon;
+		this.titleKey = titleKey;
+		this.descriptionKey = descriptionKey;
+		this.privileges = Arrays.asList(privileges);
+		this.multiFactorAuthenticationRequired = multiFactorAuthenticationRequired;
+		this.inheritanceForbidden = inheritanceForbidden;
+	}
+
+	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, List<Privilege> privileges) {
+		this.name = name;
+		this.icon = icon;
+		this.titleKey = titleKey;
+		this.descriptionKey = descriptionKey;
+		this.multiFactorAuthenticationRequired = multiFactorAuthenticationRequired;
+		this.privileges = privileges;
+		this.inheritanceForbidden = false;
 	}
 
 	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, List<Privilege> privileges, Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
@@ -67,6 +105,19 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 		this.descriptionKey = descriptionKey;
 		this.privileges = privileges;
 		this.privilegeObjectsSupplier = privilegeObjectsSupplier;
+		this.multiFactorAuthenticationRequired = false;
+		this.inheritanceForbidden = false;
+	}
+
+	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, List<Privilege> privileges, Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
+		this.name = name;
+		this.icon = icon;
+		this.titleKey = titleKey;
+		this.descriptionKey = descriptionKey;
+		this.multiFactorAuthenticationRequired = multiFactorAuthenticationRequired;
+		this.privileges = privileges;
+		this.privilegeObjectsSupplier = privilegeObjectsSupplier;
+		this.inheritanceForbidden = inheritanceForbidden;
 	}
 
 	public void setPrivilegeObjectsSupplier(Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
@@ -96,6 +147,16 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 	@Override
 	public List<Privilege> getPrivileges() {
 		return privileges;
+	}
+
+	@Override
+	public boolean isMultiFactorAuthenticationRequired() {
+		return multiFactorAuthenticationRequired;
+	}
+
+	@Override
+	public boolean isInheritanceForbidden() {
+		return inheritanceForbidden;
 	}
 
 	@Override

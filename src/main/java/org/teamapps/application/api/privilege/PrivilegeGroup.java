@@ -37,8 +37,16 @@ public interface PrivilegeGroup {
 		return new SimplePrivilegeImpl(name, icon, titleKey, descriptionKey);
 	}
 
+	static SimplePrivilege createSimplePrivilege(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden) {
+		return new SimplePrivilegeImpl(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden);
+	}
+
 	static SimpleOrganizationalPrivilege createSimpleOrganizationalPrivilege(String name, Icon icon, String titleKey, String descriptionKey) {
 		return new SimpleOrganizationalPrivilegeImpl(name, icon, titleKey, descriptionKey);
+	}
+
+	static SimpleOrganizationalPrivilege createSimpleOrganizationalPrivilege(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden) {
+		return new SimpleOrganizationalPrivilegeImpl(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden);
 	}
 
 	static SimpleCustomObjectPrivilege createSimpleCustomObjectPrivilege(String name, Icon icon, String titleKey, String descriptionKey, Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
@@ -49,16 +57,32 @@ public interface PrivilegeGroup {
 		return new StandardPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privileges);
 	}
 
+	static StandardPrivilegeGroup createStandardPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Privilege... privileges) {
+		return new StandardPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privileges);
+	}
+
 	static OrganizationalPrivilegeGroup createOrganizationalPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Privilege... privileges) {
 		return new OrganizationalPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privileges);
+	}
+
+	static OrganizationalPrivilegeGroup createOrganizationalPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Privilege... privileges) {
+		return new OrganizationalPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privileges);
 	}
 
 	static CustomObjectPrivilegeGroup createCustomObjectPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, List<Privilege> privileges, Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
 		return new CustomObjectPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privileges, privilegeObjectsSupplier);
 	}
 
+	static CustomObjectPrivilegeGroup createCustomObjectPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, List<Privilege> privileges, Supplier<List<PrivilegeObject>> privilegeObjectsSupplier) {
+		return new CustomObjectPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privileges, privilegeObjectsSupplier);
+	}
+
 	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
 		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
+	}
+
+	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privilegeObjectByIdFunction, privileges);
 	}
 
 	static PrivilegeGroup mergeGroups(PrivilegeGroup groupA, PrivilegeGroup groupB) {
@@ -82,6 +106,10 @@ public interface PrivilegeGroup {
 	String getTitleKey();
 
 	String getDescriptionKey();
+
+	boolean isMultiFactorAuthenticationRequired();
+
+	boolean isInheritanceForbidden();
 
 	List<Privilege> getPrivileges();
 
