@@ -84,6 +84,7 @@ public class PerspectiveMenuPanel {
 			case BaseTemplate.PROPERTY_ICON -> builder.getIcon();
 			case BaseTemplate.PROPERTY_CAPTION -> applicationInstanceData.getLocalized(builder.getTitleKey());
 			case BaseTemplate.PROPERTY_DESCRIPTION -> applicationInstanceData.getLocalized(builder.getDescriptionKey());
+			case BaseTemplate.PROPERTY_BADGE -> builder.getBadgeValue(applicationInstanceData);
 			default -> null;
 		});
 		tree.onNodeSelected.addListener(this::openPerspective);

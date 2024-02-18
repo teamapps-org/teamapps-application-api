@@ -35,6 +35,10 @@ public interface PerspectiveBuilder {
 
 	String getDescriptionKey();
 
+	default String getBadgeValue(ApplicationPrivilegeProvider privilegeProvider) {
+		return null;
+	}
+
 	boolean isPerspectiveAccessible(ApplicationPrivilegeProvider privilegeProvider);
 
 	default boolean autoProvisionPerspective() {
