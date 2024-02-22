@@ -29,5 +29,6 @@ public interface UserSearch {
 
 	List<UserMatch> search(UserSearchBuilder searchBuilder, int minScore);
 
+	List<UserMatch> fullTextSearch(String query);
 
 }
