@@ -119,6 +119,7 @@ public interface LocalizationData {
 				new LocalizationLanguages(
 						Locale.forLanguageTag("en")
 				).setMachineTranslatedLanguages(
+						Locale.forLanguageTag("ar"),
 						Locale.forLanguageTag("bg"),
 						Locale.forLanguageTag("cs"),
 						Locale.forLanguageTag("da"),
@@ -132,8 +133,10 @@ public interface LocalizationData {
 						Locale.forLanguageTag("in"), //id
 						Locale.forLanguageTag("it"),
 						Locale.forLanguageTag("ja"),
+						Locale.forLanguageTag("ko"),
 						Locale.forLanguageTag("lt"),
 						Locale.forLanguageTag("lv"),
+						Locale.forLanguageTag("no"),
 						Locale.forLanguageTag("nl"),
 						Locale.forLanguageTag("pl"),
 						Locale.forLanguageTag("pt"),
