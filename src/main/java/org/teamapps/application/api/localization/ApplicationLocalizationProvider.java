@@ -38,6 +38,4 @@ public interface ApplicationLocalizationProvider {
 
 	String getLocalized(TranslatableText translatableText);
 
-	Function<TranslatableText, String> getTranslatableTextExtractor();
-
 }

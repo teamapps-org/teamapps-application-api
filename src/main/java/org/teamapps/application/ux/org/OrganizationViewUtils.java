@@ -183,27 +183,25 @@ public class OrganizationViewUtils {
 	}
 
 	public static PropertyProvider<OrganizationUnitView> creatOrganizationUnitPropertyProvider(ApplicationInstanceData applicationInstanceData) {
-		Function<TranslatableText, String> translatableTextExtractor = TranslatableTextUtils.createTranslatableTextExtractor(applicationInstanceData);
 		return (unit, propertyNames) -> {
 			Map<String, Object> map = new HashMap<>();
 			map.put(BaseTemplate.PROPERTY_ICON, unit.getIcon() != null ? IconUtils.decodeIcon(unit.getIcon()) : IconUtils.decodeIcon(unit.getType().getIcon()));
-			map.put(BaseTemplate.PROPERTY_CAPTION, getOrganizationUnitTitle(unit, translatableTextExtractor, true));
-			map.put(BaseTemplate.PROPERTY_DESCRIPTION, translatableTextExtractor.apply(unit.getType().getName()));
+			map.put(BaseTemplate.PROPERTY_CAPTION, getOrganizationUnitTitle(unit,  true, applicationInstanceData));
+			map.put(BaseTemplate.PROPERTY_DESCRIPTION, applicationInstanceData.getLocalized(unit.getType().getName()));
 			return map;
 		};
 	}
 
 	public static PropertyProvider<OrganizationUnitView> creatOrganizationUnitWithPathPropertyProvider(ApplicationInstanceData applicationInstanceData) {
-		Function<TranslatableText, String> translatableTextExtractor = TranslatableTextUtils.createTranslatableTextExtractor(applicationInstanceData);
 		return (unit, propertyNames) -> {
 			Map<String, Object> map = new HashMap<>();
 			map.put(BaseTemplate.PROPERTY_ICON, unit.getIcon() != null ? IconUtils.decodeIcon(unit.getIcon()) : IconUtils.decodeIcon(unit.getType().getIcon()));
-			map.put(BaseTemplate.PROPERTY_CAPTION, getOrganizationUnitTitle(unit, translatableTextExtractor, true));
+			map.put(BaseTemplate.PROPERTY_CAPTION, getOrganizationUnitTitle(unit, true, applicationInstanceData));
 			int level = 0;
 			OrganizationUnitView parent = unit.getParent();
 			String path = null;
 			while (parent != null && level < 3) {
-				String parentName = getOrganizationUnitTitle(parent, translatableTextExtractor, true);
+				String parentName = getOrganizationUnitTitle(parent, true, applicationInstanceData);
 				path = path == null ? parentName : parentName + "/" + path;
 				level++;
 				parent = parent.getParent();
@@ -213,27 +211,26 @@ public class OrganizationViewUtils {
 		};
 	}
 
-	private static String getOrganizationUnitTitle(OrganizationUnitView unit, Function<TranslatableText, String> translatableTextExtractor, boolean withOrgLevelPrefix) {
+	private static String getOrganizationUnitTitle(OrganizationUnitView unit, boolean withOrgLevelPrefix, ApplicationInstanceData applicationInstanceData) {
 		if (unit == null) {
 			return null;
 		}
 		String prefix = "";
-		String abbreviation = translatableTextExtractor.apply(unit.getType().getAbbreviation());
+		String abbreviation = applicationInstanceData.getLocalized(unit.getType().getAbbreviation());
 		if (withOrgLevelPrefix && abbreviation != null) {
 			prefix = abbreviation + "-";
 		}
-		String title = prefix + translatableTextExtractor.apply(unit.getName());
+		String title = prefix + applicationInstanceData.getLocalized(unit.getName());
 		return title;
 	}
 
 
 	public static PropertyProvider<OrganizationUnitTypeView> creatOrganizationUnitTypeViewPropertyProvider(ApplicationInstanceData applicationInstanceData) {
-		Function<TranslatableText, String> translatableTextExtractor = TranslatableTextUtils.createTranslatableTextExtractor(applicationInstanceData);
 		return (unitType, propertyNames) -> {
 			Map<String, Object> map = new HashMap<>();
 			map.put(BaseTemplate.PROPERTY_ICON, IconUtils.decodeIcon(unitType.getIcon()));
-			map.put(BaseTemplate.PROPERTY_CAPTION, translatableTextExtractor.apply(unitType.getName()));
-			map.put(BaseTemplate.PROPERTY_DESCRIPTION, translatableTextExtractor.apply(unitType.getAbbreviation()));
+			map.put(BaseTemplate.PROPERTY_CAPTION, applicationInstanceData.getLocalized(unitType.getName()));
+			map.put(BaseTemplate.PROPERTY_DESCRIPTION, applicationInstanceData.getLocalized(unitType.getAbbreviation()));
 			return map;
 		};
 	}

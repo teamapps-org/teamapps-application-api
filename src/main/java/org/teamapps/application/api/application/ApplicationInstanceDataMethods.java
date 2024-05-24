@@ -134,10 +134,6 @@ public interface ApplicationInstanceDataMethods {
 		return getApplicationInstanceData().getLocalized(translatableText);
 	}
 
-	default Function<TranslatableText, String> getTranslatableTextExtractor() {
-		return getApplicationInstanceData().getTranslatableTextExtractor();
-	}
-
 	default boolean isAllowed(SimplePrivilege simplePrivilege) {
 		return getApplicationInstanceData().isAllowed(simplePrivilege);
 	}
