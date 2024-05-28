@@ -34,6 +34,7 @@ import org.teamapps.ux.session.SessionContext;
 public class ApplicationWindow implements ApplicationInstanceDataMethods {
 
 	private final Window window;
+	private final boolean smallToolbarButtons;
 	private final ApplicationInstanceData applicationInstanceData;
 	private Toolbar toolbar;
 	private ToolbarButtonGroup currentButtonGroup;
@@ -42,6 +43,11 @@ public class ApplicationWindow implements ApplicationInstanceDataMethods {
 	private ToolbarButton cancelButton;
 
 	public ApplicationWindow(Icon icon, String title, ApplicationInstanceData applicationInstanceData) {
+		this(icon, title, false, applicationInstanceData);
+	}
+
+	public ApplicationWindow(Icon icon, String title, boolean smallToolbarButtons, ApplicationInstanceData applicationInstanceData) {
+		this.smallToolbarButtons = smallToolbarButtons;
 		this.applicationInstanceData = applicationInstanceData;
 		this.window = new Window(icon, title, 800, 600, null);
 		toolbar = new Toolbar();
@@ -64,7 +70,7 @@ public class ApplicationWindow implements ApplicationInstanceDataMethods {
 	}
 
 	public ToolbarButton addButton(Icon icon, String title, String description) {
-		ToolbarButton button = ToolbarButton.create(icon, title, description);
+		ToolbarButton button = smallToolbarButtons ? ToolbarButton.createSmall(icon, title) : ToolbarButton.create(icon, title, description);
 		currentButtonGroup.addButton(button);
 		return button;
 	}
@@ -74,7 +80,7 @@ public class ApplicationWindow implements ApplicationInstanceDataMethods {
 	}
 
 	public ToolbarButton addSaveButton(String title, String description) {
-		saveButton = ToolbarButton.create(ApplicationIcons.FLOPPY_DISK, title, description);
+		saveButton = smallToolbarButtons ? ToolbarButton.createSmall(ApplicationIcons.FLOPPY_DISK, title) : ToolbarButton.create(ApplicationIcons.FLOPPY_DISK, title, description);
 		currentButtonGroup.addButton(saveButton);
 		return saveButton;
 	}
@@ -84,7 +90,7 @@ public class ApplicationWindow implements ApplicationInstanceDataMethods {
 	}
 
 	public ToolbarButton addOkButton(String title, String description) {
-		okButton = ToolbarButton.create(ApplicationIcons.OK, title, description);
+		okButton = smallToolbarButtons ? ToolbarButton.createSmall(ApplicationIcons.OK, title) : ToolbarButton.create(ApplicationIcons.OK, title, description);
 		currentButtonGroup.addButton(okButton);
 		return okButton;
 	}
@@ -94,7 +100,7 @@ public class ApplicationWindow implements ApplicationInstanceDataMethods {
 	}
 
 	public ToolbarButton addCancelButton(String title, String description) {
-		cancelButton = ToolbarButton.create(ApplicationIcons.WINDOW_CLOSE, title, description);
+		cancelButton = smallToolbarButtons ? ToolbarButton.createSmall(ApplicationIcons.WINDOW_CLOSE, title) : ToolbarButton.create(ApplicationIcons.WINDOW_CLOSE, title, description);
 		currentButtonGroup.addButton(cancelButton);
 		cancelButton.onClick.addListener(() -> window.close());
 		return cancelButton;

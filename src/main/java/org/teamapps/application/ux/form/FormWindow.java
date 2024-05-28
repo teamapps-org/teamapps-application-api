@@ -38,7 +38,11 @@ public class FormWindow extends ApplicationWindow {
 	private List<AbstractField> fields = new ArrayList<>();
 
 	public FormWindow(Icon icon, String title, ApplicationInstanceData applicationInstanceData) {
-		super(icon, title, applicationInstanceData);
+		this(icon, title, false, applicationInstanceData);
+	}
+
+	public FormWindow(Icon icon, String title, boolean smallToolbarButtons, ApplicationInstanceData applicationInstanceData) {
+		super(icon, title, smallToolbarButtons, applicationInstanceData);
 		init();
 	}
 
