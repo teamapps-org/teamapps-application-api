@@ -458,8 +458,8 @@ country.JO_JORDAN=Jordan
 country.KZ_KAZAKHSTAN=Kazakhstan
 country.KE_KENYA=Kenya
 country.KI_KIRIBATI=Kiribati
-country.KP_KOREA_DEMOCRATIC_PEOPLE_S_REPUBLIC_OF=Korea, Democratic People's Republic of
-country.KR_KOREA_REPUBLIC_OF=Korea, Republic of
+country.KP_KOREA_DEMOCRATIC_PEOPLE_S_REPUBLIC_OF=North Korea
+country.KR_KOREA_REPUBLIC_OF=South Korea
 country.KW_KUWAIT=Kuwait
 country.KG_KYRGYZSTAN=Kyrgyzstan
 country.LA_LAO_PEOPLE_S_DEMOCRATIC_REPUBLIC=Lao People's Democratic Republic
@@ -590,6 +590,7 @@ country.EH_WESTERN_SAHARA=Western Sahara
 country.YE_YEMEN=Yemen
 country.ZM_ZAMBIA=Zambia
 country.ZW_ZIMBABWE=Zimbabwe
+country.XK_KOSOVO=Kosovo
 
 ::languages
 language.AA_AFAR=Afar
