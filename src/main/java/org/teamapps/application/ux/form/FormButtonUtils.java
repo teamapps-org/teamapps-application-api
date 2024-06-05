@@ -31,6 +31,10 @@ public class FormButtonUtils {
 		return ToolbarButton.createSmall(ApplicationIcons.ADD, applicationInstanceData.getLocalized(Dictionary.NEW));
 	}
 
+	public static ToolbarButton createEditButton(ApplicationInstanceData applicationInstanceData) {
+		return ToolbarButton.createSmall(ApplicationIcons.EDIT, applicationInstanceData.getLocalized(Dictionary.EDIT));
+	}
+
 	public static ToolbarButton createAddButton(ApplicationInstanceData applicationInstanceData) {
 		return ToolbarButton.createSmall(ApplicationIcons.ADD, applicationInstanceData.getLocalized(Dictionary.ADD));
 	}

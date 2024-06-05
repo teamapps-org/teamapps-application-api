@@ -26,7 +26,6 @@ import org.teamapps.common.format.Color;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.data.value.SortDirection;
-import org.teamapps.data.value.Sorting;
 import org.teamapps.databinding.TwoWayBindableValue;
 import org.teamapps.event.Event;
 import org.teamapps.ux.application.view.View;
