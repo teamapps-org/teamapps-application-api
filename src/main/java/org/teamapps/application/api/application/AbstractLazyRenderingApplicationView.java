@@ -111,6 +111,8 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 			parentView.setComponent(getViewComponent());
 		} else if (parentPanel != null) {
 			parentPanel.setContent(getViewComponent());
+		} else if (parentWindow != null) {
+			parentWindow.setContent(getViewComponent());
 		}
 	}
 
@@ -149,6 +151,9 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 			if (parentWindow != null) {
 				parentWindow.show();
 			}
+		} else if (parentWindow != null) {
+			parentWindow.setContent(getViewComponent());
+			parentWindow.show();
 		}
 		visible.set(true);
 		peerViewsToHideWhenVisible.forEach(v -> {
@@ -194,6 +199,8 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 			return parentView.getPanel();
 		} else if (parentPanel != null) {
 			return parentPanel;
+		} else if (parentWindow != null) {
+			return parentWindow;
 		}
 		return null;
 	}
@@ -220,6 +227,11 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 				parentPanel.setToolbar(new Toolbar());
 			}
 			return parentPanel.getToolbar().addButtonGroup(group);
+		} else if (parentWindow != null) {
+			if (parentWindow.getToolbar() == null) {
+				parentWindow.setToolbar(new Toolbar());
+			}
+			return parentWindow.getToolbar().addButtonGroup(group);
 		}
 		return null;
 	}
