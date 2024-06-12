@@ -243,10 +243,6 @@ public class TranslatableField2 {
 				case RICH_TEXT_FIELD -> {
 					RichTextEditor richTextEditor = new RichTextEditor();
 					richTextEditor.setToolbarVisibilityMode(ToolbarVisibilityMode.VISIBLE_IF_FOCUSED);
-					richTextEditor.setFixedHeight(500);
-					//richTextEditor.setEditingMode(FieldEditingMode.READONLY);
-					//richTextEditor.setMinHeight(400);
-					//richTextEditor.setCssStyle("height", Length.ofPixels(500).toCssString());
 					field = richTextEditor;
 				}
 			}
