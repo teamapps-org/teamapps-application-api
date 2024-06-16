@@ -86,6 +86,16 @@ public class FormMetaFieldsImpl implements FormMetaFields {
 		restoreDateField.setEditingMode(FieldEditingMode.READONLY);
 		idField.setEditingMode(FieldEditingMode.READONLY);
 
+		createdByField.setVisible(false);
+		modifiedByField.setVisible(false);
+		deletedByField.setVisible(false);
+		restoredByField.setVisible(false);
+		creationDateField.setVisible(false);
+		modificationDateField.setVisible(false);
+		deletionDateField.setVisible(false);
+		restoreDateField.setVisible(false);
+		idField.setVisible(false);
+
 		createdByField.onClicked.addListener(() -> onClicked.fire(createdByField.getValue()));
 		modifiedByField.onClicked.addListener(() -> onClicked.fire(modifiedByField.getValue()));
 		deletedByField.onClicked.addListener(() -> onClicked.fire(deletedByField.getValue()));
