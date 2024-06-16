@@ -114,7 +114,7 @@ public class LocalizedFormatter {
 	}
 
 	public String formatDurationInSeconds(int seconds) {
-		LocalTime timeOfDay = LocalTime.ofSecondOfDay(seconds);
+		LocalTime timeOfDay = LocalTime.ofSecondOfDay(Math.abs(seconds));
 		return durationFormatter.format(timeOfDay);
 	}
 
