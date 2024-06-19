@@ -58,7 +58,7 @@ public class ComboBoxUtils {
 	}
 
 	public static <RECORD> ComboBox<RECORD> createRecordComboBox(Supplier<List<RECORD>> records, PropertyProvider<RECORD> propertyProvider, Template template) {
-		return createRecordComboBox(records, 50, propertyProvider, template);
+		return createRecordComboBox(records, 150, propertyProvider, template);
 	}
 
 	public static <RECORD> ComboBox<RECORD> createRecordComboBox(Supplier<List<RECORD>> records, int limit, PropertyProvider<RECORD> propertyProvider, Template template) {
@@ -100,7 +100,7 @@ public class ComboBoxUtils {
 
 
 	public static <RECORD> TagComboBox<RECORD> createTagComboBox(Supplier<List<RECORD>> records, PropertyProvider<RECORD> propertyProvider, Template template) {
-		return createTagComboBox(records, 50, propertyProvider, template);
+		return createTagComboBox(records, 150, propertyProvider, template);
 	}
 
 	public static <RECORD> TagComboBox<RECORD> createTagComboBox(Supplier<List<RECORD>> records, int limit, PropertyProvider<RECORD> propertyProvider, Template template) {
