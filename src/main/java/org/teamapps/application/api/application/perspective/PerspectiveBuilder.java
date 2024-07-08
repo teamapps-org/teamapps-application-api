@@ -24,6 +24,7 @@ import org.teamapps.application.api.application.perspective.ApplicationPerspecti
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.databinding.MutableValue;
 import org.teamapps.icons.Icon;
+import org.teamapps.model.controlcenter.OrganizationFieldView;
 
 public interface PerspectiveBuilder {
 
@@ -37,6 +38,10 @@ public interface PerspectiveBuilder {
 
 	default String getBadgeValue(ApplicationPrivilegeProvider privilegeProvider) {
 		return null;
+	}
+
+	default int getApplicationBadgeCount(int userId, OrganizationFieldView organizationFieldView) {
+		return 0;
 	}
 
 	boolean isPerspectiveAccessible(ApplicationPrivilegeProvider privilegeProvider);
