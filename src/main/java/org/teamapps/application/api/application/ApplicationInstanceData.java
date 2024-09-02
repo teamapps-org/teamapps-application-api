@@ -32,6 +32,7 @@ import org.teamapps.application.api.state.ReplicatedStateMachine;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.LocalizedFormatter;
 import org.teamapps.application.api.user.SessionUser;
+import org.teamapps.databinding.TwoWayBindableValue;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.message.protocol.message.Message;
@@ -111,6 +112,8 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	<ENTITY> void registerEntityUpdateListener(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener);
 
 	<TYPE> Event<TYPE> getUserSessionEvent(String name);
+
+	<TYPE>TwoWayBindableValue<TYPE> getBindableValue(String name);
 
 	ReplicatedStateMachine getReplicatedStateMachine(String name);
 

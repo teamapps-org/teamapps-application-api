@@ -25,9 +25,12 @@ import org.teamapps.application.api.application.perspective.ApplicationPerspecti
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.privilege.*;
+import org.teamapps.application.api.state.ReplicatedStateMachine;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.LocalizedFormatter;
 import org.teamapps.application.api.user.SessionUser;
+import org.teamapps.databinding.TwoWayBindableValue;
+import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.message.protocol.message.Message;
 import org.teamapps.model.controlcenter.OrganizationFieldView;
@@ -188,6 +191,19 @@ public interface ApplicationInstanceDataMethods {
 
 	default String createPublicLinkForResource(Resource resource, Duration availabilityDuration) {
 		return getApplicationInstanceData().createPublicLinkForResource(resource, availabilityDuration);
+	}
+
+
+	default <TYPE> Event<TYPE> getUserSessionEvent(String name) {
+		return getApplicationInstanceData().getUserSessionEvent(name);
+	}
+
+	default <TYPE> TwoWayBindableValue<TYPE> getBindableValue(String name) {
+		return getApplicationInstanceData().getBindableValue(name);
+	}
+
+	default ReplicatedStateMachine getReplicatedStateMachine(String name) {
+		return getApplicationInstanceData().getReplicatedStateMachine(name);
 	}
 
 	default <MESSAGE extends Message> MessageStore<MESSAGE> getMessageStore(String name) {
