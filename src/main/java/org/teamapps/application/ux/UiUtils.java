@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,17 +23,23 @@ import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.ux.window.BaseDialogue;
+import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.icons.Icon;
-import org.teamapps.ux.component.dialogue.Dialogue;
 import org.teamapps.ux.component.field.DisplayField;
 import org.teamapps.ux.component.field.FieldEditingMode;
 import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.field.combobox.TagBoxWrappingMode;
 import org.teamapps.ux.component.field.combobox.TagComboBox;
+import org.teamapps.ux.component.format.FontStyle;
+import org.teamapps.ux.component.format.SizingPolicy;
+import org.teamapps.ux.component.format.Spacing;
+import org.teamapps.ux.component.grid.layout.GridColumn;
 import org.teamapps.ux.component.template.BaseTemplate;
 import org.teamapps.ux.component.template.Template;
+import org.teamapps.ux.component.template.gridtemplate.BadgeElement;
+import org.teamapps.ux.component.template.gridtemplate.GridTemplate;
 import org.teamapps.ux.session.SessionContext;
 
 import java.util.*;
@@ -64,6 +70,25 @@ public class UiUtils {
 				onConfirmation.run();
 			}
 		});
+	}
+
+	public static TemplateField<String> createBadgeField(Color textColor, Color backgroundColor) {
+		GridTemplate tpl = new GridTemplate()
+				.addColumn(new GridColumn(SizingPolicy.AUTO))
+				.addColumn(new GridColumn(SizingPolicy.FRACTION))
+				.addRow(SizingPolicy.AUTO)
+				.setPadding(Spacing.px(2, 5))
+				.addElement(new BadgeElement(BaseTemplate.PROPERTY_BADGE, 0, 0)
+						.setFontStyle(new FontStyle(0.9f, textColor))
+						.setBackgroundColor(backgroundColor)
+				);
+		TemplateField<String> templateField = new TemplateField<>(tpl);
+		templateField.setPropertyProvider((s, propertyNames) -> {
+			Map<String, Object> map = PropertyData.createEmpty();
+			map.put(BaseTemplate.PROPERTY_BADGE, s);
+			return map;
+		});
+		return templateField;
 	}
 
 	public static <TYPE> TemplateField<TYPE> createTemplateField(Template template, PropertyProvider<TYPE> propertyProvider) {
@@ -136,7 +161,7 @@ public class UiUtils {
 	}
 
 	public static <RECORD> Function<RECORD, String> createRecordQueryStringFunction(PropertyProvider<RECORD> propertyProvider, String... properties) {
-		Set<String> keys = properties != null && properties.length > 0 ? new HashSet<>(Arrays.asList(properties)) : new HashSet<>(Arrays.asList(BaseTemplate.PROPERTY_CAPTION)) ;
+		Set<String> keys = properties != null && properties.length > 0 ? new HashSet<>(Arrays.asList(properties)) : new HashSet<>(Arrays.asList(BaseTemplate.PROPERTY_CAPTION));
 		return record -> {
 			Map<String, Object> values = propertyProvider.getValues(record, keys);
 			return values.entrySet().stream()
