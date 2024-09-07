@@ -115,6 +115,8 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	<TYPE>TwoWayBindableValue<TYPE> getBindableValue(String name);
 
+	<TYPE>TwoWayBindableValue<TYPE> getBindableValue(String name, boolean fireAlways);
+
 	ReplicatedStateMachine getReplicatedStateMachine(String name);
 
 	String createPublicLinkForResource(Resource resource, Duration availabilityDuration);

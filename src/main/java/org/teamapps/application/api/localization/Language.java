@@ -113,7 +113,7 @@ public enum Language {
 	KO_KOREAN("ko", "Korean", FlagIcon.KR_SOUTH_KOREA),
 	KR_KANURI("kr", "Kanuri", FlagIcon.NG_NIGERIA),
 	KS_KASHMIRI("ks", "Kashmiri", FlagIcon.IN_INDIA),
-	KU_KURDISH("ku", "Kurdish", FlagIcon.TR_TURKEY),
+	KU_KURDISH("ku", "Kurdish", FlagIcon.IQ_IRAQ),
 	KV_KOMI("kv", "Komi", FlagIcon.RU_RUSSIA),
 	KW_CORNISH("kw", "Cornish", FlagIcon.GB_GREAT_BRITAIN),
 	KY_KIRGHIZ_KYRGYZ("ky", "Kirghiz", FlagIcon.KG_KYRGYZSTAN),

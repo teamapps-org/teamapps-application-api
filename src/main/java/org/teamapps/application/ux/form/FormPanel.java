@@ -60,6 +60,12 @@ public class FormPanel {
 		setContent(content);
 	}
 
+	public void setPanelTitleAndIcon(Icon icon, String title) {
+		panel.setHideTitleBar(false);
+		panel.setIcon(icon);
+		panel.setTitle(title);
+	}
+
 	public void setContent(Component content) {
 		panel.setContent(content);
 	}

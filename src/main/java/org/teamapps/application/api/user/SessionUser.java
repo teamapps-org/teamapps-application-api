@@ -63,4 +63,8 @@ public interface SessionUser extends UserContext {
 
 	Event<Void> onUserLogout();
 
+	boolean isAppLogin();
+
+	UserAppConferenceHandler getUserAppConferenceHandler();
+
 }
