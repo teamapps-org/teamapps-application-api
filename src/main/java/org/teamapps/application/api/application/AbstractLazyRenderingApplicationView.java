@@ -86,6 +86,16 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 		return this;
 	}
 
+	public AbstractLazyRenderingApplicationView setPeerViews(List<AbstractLazyRenderingApplicationView> allViews, AbstractLazyRenderingApplicationView... peerViews) {
+		return setPeerViews(allViews, Collections.emptyList(), peerViews);
+	}
+
+	public AbstractLazyRenderingApplicationView setPeerViews(List<AbstractLazyRenderingApplicationView> allViews, List<AbstractLazyRenderingApplicationView> exclude, AbstractLazyRenderingApplicationView... peerViews) {
+		peerViewsToShowWhenVisible = Arrays.stream(peerViews).filter(v -> !v.equals(this)).collect(Collectors.toList());
+		peerViewsToHideWhenVisible = allViews.stream().filter(v -> !exclude.contains(v) && !peerViewsToShowWhenVisible.contains(v) && !v.equals(this)).collect(Collectors.toList());
+		return this;
+	}
+
 	public AbstractLazyRenderingApplicationView setPeerViewsToHideWhenVisible(AbstractLazyRenderingApplicationView... views) {
 		peerViewsToHideWhenVisible = Arrays.stream(views).filter(v -> !v.equals(this)).collect(Collectors.toList());
 		return this;
@@ -109,10 +119,10 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 	protected void handleViewComponentChange() {
 		if (parentView != null) {
 			parentView.setComponent(getViewComponent());
-		} else if (parentPanel != null) {
-			parentPanel.setContent(getViewComponent());
 		} else if (parentWindow != null) {
 			parentWindow.setContent(getViewComponent());
+		} else if (parentPanel != null) {
+			parentPanel.setContent(getViewComponent());
 		}
 	}
 
