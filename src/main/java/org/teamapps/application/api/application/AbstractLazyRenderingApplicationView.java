@@ -43,6 +43,7 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 	private Window parentWindow;
 	private Panel parentPanel;
 	private View targetView;
+	private AbstractLazyRenderingApplicationView targetApplicationView;
 	private Window targetWindow;
 	protected boolean created;
 	private List<AbstractLazyRenderingApplicationView> peerViewsToHideWhenVisible = Collections.emptyList();
@@ -78,6 +79,11 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 
 	public AbstractLazyRenderingApplicationView setTargetView(View target) {
 		this.targetView = target;
+		return this;
+	}
+
+	public AbstractLazyRenderingApplicationView setTargetView(AbstractLazyRenderingApplicationView targetApplicationView) {
+		this.targetApplicationView = targetApplicationView;
 		return this;
 	}
 
@@ -193,6 +199,9 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 	}
 
 	public void focusTargetView() {
+		if (targetApplicationView != null) {
+			targetApplicationView.show(true);
+		}
 		if (targetView != null) {
 			targetView.focus();
 		} else if (targetWindow != null) {
