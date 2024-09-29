@@ -20,10 +20,16 @@
 package org.teamapps.application.api.application;
 
 import org.teamapps.application.api.application.perspective.PerspectiveBuilder;
+import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
+import org.teamapps.event.Event;
+import org.teamapps.ux.application.perspective.Perspective;
 
 import java.util.List;
 
 public interface UserProfileApplicationBuilder {
+
+
+	void updateLauncherView(int userId, ApplicationInstanceData applicationInstanceData, Perspective perspective, Event<Void> updateEvent);
 
 	List<PerspectiveBuilder> getUserProfilePerspectiveBuilders();
 }
