@@ -64,6 +64,10 @@ public class UiUtils {
 		showQuestion(ApplicationIcons.DELETE, applicationInstanceData.getLocalized(Dictionary.DELETE), applicationInstanceData.getLocalized(Dictionary.SENTENCE_DO_YOU_REALLY_WANT_TO_DELETE_THE_RE__), onConfirmation, applicationInstanceData);
 	}
 
+	public static void showDeleteQuestion(String question, Runnable onConfirmation, ApplicationInstanceData applicationInstanceData) {
+		showQuestion(ApplicationIcons.DELETE, applicationInstanceData.getLocalized(Dictionary.DELETE), question, onConfirmation, applicationInstanceData);
+	}
+
 	public static void showQuestion(Icon icon, String title, String text, Runnable onConfirmation, ApplicationInstanceData applicationInstanceData) {
 		BaseDialogue.showOkCancel(icon, title, text, applicationInstanceData).addListener(result -> {
 			if (result) {
