@@ -27,6 +27,7 @@ import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.privilege.ApplicationRole;
 import org.teamapps.application.api.privilege.PrivilegeGroup;
 import org.teamapps.application.api.versioning.ApplicationVersion;
+import org.teamapps.application.server.ApiHandler;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
 import org.teamapps.universaldb.schema.ModelProvider;
@@ -94,6 +95,10 @@ public interface BaseApplicationBuilder {
 	Event<Void> getOnApplicationUnloaded();
 
 	Event<Void> getOnApplicationUninstalled();
+
+	default ApiHandler getApiHandler() {
+		return null;
+	}
 
 	boolean isApplicationAccessible(ApplicationPrivilegeProvider privilegeProvider);
 
