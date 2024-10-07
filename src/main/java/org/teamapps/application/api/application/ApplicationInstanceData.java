@@ -25,6 +25,7 @@ import org.teamapps.application.api.application.perspective.ApplicationPerspecti
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
 import org.teamapps.application.api.localization.ApplicationLocalizationProvider;
+import org.teamapps.application.api.notification.ApplicationNotificationHandler;
 import org.teamapps.application.api.organization.UserRoleType;
 import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.search.UserSearch;
@@ -124,4 +125,6 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	<MESSAGE extends Message> MessageStore<MESSAGE> getMessageStore(String name);
 
 	UserSearch createUserSearch(String authCode);
+
+	ApplicationNotificationHandler getNotificationHandler();
 }
