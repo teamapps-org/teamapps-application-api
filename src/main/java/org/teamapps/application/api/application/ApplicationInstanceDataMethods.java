@@ -24,6 +24,7 @@ import org.teamapps.application.api.application.entity.EntityUpdate;
 import org.teamapps.application.api.application.perspective.ApplicationPerspective;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.desktop.ApplicationDesktop;
+import org.teamapps.application.api.notification.ApplicationNotificationHandler;
 import org.teamapps.application.api.privilege.*;
 import org.teamapps.application.api.state.ReplicatedStateMachine;
 import org.teamapps.application.api.ui.UiComponentFactory;
@@ -49,7 +50,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface ApplicationInstanceDataMethods {
@@ -208,5 +208,9 @@ public interface ApplicationInstanceDataMethods {
 
 	default <MESSAGE extends Message> MessageStore<MESSAGE> getMessageStore(String name) {
 		return getApplicationInstanceData().getMessageStore(name);
+	}
+
+	default ApplicationNotificationHandler getNotificationHandler() {
+		return getApplicationInstanceData().getNotificationHandler();
 	}
 }
