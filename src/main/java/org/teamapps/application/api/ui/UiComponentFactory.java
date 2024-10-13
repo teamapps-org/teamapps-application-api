@@ -44,8 +44,6 @@ public interface UiComponentFactory {
 
 	TemplateField<Integer> createUserTemplateField();
 
-	ComboBox<UserView> createUserSelectionComboBox();
-
 	default TranslationKeyField createTranslationKeyField(String linkButtonCaption) {
 		return createTranslationKeyField(linkButtonCaption, false, false);
 	}
