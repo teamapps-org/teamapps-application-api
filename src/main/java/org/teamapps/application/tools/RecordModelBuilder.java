@@ -205,6 +205,10 @@ public abstract class RecordModelBuilder<RECORD> {
 	}
 
 	public TableModel<RECORD> createTableModel() {
+		return createTableModel(false);
+	}
+
+	public TableModel<RECORD> createTableModel(boolean reverseOrder) {
 		AbstractTableModel<RECORD> model = new AbstractTableModel<>() {
 			@Override
 			public int getCount() {
@@ -213,7 +217,12 @@ public abstract class RecordModelBuilder<RECORD> {
 
 			@Override
 			public List<RECORD> getRecords(int startIndex, int length) {
-				return records == null ? Collections.emptyList() : records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
+				if (records == null) {
+					return Collections.emptyList();
+				} else {
+					List<RECORD> recordList = records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
+					return reverseOrder ? recordList.reversed() : recordList;
+				}
 			}
 		};
 		onDataChanged.addListener((Runnable) model.onAllDataChanged::fire);
@@ -221,8 +230,12 @@ public abstract class RecordModelBuilder<RECORD> {
 	}
 
 	public Table<RECORD> createTable() {
+		return createTable(false);
+	}
+
+	public Table<RECORD> createTable(boolean reverseOrder) {
 		Table<RECORD> table = new Table<>();
-		table.setModel(createTableModel());
+		table.setModel(createTableModel(reverseOrder));
 		table.onSortingChanged.addListener(event -> setSorting(event.getSortField(), event.getSortDirection() == SortDirection.ASC));
 		table.onSingleRowSelected.addListener(selectedRecord::set);
 		return table;
@@ -239,7 +252,11 @@ public abstract class RecordModelBuilder<RECORD> {
 
 
 	public Table<RECORD> createTemplateFieldTableList(Template template, PropertyProvider<RECORD> propertyProvider, int rowHeight) {
-		Table<RECORD> table = createTable();
+		return createTemplateFieldTableList(template, propertyProvider, rowHeight, false);
+	}
+
+	public Table<RECORD> createTemplateFieldTableList(Template template, PropertyProvider<RECORD> propertyProvider, int rowHeight, boolean reverseOrder) {
+		Table<RECORD> table = createTable(reverseOrder);
 		table.setDisplayAsList(true);
 		table.setForceFitWidth(true);
 		table.setRowHeight(rowHeight);
