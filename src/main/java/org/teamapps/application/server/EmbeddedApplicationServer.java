@@ -21,7 +21,6 @@ package org.teamapps.application.server;
 
 import org.teamapps.application.api.application.BaseApplicationBuilder;
 import org.teamapps.config.TeamAppsConfiguration;
-import org.teamapps.model.controlcenter.OrganizationUnitView;
 
 import java.io.File;
 import java.io.InputStream;
@@ -110,7 +109,7 @@ public class EmbeddedApplicationServer {
 				basePath.mkdir();
 			}
 			System.out.println("Starting server with port:" + port + ", data path:" + basePath.getAbsolutePath());
-			ApplicationServer applicationServer = new ApplicationServer(basePath, teamAppsConfiguration, port);
+			ApplicationServer applicationServer = new ApplicationServer(ServerMode.DEVELOPMENT, basePath, teamAppsConfiguration, port);
 			InputStream inputStream = EmbeddedApplicationServer.class.getResourceAsStream("/org/teamapps/application/api/embedded/embedded-system.jar");
 			Path tempFile = Files.createTempFile("temp", ".jar");
 			Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
