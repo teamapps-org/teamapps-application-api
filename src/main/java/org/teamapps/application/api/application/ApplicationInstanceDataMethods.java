@@ -45,6 +45,7 @@ import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.resource.Resource;
 import org.teamapps.ux.session.SessionContext;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
@@ -102,6 +103,14 @@ public interface ApplicationInstanceDataMethods {
 
 	default <RESULT> void runTaskAsync(Icon icon, String title, Supplier<RESULT> task, Consumer<RESULT> uiResultTask) {
 		getApplicationInstanceData().runTaskAsync(icon, title, task, uiResultTask);
+	}
+
+	default File createTempFile() {
+		return getApplicationInstanceData().createTempFile();
+	}
+
+	default File createTempFile(String prefix, String suffix) {
+		return getApplicationInstanceData().createTempFile(prefix, suffix);
 	}
 
 	default void showPerspective(Perspective perspective) {
@@ -192,7 +201,6 @@ public interface ApplicationInstanceDataMethods {
 	default String createPublicLinkForResource(Resource resource, Duration availabilityDuration) {
 		return getApplicationInstanceData().createPublicLinkForResource(resource, availabilityDuration);
 	}
-
 
 	default <TYPE> Event<TYPE> getUserSessionEvent(String name) {
 		return getApplicationInstanceData().getUserSessionEvent(name);

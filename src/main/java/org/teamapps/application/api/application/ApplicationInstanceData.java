@@ -47,6 +47,7 @@ import org.teamapps.ux.component.progress.MultiProgressDisplay;
 import org.teamapps.ux.resource.Resource;
 import org.teamapps.ux.session.SessionContext;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Consumer;
@@ -87,6 +88,10 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 			}
 		});
 	}
+
+	File createTempFile();
+
+	File createTempFile(String prefix, String suffix);
 
 	void showPerspective(Perspective perspective);
 
