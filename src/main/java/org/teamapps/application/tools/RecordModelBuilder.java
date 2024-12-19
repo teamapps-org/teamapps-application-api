@@ -51,6 +51,7 @@ import org.teamapps.ux.component.tree.TreeNodeInfoImpl;
 import org.teamapps.ux.model.AbstractTreeModel;
 import org.teamapps.ux.model.TreeModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -220,8 +221,13 @@ public abstract class RecordModelBuilder<RECORD> {
 				if (records == null) {
 					return Collections.emptyList();
 				} else {
-					List<RECORD> recordList = records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
-					return reverseOrder ? recordList.reversed() : recordList;
+					if (reverseOrder) {
+						ArrayList<RECORD> reverseRecords = new ArrayList<>(records);
+						Collections.reverse(reverseRecords);
+						return reverseRecords.stream().skip(startIndex).limit(length).collect(Collectors.toList());
+					} else {
+						return records.stream().skip(startIndex).limit(length).collect(Collectors.toList());
+					}
 				}
 			}
 		};

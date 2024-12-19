@@ -95,4 +95,14 @@ public class ApplicationPrivilegeBuilder {
 	public List<PrivilegeGroup> getPrivileges() {
 		return privilegeGroups;
 	}
+
+	public void setCategory(String category, PrivilegeGroup... privilegeGroups) {
+		for (PrivilegeGroup privilegeGroup : privilegeGroups) {
+			if (privilegeGroup.getCategory() != null) {
+				throw new RuntimeException("Cannot override privilege group category:" + privilegeGroup.getCategory());
+			}
+			privilegeGroup.setCategory(category);
+		}
+
+	}
 }

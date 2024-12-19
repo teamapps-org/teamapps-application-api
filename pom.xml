@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-application-server</artifactId>
-            <version>0.60-SNAPSHOT</version>
+            <version>0.60</version>
         </dependency>
 
         <dependency>
@@ -83,6 +83,10 @@
                 <exclusion>
                     <artifactId>teamapps-message-protocol</artifactId>
                     <groupId>org.teamapps</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-lang3</artifactId>
+                    <groupId>org.apache.commons</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

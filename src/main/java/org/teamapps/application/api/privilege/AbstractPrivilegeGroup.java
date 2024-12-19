@@ -37,6 +37,7 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 	private final boolean inheritanceForbidden;
 	private final List<Privilege> privileges;
 	private Supplier<List<PrivilegeObject>> privilegeObjectsSupplier;
+	private String category;
 
 	public AbstractPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey) {
 		this.name = name;
@@ -162,6 +163,15 @@ public abstract class AbstractPrivilegeGroup implements PrivilegeGroup {
 	@Override
 	public Supplier<List<PrivilegeObject>> getPrivilegeObjectsSupplier() {
 		return privilegeObjectsSupplier;
+	}
+
+	@Override
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	@Override

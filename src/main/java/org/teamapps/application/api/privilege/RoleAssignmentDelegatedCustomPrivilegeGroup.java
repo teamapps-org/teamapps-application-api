@@ -35,4 +35,6 @@ public interface RoleAssignmentDelegatedCustomPrivilegeGroup extends PrivilegeGr
 	}
 
 	PrivilegeObject getPrivilegeObjectById(int id);
+
+	String getObjectType();
 }

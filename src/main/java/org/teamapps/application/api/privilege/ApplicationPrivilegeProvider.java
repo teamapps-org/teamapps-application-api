@@ -40,6 +40,14 @@ public interface ApplicationPrivilegeProvider {
 
 	boolean isAllowed(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege, PrivilegeObject privilegeObject);
 
+	default boolean isAllowed(StandardPrivilegeGroup standardPrivilegeGroup) {
+		return isReadAccess(standardPrivilegeGroup);
+	}
+
+	default boolean isAllowed(OrganizationalPrivilegeGroup organizationalPrivilegeGroup) {
+		return isAnyReadAccess(organizationalPrivilegeGroup);
+	}
+
 	default boolean isAnyReadAccess(OrganizationalPrivilegeGroup privilegeGroup) {
 		return isAnyAccess(privilegeGroup, Privilege.READ);
 	}
@@ -59,6 +67,10 @@ public interface ApplicationPrivilegeProvider {
 
 	default boolean isReadAccess(StandardPrivilegeGroup privilegeGroup) {
 		return isAllowed(privilegeGroup, Privilege.READ);
+	}
+
+	default List<OrganizationUnitView> getAllowedUnits(OrganizationalPrivilegeGroup group) {
+		return getAllowedUnits(group, Privilege.READ);
 	}
 
 	List<OrganizationUnitView> getAllowedUnits(SimpleOrganizationalPrivilege simplePrivilege);

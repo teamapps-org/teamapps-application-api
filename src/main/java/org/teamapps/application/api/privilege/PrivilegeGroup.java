@@ -19,11 +19,8 @@
  */
 package org.teamapps.application.api.privilege;
 
-import org.teamapps.application.api.localization.Dictionary;
-import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.icons.Icon;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,11 +75,19 @@ public interface PrivilegeGroup {
 	}
 
 	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
-		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(null, name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
 	}
 
 	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
-		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privilegeObjectByIdFunction, privileges);
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(null, name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privilegeObjectByIdFunction, privileges);
+	}
+
+	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String objectType, String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(objectType, name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
+	}
+
+	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String objectType, String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(objectType, name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privilegeObjectByIdFunction, privileges);
 	}
 
 	static PrivilegeGroup mergeGroups(PrivilegeGroup groupA, PrivilegeGroup groupB) {
@@ -114,4 +119,8 @@ public interface PrivilegeGroup {
 	List<Privilege> getPrivileges();
 
 	Supplier<List<PrivilegeObject>> getPrivilegeObjectsSupplier();
+
+	String getCategory();
+
+	void setCategory(String category);
 }

@@ -49,7 +49,7 @@ public interface Privilege {
 	}
 
 	static Privilege[] getDefault() {
-		return new Privilege[]{CREATE, READ, UPDATE, DELETE, RESTORE, SHOW_RECYCLE_BIN};
+		return new Privilege[]{CREATE, READ, UPDATE, DELETE, RESTORE, SHOW_RECYCLE_BIN, SHOW_MODIFICATION_HISTORY, PRINT};
 	}
 
 	static Privilege[] getAll() {
