@@ -33,6 +33,7 @@ import org.teamapps.application.api.state.ReplicatedStateMachine;
 import org.teamapps.application.api.ui.UiComponentFactory;
 import org.teamapps.application.api.user.LocalizedFormatter;
 import org.teamapps.application.api.user.SessionUser;
+import org.teamapps.application.server.ServerMode;
 import org.teamapps.databinding.TwoWayBindableValue;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
@@ -132,4 +133,6 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	UserSearch createUserSearch(String authCode);
 
 	ApplicationNotificationHandler getNotificationHandler();
+
+	ServerMode getServerMode();
 }
