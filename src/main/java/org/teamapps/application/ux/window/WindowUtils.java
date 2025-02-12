@@ -35,6 +35,7 @@ public class WindowUtils {
 		int width = (int) Math.max(800, Math.min(1600, SessionContext.current().getClientInfo().getViewPortWidth() * 0.8f));
 		int height = (int) Math.max(600, Math.min(1200, SessionContext.current().getClientInfo().getScreenHeight() * 0.8f));
 		Window window = new Window(icon, title, width, height, null);
+		window.setResizable(true);
 		window.setToolbar(new Toolbar());
 		window.setCloseable(true);
 		window.setCloseOnEscape(true);

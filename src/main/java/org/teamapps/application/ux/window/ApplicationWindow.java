@@ -49,7 +49,8 @@ public class ApplicationWindow implements ApplicationInstanceDataMethods {
 	public ApplicationWindow(Icon icon, String title, boolean smallToolbarButtons, ApplicationInstanceData applicationInstanceData) {
 		this.smallToolbarButtons = smallToolbarButtons;
 		this.applicationInstanceData = applicationInstanceData;
-		this.window = new Window(icon, title, 800, 600, null);
+		window = new Window(icon, title, 800, 600, null);
+		window.setResizable(true);
 		toolbar = new Toolbar();
 		window.setToolbar(toolbar);
 		window.setMaximizable(true);
