@@ -178,12 +178,7 @@ public class ReplicatedList<TYPE extends Message> {
 	}
 
 	public int getEntryCount() {
-		List<Message> entries = replicatedState.getEntries(listName);
-		if (entries != null) {
-			return entries.size();
-		} else {
-			return 0;
-		}
+		return replicatedState.getEntryCount(listName);
 	}
 
 	protected void handleEntryAdded(Message message) {
