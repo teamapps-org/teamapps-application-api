@@ -68,13 +68,13 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-application-server</artifactId>
-            <version>0.60</version>
+            <version>0.61</version>
         </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-cluster</artifactId>
-            <version>0.12</version>
+            <version>0.13</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-simple</artifactId>
