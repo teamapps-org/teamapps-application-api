@@ -110,7 +110,7 @@ public class ApplicationLayout {
 												new SplitPaneDefinition(
 														"centerSplit", SplitDirection.VERTICAL, centerWidth,
 														new SplitPaneDefinition(
-																"centerSplit", SplitDirection.HORIZONTAL, centerHeight,
+																"centerInnerSplit", SplitDirection.HORIZONTAL, centerHeight,
 																centerViewGroup,
 																centerBottomViewGroup
 														),
