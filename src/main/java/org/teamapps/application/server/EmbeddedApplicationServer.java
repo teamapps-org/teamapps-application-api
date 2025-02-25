@@ -109,7 +109,8 @@ public class EmbeddedApplicationServer {
 				basePath.mkdir();
 			}
 			System.out.println("Starting server with port:" + port + ", data path:" + basePath.getAbsolutePath());
-			ApplicationServer applicationServer = new ApplicationServer(ServerMode.DEVELOPMENT, basePath, teamAppsConfiguration, port);
+			ServerData.setServerMode(ServerMode.DEVELOPMENT);
+			ApplicationServer applicationServer = new ApplicationServer(basePath, teamAppsConfiguration, port);
 			InputStream inputStream = EmbeddedApplicationServer.class.getResourceAsStream("/org/teamapps/application/api/embedded/embedded-system.jar");
 			Path tempFile = Files.createTempFile("temp", ".jar");
 			Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
