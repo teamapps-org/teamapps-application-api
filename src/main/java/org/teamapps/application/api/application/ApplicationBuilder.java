@@ -23,6 +23,7 @@ import org.teamapps.application.api.application.perspective.PerspectiveBuilder;
 import org.teamapps.application.api.application.perspective.PerspectiveData;
 import org.teamapps.ux.application.ResponsiveApplication;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,5 +47,15 @@ public interface ApplicationBuilder extends BaseApplicationBuilder {
 
 	@Override
 	default void build(ResponsiveApplication application, ApplicationInstanceData applicationInstanceData) {
+	}
+
+	@Override
+	default void createTestData(File directory) {
+
+	}
+
+	@Override
+	default void importTestData(File directory) {
+
 	}
 }

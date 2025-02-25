@@ -19,7 +19,6 @@
  */
 package org.teamapps.application.api.application;
 
-import org.teamapps.application.api.application.perspective.PerspectiveData;
 import org.teamapps.application.api.application.theme.ApplicationTheme;
 import org.teamapps.application.api.config.ApplicationConfig;
 import org.teamapps.application.api.localization.LocalizationData;
@@ -33,8 +32,8 @@ import org.teamapps.icons.Icon;
 import org.teamapps.universaldb.schema.ModelProvider;
 import org.teamapps.ux.application.ResponsiveApplication;
 
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 public interface BaseApplicationBuilder {
 
@@ -104,4 +103,7 @@ public interface BaseApplicationBuilder {
 
 	void build(ResponsiveApplication application, ApplicationInstanceData applicationInstanceData);
 
+	void createTestData(File directory);
+
+	void importTestData(File directory);
 }
