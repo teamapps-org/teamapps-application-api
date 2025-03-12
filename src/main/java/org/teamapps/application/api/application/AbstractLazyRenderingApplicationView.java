@@ -19,6 +19,7 @@
  */
 package org.teamapps.application.api.application;
 
+import org.teamapps.databinding.ObservableValue;
 import org.teamapps.databinding.TwoWayBindableValue;
 import org.teamapps.event.Event;
 import org.teamapps.ux.application.view.View;
@@ -211,6 +212,10 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 
 	public boolean isVisible() {
 		return visible.get();
+	}
+
+	public ObservableValue<Boolean> getVisible() {
+		return visible;
 	}
 
 	public Panel getParentPanel() {
