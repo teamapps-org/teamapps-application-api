@@ -56,6 +56,10 @@ public class ApplicationPrivilegeBuilder {
 		return addStandardPrivilegeGroup(name, icon, titleKey, descriptionKey, Privilege.getDefault());
 	}
 
+	public StandardPrivilegeGroup addStandardPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey) {
+		return addStandardPrivilegeGroup(name, icon, titleKey, descriptionKey, Privilege.getDefault());
+	}
+
 	public StandardPrivilegeGroup addStandardPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Privilege... privileges) {
 		StandardPrivilegeGroup privilegeGroup = PrivilegeGroup.createStandardPrivilegeGroup(name, icon, titleKey, descriptionKey, privileges);
 		addPrivilege(privilegeGroup);
