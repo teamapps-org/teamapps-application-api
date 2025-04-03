@@ -32,6 +32,10 @@ public class TwoWayBindableValueFireAlways<T> implements TwoWayBindableValue<T> 
 		return new TwoWayBindableValueFireAlways<>();
 	}
 
+	public static <T> TwoWayBindableValue<T> create(T initialValue) {
+		return new TwoWayBindableValueFireAlways<>(initialValue);
+	}
+
 	public TwoWayBindableValueFireAlways() {
 	}
 
