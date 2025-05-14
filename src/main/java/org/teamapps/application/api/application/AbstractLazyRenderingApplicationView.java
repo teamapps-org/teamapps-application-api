@@ -28,6 +28,7 @@ import org.teamapps.ux.component.Component;
 import org.teamapps.ux.component.panel.Panel;
 import org.teamapps.ux.component.toolbar.Toolbar;
 import org.teamapps.ux.component.toolbar.ToolbarButtonGroup;
+import org.teamapps.ux.component.toolbutton.ToolButton;
 import org.teamapps.ux.component.window.Window;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 	private List<AbstractLazyRenderingApplicationView> peerWithSameParent = Collections.emptyList();
 	private ViewSize ensureViewSize;
 	private List<ToolbarButtonGroup> buttonGroups = new ArrayList<>();
+	private List<ToolButton> toolButtons = new ArrayList<>();
 
 	public AbstractLazyRenderingApplicationView(ApplicationInstanceData applicationInstanceData) {
 		super(applicationInstanceData);
@@ -122,6 +124,9 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 
 	public abstract Component getViewComponent();
 
+	public void addToolButton(ToolButton toolButton) {
+		toolButtons.add(toolButton);
+	}
 
 	protected void handleViewComponentChange() {
 		if (parentView != null) {
@@ -152,6 +157,9 @@ public abstract class AbstractLazyRenderingApplicationView extends AbstractAppli
 		if (!created) {
 			createUi();
 			created = true;
+			if (!toolButtons.isEmpty() && getParentPanel() != null) {
+				toolButtons.forEach(b -> getParentPanel().addToolButton(b));
+			}
 		}
 		if (parentView != null) {
 			if (parentView.getComponent() == null || !parentView.getComponent().equals(getViewComponent())) {
