@@ -32,6 +32,4 @@ public interface ApplicationRoleAssignmentPrivilegeObjectProvider {
 
 	List<PrivilegeObject> getPrivilegeObjects(OrganizationUnitView organizationUnit);
 
-	List<PrivilegeObject> getPrivilegeObjects(OrganizationUnitView organizationUnit, String objectType);
-
 }

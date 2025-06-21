@@ -112,9 +112,13 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 
 	Integer getOrganizationUserWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType);
 
+	Integer getOrganizationUserWithDelegatedObjectId(OrganizationUnitView orgUnit, int objectId);
+
 	String getOrganizationUserNameWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType, boolean lastNameFirst);
 
 	List<Integer> getOrganizationUsersWithRole(OrganizationUnitView orgUnit, UserRoleType userRoleType);
+
+	List<Integer> getOrganizationUsersWithDelegatedObjectId(OrganizationUnitView orgUnit, int objectId);
 
 	<ENTITY> void registerEntityUpdateListener(EntityBuilder<ENTITY> entityBuilder, Consumer<EntityUpdate<ENTITY>> listener);
 

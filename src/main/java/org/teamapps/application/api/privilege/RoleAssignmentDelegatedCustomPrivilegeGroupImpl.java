@@ -27,29 +27,25 @@ import java.util.function.Function;
 public class RoleAssignmentDelegatedCustomPrivilegeGroupImpl extends AbstractPrivilegeGroup implements RoleAssignmentDelegatedCustomPrivilegeGroup{
 
 	private Function<Integer, PrivilegeObject> privilegeObjectByIdFunction;
-	private final String objectType;
 
-	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String objectType, String name, Icon icon, String titleKey, String descriptionKey, List<Privilege> privileges, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction) {
+	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, List<Privilege> privileges, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction) {
 		super(name, icon, titleKey, descriptionKey, privileges);
 		this.privilegeObjectByIdFunction = privilegeObjectByIdFunction;
-		this.objectType = objectType;
 	}
 
-	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String objectType, String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
+	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
 		super(name, icon, titleKey, descriptionKey, privileges);
 		this.privilegeObjectByIdFunction = privilegeObjectByIdFunction;
-		this.objectType = objectType;
 	}
 
-	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String objectType, String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
+	public RoleAssignmentDelegatedCustomPrivilegeGroupImpl(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
 		super(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privileges);
 		this.privilegeObjectByIdFunction = privilegeObjectByIdFunction;
-		this.objectType = objectType;
 	}
 
 	@Override
 	public PrivilegeGroup createCopyWithPrivileges(Privilege... privileges) {
-		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(getObjectType(), getName(), getIcon(), getTitleKey(), getDescriptionKey(), privilegeObjectByIdFunction, privileges);
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(getName(), getIcon(), getTitleKey(), getDescriptionKey(), privilegeObjectByIdFunction, privileges);
 	}
 
 	@Override
@@ -57,8 +53,4 @@ public class RoleAssignmentDelegatedCustomPrivilegeGroupImpl extends AbstractPri
 		return privilegeObjectByIdFunction.apply(id);
 	}
 
-	@Override
-	public String getObjectType() {
-		return objectType;
-	}
 }

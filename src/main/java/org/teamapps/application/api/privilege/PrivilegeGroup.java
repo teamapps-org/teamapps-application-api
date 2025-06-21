@@ -75,19 +75,11 @@ public interface PrivilegeGroup {
 	}
 
 	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
-		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(null, name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
 	}
 
 	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
-		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(null, name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privilegeObjectByIdFunction, privileges);
-	}
-
-	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String objectType, String name, Icon icon, String titleKey, String descriptionKey, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
-		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(objectType, name, icon, titleKey, descriptionKey, privilegeObjectByIdFunction, privileges);
-	}
-
-	static RoleAssignmentDelegatedCustomPrivilegeGroup createDelegatedCustomPrivilegeGroup(String objectType, String name, Icon icon, String titleKey, String descriptionKey, boolean multiFactorAuthenticationRequired, boolean inheritanceForbidden, Function<Integer, PrivilegeObject> privilegeObjectByIdFunction, Privilege... privileges) {
-		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(objectType, name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privilegeObjectByIdFunction, privileges);
+		return new RoleAssignmentDelegatedCustomPrivilegeGroupImpl(name, icon, titleKey, descriptionKey, multiFactorAuthenticationRequired, inheritanceForbidden, privilegeObjectByIdFunction, privileges);
 	}
 
 	static PrivilegeGroup mergeGroups(PrivilegeGroup groupA, PrivilegeGroup groupB) {
