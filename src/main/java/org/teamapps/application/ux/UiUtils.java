@@ -21,6 +21,7 @@ package org.teamapps.application.ux;
 
 import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.localization.Dictionary;
+import org.teamapps.application.api.localization.Language;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.ux.window.BaseDialogue;
 import org.teamapps.common.format.Color;
@@ -32,6 +33,7 @@ import org.teamapps.ux.component.field.TemplateField;
 import org.teamapps.ux.component.field.TextField;
 import org.teamapps.ux.component.field.combobox.TagBoxWrappingMode;
 import org.teamapps.ux.component.field.combobox.TagComboBox;
+import org.teamapps.ux.component.field.datetime.InstantDateTimeField;
 import org.teamapps.ux.component.format.FontStyle;
 import org.teamapps.ux.component.format.SizingPolicy;
 import org.teamapps.ux.component.format.Spacing;
@@ -42,6 +44,7 @@ import org.teamapps.ux.component.template.gridtemplate.BadgeElement;
 import org.teamapps.ux.component.template.gridtemplate.GridTemplate;
 import org.teamapps.ux.session.SessionContext;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -110,33 +113,53 @@ public class UiUtils {
 
 	public static TemplateField<Boolean> createBooleanTemplateField(Icon trueIcon, String trueTitle, Icon falseIcon, String falseTitle) {
 		TemplateField<Boolean> templateField = new TemplateField<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
-		templateField.setPropertyExtractor((value, propertyName) -> switch (propertyName) {
-			case BaseTemplate.PROPERTY_ICON -> value ? trueIcon : falseIcon;
-			case BaseTemplate.PROPERTY_CAPTION -> value ? trueTitle : falseTitle;
-			default -> null;
-		});
+		templateField.setPropertyProvider((value, propertyName) ->
+				Map.of(
+						BaseTemplate.PROPERTY_ICON, value ? trueIcon : falseIcon,
+						BaseTemplate.PROPERTY_CAPTION, value ? trueTitle : falseTitle)
+		);
 		return templateField;
 	}
 
 	public static TemplateField<String> createIconFixedIconTemplateField(Icon icon) {
 		TemplateField<String> templateField = new TemplateField<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
-		templateField.setPropertyExtractor((value, propertyName) -> switch (propertyName) {
-			case BaseTemplate.PROPERTY_ICON -> icon;
-			case BaseTemplate.PROPERTY_CAPTION -> value;
-			default -> null;
+		templateField.setPropertyProvider((value, propertyName) -> Map.of(BaseTemplate.PROPERTY_ICON, icon, BaseTemplate.PROPERTY_CAPTION, value));
+		return templateField;
+	}
+
+	public static TemplateField<String> createLanguageTemplateField(String language, Template template, ApplicationInstanceData applicationInstanceData) {
+		TemplateField<String> templateField = new TemplateField<>(template);
+		templateField.setPropertyProvider((value, propertyName) -> {
+			Language languageByIsoCode = Language.getLanguageByIsoCode(value);
+			if (languageByIsoCode != null) {
+				return Map.of(
+						BaseTemplate.PROPERTY_ICON, languageByIsoCode.getIcon(),
+						BaseTemplate.PROPERTY_CAPTION, languageByIsoCode.getLanguageLocalized(applicationInstanceData),
+						BaseTemplate.PROPERTY_DESCRIPTION, languageByIsoCode.getIsoCode()
+				);
+			}
+			return null;
 		});
+		templateField.setValue(language);
 		return templateField;
 	}
 
 	public static TemplateField<String> createSingleValueTemplateField(Icon icon, String title) {
-		TemplateField<String> templateField = new TemplateField<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
-		templateField.setPropertyExtractor((value, propertyName) -> switch (propertyName) {
-			case BaseTemplate.PROPERTY_ICON -> icon;
-			case BaseTemplate.PROPERTY_CAPTION -> title;
-			default -> null;
-		});
+		return createSingleValueTemplateField(icon, title, BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
+	}
+
+	public static TemplateField<String> createSingleValueTemplateField(Icon icon, String title, Template template) {
+		TemplateField<String> templateField = new TemplateField<>(template);
+		templateField.setPropertyProvider((value, propertyName) -> Map.of(BaseTemplate.PROPERTY_ICON, icon, BaseTemplate.PROPERTY_CAPTION, title));
 		templateField.setValue(title);
 		return templateField;
+	}
+
+	public static InstantDateTimeField createDateTimeField(Instant instant) {
+		InstantDateTimeField dateTimeField = new InstantDateTimeField();
+		dateTimeField.setValue(instant);
+		dateTimeField.setEditingMode(FieldEditingMode.READONLY);
+		return dateTimeField;
 	}
 
 	public static TextField createSingleValueTextField(String value) {
@@ -213,5 +236,6 @@ public class UiUtils {
 			return map;
 		};
 	}
+
 
 }
