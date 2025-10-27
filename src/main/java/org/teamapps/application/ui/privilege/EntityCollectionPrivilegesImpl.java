@@ -1,6 +1,6 @@
 package org.teamapps.application.ui.privilege;
 
-import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.privilege.OrganizationalPrivilegeGroup;
 import org.teamapps.application.api.privilege.Privilege;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
@@ -12,29 +12,29 @@ import java.util.function.Function;
 public class EntityCollectionPrivilegesImpl<ENTITY extends Entity<ENTITY>> implements EntityCollectionPrivileges<ENTITY> {
 
 	private final OrganizationalPrivilegeGroup organizationalPrivilegeGroup;
-	private final ApplicationInstanceData applicationInstanceData;
+	private final ApplicationPrivilegeProvider privilegeProvider;
 	private final EntityPrivileges<ENTITY> entityPrivileges;
 
-	public EntityCollectionPrivilegesImpl(OrganizationalPrivilegeGroup organizationalPrivilegeGroup, Function<ENTITY, OrganizationUnitView> unitByEntityFunction, ApplicationInstanceData applicationInstanceData) {
+	public EntityCollectionPrivilegesImpl(OrganizationalPrivilegeGroup organizationalPrivilegeGroup, Function<ENTITY, OrganizationUnitView> unitByEntityFunction, ApplicationPrivilegeProvider privilegeProvider) {
 		this.organizationalPrivilegeGroup = organizationalPrivilegeGroup;
-		this.entityPrivileges = EntityPrivileges.create(organizationalPrivilegeGroup, unitByEntityFunction, applicationInstanceData);
-		this.applicationInstanceData = applicationInstanceData;
+		this.entityPrivileges = EntityPrivileges.create(organizationalPrivilegeGroup, unitByEntityFunction, privilegeProvider);
+		this.privilegeProvider = privilegeProvider;
 	}
 
-	public EntityCollectionPrivilegesImpl(OrganizationalPrivilegeGroup organizationalPrivilegeGroup, EntityPrivileges<ENTITY> entityPrivileges, ApplicationInstanceData applicationInstanceData) {
+	public EntityCollectionPrivilegesImpl(OrganizationalPrivilegeGroup organizationalPrivilegeGroup, EntityPrivileges<ENTITY> entityPrivileges, ApplicationPrivilegeProvider privilegeProvider) {
 		this.organizationalPrivilegeGroup = organizationalPrivilegeGroup;
 		this.entityPrivileges = entityPrivileges;
-		this.applicationInstanceData = applicationInstanceData;
+		this.privilegeProvider = privilegeProvider;
 	}
 
 	@Override
 	public List<OrganizationUnitView> getReadAllowedOrgUnits() {
-		return applicationInstanceData.getAllowedUnits(organizationalPrivilegeGroup, Privilege.READ);
+		return privilegeProvider.getAllowedUnits(organizationalPrivilegeGroup, Privilege.READ);
 	}
 
 	@Override
 	public List<OrganizationUnitView> getDeletedEntitiesAllowedOrgUnits() {
-		return applicationInstanceData.getAllowedUnits(organizationalPrivilegeGroup, Privilege.DELETE);
+		return privilegeProvider.getAllowedUnits(organizationalPrivilegeGroup, Privilege.DELETE);
 	}
 
 	@Override
@@ -43,13 +43,13 @@ public class EntityCollectionPrivilegesImpl<ENTITY extends Entity<ENTITY>> imple
 	}
 
 	@Override
-	public boolean isSaveOptionAvailable(ENTITY entity) {
-		return entityPrivileges.isSaveOptionAvailable(entity);
+	public boolean isSaveOptionAvailable(ENTITY entity, ENTITY synchronizedEntityCopy) {
+		return entityPrivileges.isSaveOptionAvailable(entity, synchronizedEntityCopy);
 	}
 
 	@Override
-	public boolean isSaveAllowed(ENTITY entity) {
-		return entityPrivileges.isSaveAllowed(entity);
+	public boolean isSaveAllowed(ENTITY entity, ENTITY synchronizedEntityCopy) {
+		return entityPrivileges.isSaveAllowed(entity, synchronizedEntityCopy);
 	}
 
 	@Override

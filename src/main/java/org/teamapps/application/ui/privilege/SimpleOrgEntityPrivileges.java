@@ -1,6 +1,6 @@
 package org.teamapps.application.ui.privilege;
 
-import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.privilege.Privilege;
 import org.teamapps.application.api.privilege.SimpleOrganizationalPrivilege;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
@@ -16,13 +16,13 @@ public class SimpleOrgEntityPrivileges<ENTITY extends Entity<ENTITY>> implements
 	private final SimpleOrganizationalPrivilege simpleOrganizationalPrivilege;
 	private final Function<ENTITY, OrganizationUnitView> unitByEntityFunction;
 	private final Set<Privilege> privilegeSet;
-	private final ApplicationInstanceData applicationInstanceData;
+	private final ApplicationPrivilegeProvider privilegeProvider;
 
-	public SimpleOrgEntityPrivileges(SimpleOrganizationalPrivilege simpleOrganizationalPrivilege, Function<ENTITY, OrganizationUnitView> unitByEntityFunction, ApplicationInstanceData applicationInstanceData, Privilege ... privileges) {
+	public SimpleOrgEntityPrivileges(SimpleOrganizationalPrivilege simpleOrganizationalPrivilege, Function<ENTITY, OrganizationUnitView> unitByEntityFunction, ApplicationPrivilegeProvider privilegeProvider, Privilege ... privileges) {
 		this.simpleOrganizationalPrivilege = simpleOrganizationalPrivilege;
 		this.unitByEntityFunction = unitByEntityFunction;
 		this.privilegeSet = new HashSet<>(Arrays.asList(privileges));
-		this.applicationInstanceData = applicationInstanceData;
+		this.privilegeProvider = privilegeProvider;
 	}
 
 	@Override
@@ -31,38 +31,38 @@ public class SimpleOrgEntityPrivileges<ENTITY extends Entity<ENTITY>> implements
 	}
 
 	@Override
-	public boolean isSaveOptionAvailable(ENTITY entity) {
+	public boolean isSaveOptionAvailable(ENTITY entity, ENTITY synchronizedEntityCopy) {
 		if (entity.isStored()) {
 			OrganizationUnitView orgUnit = unitByEntityFunction.apply(entity);
-			return isWithPrivilege(Privilege.UPDATE) && applicationInstanceData.isAllowed(simpleOrganizationalPrivilege, orgUnit);
+			return isWithPrivilege(Privilege.UPDATE) && privilegeProvider.isAllowed(simpleOrganizationalPrivilege, orgUnit);
 		} else {
 			return isWithPrivilege(Privilege.CREATE);
 		}
 	}
 
 	@Override
-	public boolean isSaveAllowed(ENTITY entity) {
+	public boolean isSaveAllowed(ENTITY entity, ENTITY synchronizedEntityCopy) {
 		Privilege privilege = entity.isStored() ? Privilege.UPDATE : Privilege.CREATE;
 		OrganizationUnitView orgUnit = unitByEntityFunction.apply(entity);
-		return isWithPrivilege(privilege) && applicationInstanceData.isAllowed(simpleOrganizationalPrivilege, orgUnit);
+		return isWithPrivilege(privilege) && privilegeProvider.isAllowed(simpleOrganizationalPrivilege, orgUnit);
 	}
 
 	@Override
 	public boolean isDeleteAllowed(ENTITY entity) {
 		OrganizationUnitView orgUnit = unitByEntityFunction.apply(entity);
-		return isWithPrivilege(Privilege.DELETE) && applicationInstanceData.isAllowed(simpleOrganizationalPrivilege, orgUnit);
+		return isWithPrivilege(Privilege.DELETE) && privilegeProvider.isAllowed(simpleOrganizationalPrivilege, orgUnit);
 	}
 
 	@Override
 	public boolean isRestoreAllowed(ENTITY entity) {
 		OrganizationUnitView orgUnit = unitByEntityFunction.apply(entity);
-		return isWithPrivilege(Privilege.RESTORE) && applicationInstanceData.isAllowed(simpleOrganizationalPrivilege, orgUnit);
+		return isWithPrivilege(Privilege.RESTORE) && privilegeProvider.isAllowed(simpleOrganizationalPrivilege, orgUnit);
 	}
 
 	@Override
 	public boolean isModificationHistoryAllowed(ENTITY entity) {
 		OrganizationUnitView orgUnit = unitByEntityFunction.apply(entity);
-		return isWithPrivilege(Privilege.SHOW_MODIFICATION_HISTORY) && applicationInstanceData.isAllowed(simpleOrganizationalPrivilege, orgUnit);
+		return isWithPrivilege(Privilege.SHOW_MODIFICATION_HISTORY) && privilegeProvider.isAllowed(simpleOrganizationalPrivilege, orgUnit);
 	}
 
 	private boolean isWithPrivilege(Privilege privilege) {

@@ -17,6 +17,7 @@ import org.teamapps.ux.component.table.ListTable;
 import org.teamapps.ux.component.table.Table;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface FormController<ENTITY> extends LifecycleEntityModel<ENTITY>, EntityPrivileges<ENTITY> {
@@ -31,6 +32,8 @@ public interface FormController<ENTITY> extends LifecycleEntityModel<ENTITY>, En
 
 	ObservableValue<ENTITY> getSelectedFormEntity();
 
+	ObservableValue<ENTITY> getSynchronizedEditsEntityCopy();
+
 	ObservableValue<FormEntityState> getFormEntityState();
 
 	ObservableValue<FormEditMode> getFormEditMode();
@@ -42,6 +45,8 @@ public interface FormController<ENTITY> extends LifecycleEntityModel<ENTITY>, En
 	ResponsiveFormSection addFormSection(Icon<?, ?> icon, String title);
 
 	ResponsiveFormLayout.LabelAndField addField(String label, AbstractField<?> field);
+
+	ResponsiveFormLayout.LabelAndField addField(String label, AbstractField<?> field, Consumer<ENTITY> updateEntityConsumer);
 
 	ResponsiveFormLayout.LabelAndField addField(String label, Component component);
 

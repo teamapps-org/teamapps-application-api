@@ -1,6 +1,6 @@
 package org.teamapps.application.ui.privilege;
 
-import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.privilege.Privilege;
 import org.teamapps.application.api.privilege.StandardPrivilegeGroup;
 import org.teamapps.universaldb.pojo.Entity;
@@ -13,11 +13,11 @@ public class StandardEntityPrivileges<ENTITY extends Entity<ENTITY>> implements 
 	private final StandardPrivilegeGroup standardPrivilegeGroup;
 	private final Set<Privilege> privilegeSet;
 
-	public StandardEntityPrivileges(StandardPrivilegeGroup standardPrivilegeGroup, ApplicationInstanceData applicationInstanceData) {
+	public StandardEntityPrivileges(StandardPrivilegeGroup standardPrivilegeGroup, ApplicationPrivilegeProvider privilegeProvider) {
 		this.standardPrivilegeGroup = standardPrivilegeGroup;
 		this.privilegeSet = new HashSet<>();
 		for (Privilege privilege : standardPrivilegeGroup.getPrivileges()) {
-			if (applicationInstanceData.isAllowed(standardPrivilegeGroup, privilege)) {
+			if (privilegeProvider.isAllowed(standardPrivilegeGroup, privilege)) {
 				privilegeSet.add(privilege);
 			}
 		}
@@ -29,13 +29,13 @@ public class StandardEntityPrivileges<ENTITY extends Entity<ENTITY>> implements 
 	}
 
 	@Override
-	public boolean isSaveOptionAvailable(ENTITY entity) {
+	public boolean isSaveOptionAvailable(ENTITY entity, ENTITY synchronizedEntityCopy) {
 		Privilege privilege = entity.isStored() ? Privilege.UPDATE : Privilege.CREATE;
 		return privilegeSet.contains(privilege);
 	}
 
 	@Override
-	public boolean isSaveAllowed(ENTITY entity) {
+	public boolean isSaveAllowed(ENTITY entity, ENTITY synchronizedEntityCopy) {
 		Privilege privilege = entity.isStored() ? Privilege.UPDATE : Privilege.CREATE;
 		return privilegeSet.contains(privilege);
 	}

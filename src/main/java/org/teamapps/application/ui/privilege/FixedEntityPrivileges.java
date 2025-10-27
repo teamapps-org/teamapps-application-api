@@ -21,13 +21,13 @@ public class FixedEntityPrivileges<ENTITY extends Entity<ENTITY>> implements Ent
 	}
 
 	@Override
-	public boolean isSaveOptionAvailable(ENTITY entity) {
+	public boolean isSaveOptionAvailable(ENTITY entity, ENTITY synchronizedEntityCopy) {
 		Privilege privilege = entity.isStored() ? Privilege.UPDATE : Privilege.CREATE;
 		return privilegeSet.contains(privilege);
 	}
 
 	@Override
-	public boolean isSaveAllowed(ENTITY entity) {
+	public boolean isSaveAllowed(ENTITY entity, ENTITY synchronizedEntityCopy) {
 		Privilege privilege = entity.isStored() ? Privilege.UPDATE : Privilege.CREATE;
 		return privilegeSet.contains(privilege);
 	}

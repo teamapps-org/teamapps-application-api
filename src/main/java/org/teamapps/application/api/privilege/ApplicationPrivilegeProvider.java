@@ -20,9 +20,11 @@
 package org.teamapps.application.api.privilege;
 
 
+import org.teamapps.model.controlcenter.OrganizationFieldView;
 import org.teamapps.model.controlcenter.OrganizationUnitView;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ApplicationPrivilegeProvider {
 
@@ -82,4 +84,6 @@ public interface ApplicationPrivilegeProvider {
 	List<PrivilegeObject> getAllowedPrivilegeObjects(CustomObjectPrivilegeGroup group, Privilege privilege);
 
 	List<PrivilegeObject> getAllowedPrivilegeObjects(RoleAssignmentDelegatedCustomPrivilegeGroup group, Privilege privilege);
+
+	Map<OrganizationFieldView, ApplicationPrivilegeProvider> getInheritedOrganizationFieldPrivilegeProviderMap();
 }

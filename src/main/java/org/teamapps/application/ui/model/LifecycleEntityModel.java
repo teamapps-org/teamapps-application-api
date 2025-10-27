@@ -17,6 +17,8 @@ public interface LifecycleEntityModel<ENTITY> extends EntitySelectionModel<ENTIT
 
 	Supplier<ENTITY> getNewEntitySupplier();
 
+	Function<ENTITY, ENTITY> getEntityCopyFunction();
+
 	ObservableValue<ENTITY> getSelectedEntity();
 
 	String getEntityTitle(ENTITY entity, ApplicationInstanceData applicationInstanceData);

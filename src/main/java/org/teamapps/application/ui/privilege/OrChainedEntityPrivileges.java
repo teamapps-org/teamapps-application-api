@@ -42,12 +42,12 @@ public class OrChainedEntityPrivileges<ENTITY extends Entity<ENTITY>> implements
 	}
 
 	@Override
-	public boolean isSaveOptionAvailable(ENTITY entity) {
-		if (andPrivilege != null && !andPrivilege.isSaveOptionAvailable(entity)) {
+	public boolean isSaveOptionAvailable(ENTITY entity, ENTITY synchronizedEntityCopy) {
+		if (andPrivilege != null && !andPrivilege.isSaveOptionAvailable(entity, synchronizedEntityCopy)) {
 			return false;
 		}
 		for (EntityPrivileges<ENTITY> privilege : privileges) {
-			if (privilege.isSaveOptionAvailable(entity)) {
+			if (privilege.isSaveOptionAvailable(entity, synchronizedEntityCopy)) {
 				return true;
 			}
 		}
@@ -55,12 +55,12 @@ public class OrChainedEntityPrivileges<ENTITY extends Entity<ENTITY>> implements
 	}
 
 	@Override
-	public boolean isSaveAllowed(ENTITY entity) {
-		if (andPrivilege != null && !andPrivilege.isSaveAllowed(entity)) {
+	public boolean isSaveAllowed(ENTITY entity, ENTITY synchronizedEntityCopy) {
+		if (andPrivilege != null && !andPrivilege.isSaveAllowed(entity, synchronizedEntityCopy)) {
 			return false;
 		}
 		for (EntityPrivileges<ENTITY> privilege : privileges) {
-			if (privilege.isSaveAllowed(entity)) {
+			if (privilege.isSaveAllowed(entity, synchronizedEntityCopy)) {
 				return true;
 			}
 		}

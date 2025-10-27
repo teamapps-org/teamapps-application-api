@@ -45,6 +45,7 @@ import java.util.function.*;
 public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormController<ENTITY>, ApplicationInstanceDataMethods {
 
 	private final TwoWayBindableValue<ENTITY> selectedFormEntity = TwoWayBindableValueFireAlways.create();
+	private final TwoWayBindableValue<ENTITY> synchronizedEditsEntityCopy = TwoWayBindableValue.create();
 	private final ObservableValue<Boolean> visibilityProvider;
 	private final FormButtonSize buttonSize;
 	private final Function<FormButton<ENTITY>, ToolbarButtonGroup> toolbarButtonGroupFunction;
@@ -60,6 +61,7 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	private final TwoWayBindableValue<FormEditMode> formEditMode = TwoWayBindableValueFireAlways.create(FormEditMode.COMBINED_EDIT_AND_READ);
 	private final TwoWayBindableValue<FormEntityState> formEntityState = TwoWayBindableValue.create(FormEntityState.NOTHING);
 	private final Map<String, ToolbarButtonGroup> toolbarButtonGroupMap = new HashMap<>();
+	private final Map<AbstractField<?>, Consumer<ENTITY>> fieldToEntityHandlerMap = new HashMap<>();
 
 	private boolean blockNextChangeEvent = false;
 	private ResponsiveForm<ENTITY> form;
@@ -90,7 +92,7 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 			visibilityProvider.onChanged().addListener(visible -> {
 				if (visible) {
 					ENTITY entity = lifecycleEntityModel.getSelectedEntity().get();
-					if (entity == null) {
+					if (entity == null && lifecycleEntityModel.getNewEntitySupplier() != null) {
 						entity = lifecycleEntityModel.getNewEntitySupplier().get();
 					}
 					handleSelectedEntityChanged(entity);
@@ -182,9 +184,19 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 		}
 		currentEntity = entity;
 		for (FormButton<ENTITY> button : buttons) {
-			updateButton(button, entity);
+			updateButton(button, entity, entity);
 		}
 		formFields.forEach(AbstractField::clearValidatorMessages);
+		if (entity == null) {
+			synchronizedEditsEntityCopy.set(null);
+		} else {
+			if (entity.isStored()) {
+				synchronizedEditsEntityCopy.set(lifecycleEntityModel.getEntityCopyFunction().apply(entity));
+			} else {
+				ENTITY entityCopy = lifecycleEntityModel.getNewEntitySupplier() != null ? lifecycleEntityModel.getNewEntitySupplier().get() : null;
+				synchronizedEditsEntityCopy.set(entityCopy);
+			}
+		}
 		selectedFormEntity.set(entity);
 		markAllFieldsUnchanged();
 	}
@@ -211,6 +223,11 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	@Override
 	public ObservableValue<ENTITY> getSelectedFormEntity() {
 		return selectedFormEntity;
+	}
+
+	@Override
+	public ObservableValue<ENTITY> getSynchronizedEditsEntityCopy() {
+		return synchronizedEditsEntityCopy;
 	}
 
 	@Override
@@ -257,10 +274,24 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 
 	@Override
 	public ResponsiveFormLayout.LabelAndField addField(String label, AbstractField<?> field) {
+		return addField(label, field, null);
+	}
+
+	@Override
+	public ResponsiveFormLayout.LabelAndField addField(String label, AbstractField<?> field, Consumer<ENTITY> updateEntityConsumer) {
 		ResponsiveFormLayout.LabelAndField labelAndField = formLayout.addLabelAndField(null, label, field);
 		formFields.add(field);
 		if (field.isVisible()) {
 			initiallyVisibleFields.add(field);
+		}
+		if (updateEntityConsumer != null) {
+			fieldToEntityHandlerMap.put(field, updateEntityConsumer);
+			field.onValueChanged.addListener(() -> {
+				ENTITY entity = synchronizedEditsEntityCopy.get();
+				if (entity != null) {
+					updateEntityConsumer.accept(entity);
+				}
+			});
 		}
 		field.onValueChanged.addListener(() -> handleEntityModified(field));
 		if (field instanceof TextField textField) {
@@ -348,6 +379,7 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	@Override
 	public void handleEntityModified() {
 		ENTITY entity = getSelectedFormEntity().get();
+		ENTITY synchronizedEntityCopy = getSynchronizedEditsEntityCopy().get();
 		if (entity != null) {
 			if (entity.isDeleted()) {
 				handleFormEntityStateChanged(FormEntityState.DELETED);
@@ -358,7 +390,7 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 			}
 		}
 		for (FormButton<ENTITY> button : buttons) {
-			updateButton(button, entity);
+			updateButton(button, entity, synchronizedEntityCopy);
 		}
 	}
 
@@ -433,8 +465,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 			}
 		}
 		ENTITY entity = getSelectedFormEntity().get();
+		ENTITY synchronizedEntityCopy = getSynchronizedEditsEntityCopy().get();
 		for (FormButton<ENTITY> button : buttons) {
-			updateButton(button, entity);
+			updateButton(button, entity, synchronizedEntityCopy);
 		}
 	}
 
@@ -465,9 +498,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	@Override
 	public FormButton<ENTITY> addNewEntityButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
-		button.setAllowedFunction((entity, privileges) -> privileges.isCreateAllowed());
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> privileges.isCreateAllowed());
 		button.setVisibilityStates(FormEntityState.NOTHING, FormEntityState.STORED_UNCHANGED, FormEntityState.NEW_UNCHANGED);
-		button.setEventHandler((entity, entityState) -> {
+		button.setEventHandler((entity, synchronizedEntityCopy,entityState) -> {
 			handleNewEntityRequest();
 		});
 		createButton(button);
@@ -480,9 +513,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 
 	public FormButton<ENTITY> addEditButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
-		button.setAllowedFunction((entity, privileges) -> privileges.isCreateAllowed());
+		button.setAllowedFunction((entity, synchronizedEntityCopy,privileges) -> privileges.isCreateAllowed());
 		button.setVisibilityStates(FormEntityState.STORED_UNCHANGED);
-		button.setEventHandler((entity, entityState) -> {
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
 			if (entityPrivileges.isCreateAllowed()) {
 				handleFormEditModeChanged(FormEditMode.EDIT_MODE);
 			}
@@ -500,15 +533,15 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addSaveEntityButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
 		button.setVisibilityStates(FormEntityState.NEW_MODIFIED, FormEntityState.STORED_MODIFIED);
-		button.setAllowedFunction((entity, privileges) -> privileges.isSaveAllowed(entity));
-		button.setVisibilityFunction((entity, privileges) -> privileges.isSaveOptionAvailable(entity));
-		button.setEventHandler((entity, entityState) -> {
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> privileges.isSaveAllowed(entity, synchronizedEntityCopy));
+		button.setVisibilityFunction((entity, synchronizedEntityCopy,privileges) -> privileges.isSaveOptionAvailable(entity, synchronizedEntityCopy));
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
 			//todo add check to the handle request --> entity must be filled with form data!
 //			if (!button.isAllowed(entity, entityPrivileges)) {
 //				return;
 //			}
 
-			handleSaveRequest(formDataAppliedEntity -> button.isAllowed(formDataAppliedEntity, entityPrivileges));
+			handleSaveRequest(formDataAppliedEntity -> button.isAllowed(formDataAppliedEntity, null, entityPrivileges)); //TODO!!!
 		});
 		createButton(button);
 		return button;
@@ -523,8 +556,8 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addRevertChangesButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
 		button.setVisibilityStates(FormEntityState.NEW_MODIFIED, FormEntityState.STORED_MODIFIED);
-		button.setAllowedFunction((entity, privileges) -> true);
-		button.setEventHandler((entity, entityState) -> {
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> true);
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
 			handleRevertChangesRequest();
 		});
 		createButton(button);
@@ -540,9 +573,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addDeleteEntityButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
 		button.setVisibilityStates(FormEntityState.STORED_UNCHANGED);
-		button.setAllowedFunction((entity, privileges) -> privileges.isDeleteAllowed(entity));
-		button.setEventHandler((entity, entityState) -> {
-			if (button.isAllowed(entity, entityPrivileges)) {
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> privileges.isDeleteAllowed(entity));
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
+			if (button.isAllowed(entity, synchronizedEntityCopy, entityPrivileges)) {
 				handleDeleteRequest();
 			}
 		});
@@ -559,9 +592,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addRestoreEntityButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
 		button.setVisibilityStates(FormEntityState.DELETED);
-		button.setAllowedFunction((entity, privileges) -> privileges.isRestoreAllowed(entity));
-		button.setEventHandler((entity, entityState) -> {
-			if (button.isAllowed(entity, entityPrivileges)) {
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> privileges.isRestoreAllowed(entity));
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
+			if (button.isAllowed(entity, synchronizedEntityCopy, entityPrivileges)) {
 				handleRestoreRequest();
 			}
 		});
@@ -578,9 +611,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addEntityVersionsViewButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
 		button.setVisibilityStates(FormEntityState.STORED_UNCHANGED, FormEntityState.DELETED);
-		button.setAllowedFunction((entity, privileges) -> privileges.isModificationHistoryAllowed(entity));
-		button.setEventHandler((entity, entityState) -> {
-			if (button.isAllowed(entity, entityPrivileges)) {
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> privileges.isModificationHistoryAllowed(entity));
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
+			if (button.isAllowed(entity, synchronizedEntityCopy, entityPrivileges)) {
 				RecordVersionsView<ENTITY> recordVersionsView = new RecordVersionsView<>(entity, applicationInstanceData);
 				AbstractUdbEntity<ENTITY> udbEntity = (AbstractUdbEntity<ENTITY>) entity;
 				udbEntity.getTableIndex().getFieldIndices().forEach(col -> recordVersionsView.addField(col.getName(), null));
@@ -595,9 +628,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addEntityVersionsViewButton(EntityChangeHistoryView<ENTITY> changeHistoryView) {
 		FormButton<ENTITY> button = new FormButton<>(ApplicationIcons.CLOCK_BACK, applicationInstanceData.getLocalized(Dictionary.SHOW_MODIFICATION_HISTORY), getLocalized(Dictionary.SHOW_MODIFICATION_HISTORY));
 		button.setVisibilityStates(FormEntityState.STORED_UNCHANGED, FormEntityState.DELETED);
-		button.setAllowedFunction((entity, privileges) -> privileges.isModificationHistoryAllowed(entity));
-		button.setEventHandler((entity, entityState) -> {
-			if (button.isAllowed(entity, entityPrivileges)) {
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> privileges.isModificationHistoryAllowed(entity));
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
+			if (button.isAllowed(entity, synchronizedEntityCopy, entityPrivileges)) {
 				changeHistoryView.show();
 			}
 		});
@@ -614,9 +647,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addShowPreviousEntityButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
 		button.setVisibilityStates(FormEntityState.STORED_UNCHANGED, FormEntityState.DELETED);
-		button.setAllowedFunction((entity, privileges) -> privileges.isRestoreAllowed(entity));
-		button.setEventHandler((entity, entityState) -> {
-			if (button.isAllowed(entity, entityPrivileges)) {
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> privileges.isRestoreAllowed(entity));
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
+			if (button.isAllowed(entity, synchronizedEntityCopy, entityPrivileges)) {
 				lifecycleEntityModel.handleSelectPreviousEntity();
 			}
 		});
@@ -633,9 +666,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addShowNextEntityButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
 		button.setVisibilityStates(FormEntityState.STORED_UNCHANGED, FormEntityState.DELETED);
-		button.setAllowedFunction((entity, privileges) -> privileges.isRestoreAllowed(entity));
-		button.setEventHandler((entity, entityState) -> {
-			if (button.isAllowed(entity, entityPrivileges)) {
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> privileges.isRestoreAllowed(entity));
+		button.setEventHandler((entity, synchronizedEntityCopy, entityState) -> {
+			if (button.isAllowed(entity, synchronizedEntityCopy, entityPrivileges)) {
 				lifecycleEntityModel.handleSelectNextEntity();
 			}
 		});
@@ -652,7 +685,7 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	public FormButton<ENTITY> addToolsButton(Icon<?, ?> icon, String caption, String description) {
 		FormButton<ENTITY> button = new FormButton<>(icon, caption, description);
 		button.setVisibilityStates(FormEntityState.STORED_UNCHANGED, FormEntityState.DELETED, FormEntityState.NEW_UNCHANGED);
-		button.setAllowedFunction((entity, privileges) -> true);
+		button.setAllowedFunction((entity, synchronizedEntityCopy, privileges) -> true);
 		createButton(button);
 		return button;
 	}
@@ -710,8 +743,9 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 		if (formButton.getMenuButtons().isEmpty()) {
 			toolbarButton.onClick.addListener(event -> {
 				ENTITY entity = getSelectedFormEntity().get();
-				if (isButtonVisible(formButton, entity, getEntityState())) {
-					formButton.getEventHandler().accept(entity, getEntityState());
+				ENTITY synchronizedEntity = getSynchronizedEditsEntityCopy().get();
+				if (isButtonVisible(formButton, entity, synchronizedEntity, getEntityState())) {
+					formButton.getEventHandler().handleButtonClick(entity, synchronizedEntity, getEntityState());
 				}
 			});
 		} else {
@@ -720,16 +754,16 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 		}
 	}
 
-	private boolean isButtonVisible(FormButton<ENTITY> formButton, ENTITY entity, FormEntityState state) {
+	private boolean isButtonVisible(FormButton<ENTITY> formButton, ENTITY entity, ENTITY synchronizedEntityCopy, FormEntityState state) {
 		if (!formButton.getVisibleOnStates().contains(state)) {
 			return false;
 		} else {
-			return formButton.isVisibilityAllowed(entity, entityPrivileges);
+			return formButton.isVisibilityAllowed(entity, synchronizedEntityCopy, entityPrivileges);
 		}
 	}
 
-	private void updateButton(FormButton<ENTITY> formButton, ENTITY entity) {
-		boolean visible = isButtonVisible(formButton, entity, getEntityState());
+	private void updateButton(FormButton<ENTITY> formButton, ENTITY entity, ENTITY synchronizedEntityCopy) {
+		boolean visible = isButtonVisible(formButton, entity, synchronizedEntityCopy, getEntityState());
 		if (formButton.isVisible() != visible) {
 			ToolbarButton toolbarButton = buttonMap.get(formButton);
 			toolbarButton.setVisible(visible);
@@ -738,7 +772,7 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 		if (!formButton.getMenuButtons().isEmpty()) {
 			boolean updateRequired = false;
 			for (FormButton<ENTITY> menuButton : formButton.getMenuButtons()) {
-				boolean menuButtonVisible = isButtonVisible(menuButton, entity, getEntityState());
+				boolean menuButtonVisible = isButtonVisible(menuButton, entity, synchronizedEntityCopy, getEntityState());
 				if (menuButton.isVisible() != menuButtonVisible) {
 					updateRequired = true;
 					break;
@@ -749,14 +783,15 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 				itemView.removeAllGroups();
 				SimpleItemGroup<FormButton<ENTITY>> itemGroup = itemView.addSingleColumnGroup(formButton.getIcon(), formButton.getCaption());
 				for (FormButton<ENTITY> menuButton : formButton.getMenuButtons()) {
-					boolean menuButtonVisible = isButtonVisible(menuButton, entity, getEntityState());
+					boolean menuButtonVisible = isButtonVisible(menuButton, entity, synchronizedEntityCopy, getEntityState());
 					menuButton.setVisible(menuButtonVisible);
 					if (menuButtonVisible) {
 						itemGroup.addItem(menuButton.getIcon(), menuButton.getCaption(), menuButton.getDescription()).onClick.addListener(event -> {
 							FormEntityState entityState2 = getEntityState();
 							ENTITY entity2 = getSelectedFormEntity().get();
-							if (isButtonVisible(menuButton, entity2, entityState2)) {
-								menuButton.getEventHandler().accept(entity2, entityState2);
+							ENTITY synchronizedEntityCopy2 = getSynchronizedEditsEntityCopy().get();
+							if (isButtonVisible(menuButton, entity2, synchronizedEntityCopy2, entityState2)) {
+								menuButton.getEventHandler().handleButtonClick(entity2, synchronizedEntityCopy2, entityState2);
 							}
 						});
 					}
@@ -835,6 +870,10 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	@Override
 	public Supplier<ENTITY> getNewEntitySupplier() {
 		return lifecycleEntityModel.getNewEntitySupplier();
+	}
+
+	public Function<ENTITY, ENTITY> getEntityCopyFunction() {
+		return lifecycleEntityModel.getEntityCopyFunction();
 	}
 
 	@Override
@@ -958,13 +997,13 @@ public class FormControllerImpl<ENTITY extends Entity<ENTITY>> implements FormCo
 	}
 
 	@Override
-	public boolean isSaveOptionAvailable(ENTITY entity) {
-		return entityPrivileges.isSaveOptionAvailable(entity);
+	public boolean isSaveOptionAvailable(ENTITY entity, ENTITY synchronizedEntityCopy) {
+		return entityPrivileges.isSaveOptionAvailable(entity,synchronizedEntityCopy);
 	}
 
 	@Override
-	public boolean isSaveAllowed(ENTITY entity) {
-		return entityPrivileges.isSaveAllowed(entity);
+	public boolean isSaveAllowed(ENTITY entity, ENTITY synchronizedEntityCopy) {
+		return entityPrivileges.isSaveAllowed(entity, synchronizedEntityCopy);
 	}
 
 	@Override

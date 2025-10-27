@@ -21,6 +21,7 @@ package org.teamapps.application.api.privilege;
 
 import org.teamapps.icons.Icon;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,7 +87,7 @@ public interface PrivilegeGroup {
 		if (groupA.getType() != groupB.getType()) {
 			throw new RuntimeException("Cannot merge privilege groups of different type:" + groupA);
 		}
-		List<Privilege> privileges = groupA.getPrivileges();
+		List<Privilege> privileges = new ArrayList<>(groupA.getPrivileges());
 		Set<Privilege> privilegeSet = new HashSet<>(privileges);
 		groupB.getPrivileges().stream().filter(p -> !privilegeSet.contains(p)).forEach(privileges::add);
 		return groupA.createCopyWithPrivileges(privileges.toArray(new Privilege[0]));

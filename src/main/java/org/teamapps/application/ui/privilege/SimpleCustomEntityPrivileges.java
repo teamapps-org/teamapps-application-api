@@ -1,6 +1,6 @@
 package org.teamapps.application.ui.privilege;
 
-import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.privilege.ApplicationPrivilegeProvider;
 import org.teamapps.application.api.privilege.Privilege;
 import org.teamapps.application.api.privilege.PrivilegeObject;
 import org.teamapps.application.api.privilege.SimpleCustomObjectPrivilege;
@@ -16,13 +16,13 @@ public class SimpleCustomEntityPrivileges<ENTITY extends Entity<ENTITY>> impleme
 	private final SimpleCustomObjectPrivilege simpleCustomObjectPrivilege;
 	private final Function<ENTITY, PrivilegeObject> privilegObjectByEntityFunction;
 	private final Set<Privilege> privilegeSet;
-	private final ApplicationInstanceData applicationInstanceData;
+	private final ApplicationPrivilegeProvider privilegeProvider;
 
-	public SimpleCustomEntityPrivileges(SimpleCustomObjectPrivilege simpleCustomObjectPrivilege, Function<ENTITY, PrivilegeObject> privilegObjectByEntityFunction, ApplicationInstanceData applicationInstanceData, Privilege ... privileges) {
+	public SimpleCustomEntityPrivileges(SimpleCustomObjectPrivilege simpleCustomObjectPrivilege, Function<ENTITY, PrivilegeObject> privilegObjectByEntityFunction, ApplicationPrivilegeProvider privilegeProvider, Privilege ... privileges) {
 		this.simpleCustomObjectPrivilege = simpleCustomObjectPrivilege;
 		this.privilegObjectByEntityFunction = privilegObjectByEntityFunction;
 		this.privilegeSet = new HashSet<>(Arrays.asList(privileges));
-		this.applicationInstanceData = applicationInstanceData;
+		this.privilegeProvider = privilegeProvider;
 	}
 
 	@Override
@@ -31,38 +31,38 @@ public class SimpleCustomEntityPrivileges<ENTITY extends Entity<ENTITY>> impleme
 	}
 
 	@Override
-	public boolean isSaveOptionAvailable(ENTITY entity) {
+	public boolean isSaveOptionAvailable(ENTITY entity, ENTITY synchronizedEntityCopy) {
 		if (entity.isStored()) {
 			PrivilegeObject privilegeObject = privilegObjectByEntityFunction.apply(entity);
-			return isWithPrivilege(Privilege.UPDATE) && applicationInstanceData.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
+			return isWithPrivilege(Privilege.UPDATE) && privilegeProvider.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
 		} else {
 			return isWithPrivilege(Privilege.CREATE);
 		}
 	}
 
 	@Override
-	public boolean isSaveAllowed(ENTITY entity) {
+	public boolean isSaveAllowed(ENTITY entity, ENTITY synchronizedEntityCopy) {
 		Privilege privilege = entity.isStored() ? Privilege.UPDATE : Privilege.CREATE;
 		PrivilegeObject privilegeObject = privilegObjectByEntityFunction.apply(entity);
-		return isWithPrivilege(privilege) && applicationInstanceData.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
+		return isWithPrivilege(privilege) && privilegeProvider.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
 	}
 
 	@Override
 	public boolean isDeleteAllowed(ENTITY entity) {
 		PrivilegeObject privilegeObject = privilegObjectByEntityFunction.apply(entity);
-		return isWithPrivilege(Privilege.DELETE) && applicationInstanceData.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
+		return isWithPrivilege(Privilege.DELETE) && privilegeProvider.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
 	}
 
 	@Override
 	public boolean isRestoreAllowed(ENTITY entity) {
 		PrivilegeObject privilegeObject = privilegObjectByEntityFunction.apply(entity);
-		return isWithPrivilege(Privilege.RESTORE) && applicationInstanceData.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
+		return isWithPrivilege(Privilege.RESTORE) && privilegeProvider.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
 	}
 
 	@Override
 	public boolean isModificationHistoryAllowed(ENTITY entity) {
 		PrivilegeObject privilegeObject = privilegObjectByEntityFunction.apply(entity);
-		return isWithPrivilege(Privilege.SHOW_MODIFICATION_HISTORY) && applicationInstanceData.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
+		return isWithPrivilege(Privilege.SHOW_MODIFICATION_HISTORY) && privilegeProvider.isAllowed(simpleCustomObjectPrivilege, privilegeObject);
 	}
 
 	private boolean isWithPrivilege(Privilege privilege) {

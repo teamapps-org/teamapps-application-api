@@ -12,9 +12,9 @@ public class FormButton<ENTITY> {
 	private final Icon icon;
 	private final String caption;
 	private final String description;
-	private BiFunction<ENTITY, EntityPrivileges<ENTITY>, Boolean> allowedFunction;
-	private BiFunction<ENTITY, EntityPrivileges<ENTITY>, Boolean> visibilityFunction;
-	private BiConsumer<ENTITY, FormEntityState> eventHandler;
+	private FormButtonFunction<ENTITY> allowedFunction;
+	private FormButtonFunction<ENTITY> visibilityFunction;
+	private FormButtenEventHandler<ENTITY> eventHandler;
 	private final Set<FormEntityState> visibleOnStates = new HashSet<>();
 	private final List<FormButton<ENTITY>> menuButtons = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class FormButton<ENTITY> {
 		this.description = description;
 	}
 
-	public FormButton(Icon icon, String caption, String description, BiFunction<ENTITY, EntityPrivileges<ENTITY>, Boolean> allowedFunction, BiFunction<ENTITY, EntityPrivileges<ENTITY>, Boolean> visibilityFunction, BiConsumer<ENTITY, FormEntityState> eventHandler, FormEntityState... states) {
+	public FormButton(Icon icon, String caption, String description, FormButtonFunction<ENTITY> allowedFunction, FormButtonFunction<ENTITY> visibilityFunction, FormButtenEventHandler<ENTITY> eventHandler, FormEntityState... states) {
 		this.icon = icon;
 		this.caption = caption;
 		this.description = description;
@@ -39,17 +39,17 @@ public class FormButton<ENTITY> {
 		setVisibilityStates(states);
 	}
 
-	public FormButton<ENTITY> setAllowedFunction(BiFunction<ENTITY, EntityPrivileges<ENTITY>, Boolean> allowedFunction) {
+	public FormButton<ENTITY> setAllowedFunction(FormButtonFunction<ENTITY> allowedFunction) {
 		this.allowedFunction = allowedFunction;
 		return this;
 	}
 
-	public FormButton<ENTITY> setVisibilityFunction(BiFunction<ENTITY, EntityPrivileges<ENTITY>, Boolean> visibilityFunction) {
+	public FormButton<ENTITY> setVisibilityFunction(FormButtonFunction<ENTITY> visibilityFunction) {
 		this.visibilityFunction = visibilityFunction;
 		return this;
 	}
 
-	public FormButton<ENTITY> setEventHandler(BiConsumer<ENTITY, FormEntityState> eventHandler) {
+	public FormButton<ENTITY> setEventHandler(FormButtenEventHandler<ENTITY> eventHandler) {
 		this.eventHandler = eventHandler;
 		return this;
 	}
@@ -77,26 +77,26 @@ public class FormButton<ENTITY> {
 		return description;
 	}
 
-	public BiFunction<ENTITY, EntityPrivileges<ENTITY>, Boolean> getAllowedFunction() {
+	public FormButtonFunction<ENTITY> getAllowedFunction() {
 		return allowedFunction;
 	}
 
-	public BiFunction<ENTITY, EntityPrivileges<ENTITY>, Boolean> getVisibilityFunction() {
+	public FormButtonFunction<ENTITY> getVisibilityFunction() {
 		return visibilityFunction;
 	}
 
-	public boolean isAllowed(ENTITY entity, EntityPrivileges<ENTITY> privileges) {
-		return allowedFunction.apply(entity, privileges);
+	public boolean isAllowed(ENTITY entity, ENTITY synchronizedEntityCopy, EntityPrivileges<ENTITY> privileges) {
+		return allowedFunction.isAllowed(entity, synchronizedEntityCopy, privileges);
 	}
 
-	public boolean isVisibilityAllowed(ENTITY entity, EntityPrivileges<ENTITY> privileges) {
+	public boolean isVisibilityAllowed(ENTITY entity, ENTITY synchronizedEntityCopy, EntityPrivileges<ENTITY> privileges) {
 		if (visibilityFunction == null) {
-			return allowedFunction.apply(entity, privileges);
+			return allowedFunction.isAllowed(entity, synchronizedEntityCopy, privileges);
 		}
-		return visibilityFunction.apply(entity, privileges);
+		return visibilityFunction.isAllowed(entity, synchronizedEntityCopy, privileges);
 	}
 
-	public BiConsumer<ENTITY, FormEntityState> getEventHandler() {
+	public FormButtenEventHandler<ENTITY> getEventHandler() {
 		return eventHandler;
 	}
 

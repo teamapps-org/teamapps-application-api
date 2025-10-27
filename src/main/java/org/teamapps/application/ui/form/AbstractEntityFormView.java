@@ -69,6 +69,11 @@ public abstract class AbstractEntityFormView<ENTITY extends Entity<ENTITY>> exte
 	}
 
 	@Override
+	public ObservableValue<ENTITY> getSynchronizedEditsEntityCopy() {
+		return formController.getSynchronizedEditsEntityCopy();
+	}
+
+	@Override
 	public ObservableValue<FormEntityState> getFormEntityState() {
 		return formController.getFormEntityState();
 	}
@@ -116,6 +121,11 @@ public abstract class AbstractEntityFormView<ENTITY extends Entity<ENTITY>> exte
 	@Override
 	public ResponsiveFormLayout.LabelAndField addField(String label, AbstractField<?> field) {
 		return formController.addField(label, field);
+	}
+
+	@Override
+	public ResponsiveFormLayout.LabelAndField addField(String label, AbstractField<?> field, Consumer<ENTITY> updateEntityConsumer) {
+		return formController.addField(label, field, updateEntityConsumer);
 	}
 
 	@Override
@@ -334,6 +344,11 @@ public abstract class AbstractEntityFormView<ENTITY extends Entity<ENTITY>> exte
 	}
 
 	@Override
+	public Function<ENTITY, ENTITY> getEntityCopyFunction() {
+		return formController.getEntityCopyFunction();
+	}
+
+	@Override
 	public ObservableValue<ENTITY> getSelectedEntity() {
 		return formController.getSelectedEntity();
 	}
@@ -454,13 +469,13 @@ public abstract class AbstractEntityFormView<ENTITY extends Entity<ENTITY>> exte
 	}
 
 	@Override
-	public boolean isSaveOptionAvailable(ENTITY entity) {
-		return formController.isSaveOptionAvailable(entity);
+	public boolean isSaveOptionAvailable(ENTITY entity, ENTITY synchronizedEntityCopy) {
+		return formController.isSaveOptionAvailable(entity, synchronizedEntityCopy);
 	}
 
 	@Override
-	public boolean isSaveAllowed(ENTITY entity) {
-		return formController.isSaveAllowed(entity);
+	public boolean isSaveAllowed(ENTITY entity, ENTITY synchronizedEntityCopy) {
+		return formController.isSaveAllowed(entity, synchronizedEntityCopy);
 	}
 
 	@Override
