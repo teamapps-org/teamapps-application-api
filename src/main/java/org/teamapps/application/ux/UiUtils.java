@@ -114,16 +114,14 @@ public class UiUtils {
 	public static TemplateField<Boolean> createBooleanTemplateField(Icon trueIcon, String trueTitle, Icon falseIcon, String falseTitle) {
 		TemplateField<Boolean> templateField = new TemplateField<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
 		templateField.setPropertyProvider((value, propertyName) ->
-				Map.of(
-						BaseTemplate.PROPERTY_ICON, value ? trueIcon : falseIcon,
-						BaseTemplate.PROPERTY_CAPTION, value ? trueTitle : falseTitle)
+				PropertyData.create(value ? trueIcon : falseIcon, value ? trueTitle : falseTitle)
 		);
 		return templateField;
 	}
 
 	public static TemplateField<String> createIconFixedIconTemplateField(Icon icon) {
 		TemplateField<String> templateField = new TemplateField<>(BaseTemplate.LIST_ITEM_SMALL_ICON_SINGLE_LINE);
-		templateField.setPropertyProvider((value, propertyName) -> Map.of(BaseTemplate.PROPERTY_ICON, icon, BaseTemplate.PROPERTY_CAPTION, value));
+		templateField.setPropertyProvider((value, propertyName) -> PropertyData.create(icon, value));
 		return templateField;
 	}
 
@@ -132,11 +130,7 @@ public class UiUtils {
 		templateField.setPropertyProvider((value, propertyName) -> {
 			Language languageByIsoCode = Language.getLanguageByIsoCode(value);
 			if (languageByIsoCode != null) {
-				return Map.of(
-						BaseTemplate.PROPERTY_ICON, languageByIsoCode.getIcon(),
-						BaseTemplate.PROPERTY_CAPTION, languageByIsoCode.getLanguageLocalized(applicationInstanceData),
-						BaseTemplate.PROPERTY_DESCRIPTION, languageByIsoCode.getIsoCode()
-				);
+				return PropertyData.create(languageByIsoCode.getIcon(), languageByIsoCode.getLanguageLocalized(applicationInstanceData), languageByIsoCode.getIsoCode());
 			}
 			return null;
 		});
@@ -150,7 +144,7 @@ public class UiUtils {
 
 	public static TemplateField<String> createSingleValueTemplateField(Icon icon, String title, Template template) {
 		TemplateField<String> templateField = new TemplateField<>(template);
-		templateField.setPropertyProvider((value, propertyName) -> Map.of(BaseTemplate.PROPERTY_ICON, icon, BaseTemplate.PROPERTY_CAPTION, title));
+		templateField.setPropertyProvider((value, propertyName) -> PropertyData.create(icon, title));
 		templateField.setValue(title);
 		return templateField;
 	}
