@@ -32,6 +32,8 @@ public interface UserProfileApplicationBuilder {
 
 	void updateLauncherView(int userId, ApplicationInstanceData applicationInstanceData, Perspective perspective, Event<Void> updateEvent);
 
+	void handleAfterLogin(ApplicationInstanceData applicationInstanceData);
+
 	List<PerspectiveBuilder> getUserProfilePerspectiveBuilders();
 
 	SystemAppNotificationHandler getSystemAppNotificationHandler();

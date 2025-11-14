@@ -51,6 +51,7 @@ import org.teamapps.ux.session.SessionContext;
 import java.io.File;
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -139,4 +140,8 @@ public interface ApplicationInstanceData extends ApplicationPrivilegeProvider, A
 	ApplicationNotificationHandler getNotificationHandler();
 
 	ServerMode getServerMode();
+
+	Set<Integer> getGroupMemberships();
+
+	boolean isGroupModerator(int groupId);
 }
