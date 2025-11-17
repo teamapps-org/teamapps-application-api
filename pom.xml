@@ -101,6 +101,43 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <configuration>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <compilerArgument>-Xlint:-options</compilerArgument>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <tagNameFormat>v@{version}</tagNameFormat>
+                    <releaseProfiles>javadoc-jar,sources-jar,license-handling,release</releaseProfiles>
+                    <pushChanges>true</pushChanges>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version> <!-- Check for the latest version if needed -->
+                <extensions>true</extensions>
+                <configuration>
+                    <deploymentName>TeamApps ${project.version}</deploymentName>
+                    <publishingServerId>ossrh</publishingServerId> <!-- This ID must match your settings.xml server ID -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
@@ -109,30 +146,8 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.3</version>
-                        <configuration>
-                            <mavenExecutorId>forked-path</mavenExecutorId>
-                            <useReleaseProfile>false</useReleaseProfile>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <tagNameFormat>v@{version}</tagNameFormat>
-                            <releaseProfiles>javadoc-jar,sources-jar,license-handling</releaseProfiles>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.9.0</version> <!-- Check for the latest version if needed -->
-                        <extensions>true</extensions>
-                        <configuration>
-                            <deploymentName>TeamApps ${project.version}</deploymentName>
-                            <publishingServerId>ossrh</publishingServerId> <!-- This ID must match your settings.xml server ID -->
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.2.8</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -154,7 +169,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.12.0</version>
                         <executions>
                             <execution>
                                 <id>generate-javadoc-jar</id>
@@ -174,7 +189,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.3.1</version>
                         <executions>
                             <execution>
                                 <id>generate-sources-jar</id>
@@ -194,7 +209,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>license-maven-plugin</artifactId>
-                        <version>1.19</version>
+                        <version>2.7</version>
                         <executions>
                             <execution>
                                 <id>download-licenses</id>
