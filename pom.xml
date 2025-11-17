@@ -4,7 +4,7 @@
 
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps-application-api</artifactId>
-    <version>0.113-SNAPSHOT</version>
+    <version>0.114clea-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -33,16 +33,16 @@
     </developers>
 
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <snapshotRepository>-->
+<!--            <id>ossrh</id>-->
+<!--            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--        </snapshotRepository>-->
+<!--        <repository>-->
+<!--            <id>ossrh</id>-->
+<!--            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
 
     <scm>
         <url>https://github.com/teamapps-org/teamapps-application-api</url>
@@ -122,18 +122,20 @@
                     <useReleaseProfile>false</useReleaseProfile>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <tagNameFormat>v@{version}</tagNameFormat>
-                    <releaseProfiles>javadoc-jar,sources-jar,license-handling,release</releaseProfiles>
+<!--                    <releaseProfiles>javadoc-jar,sources-jar,license-handling,release</releaseProfiles>-->
+                    <releaseProfiles>javadoc-jar,sources-jar,release</releaseProfiles>
                     <pushChanges>true</pushChanges>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.9.0</version> <!-- Check for the latest version if needed -->
+                <version>0.9.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <deploymentName>TeamApps App Api ${project.version}</deploymentName>
-                    <publishingServerId>ossrh</publishingServerId> <!-- This ID must match your settings.xml server ID -->
+<!--                    <deploymentName>TeamApps App Api ${project.version}</deploymentName>-->
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
         </plugins>
