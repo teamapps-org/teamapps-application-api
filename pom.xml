@@ -132,7 +132,7 @@
                 <version>0.9.0</version> <!-- Check for the latest version if needed -->
                 <extensions>true</extensions>
                 <configuration>
-                    <deploymentName>TeamApps ${project.version}</deploymentName>
+                    <deploymentName>TeamApps App Api ${project.version}</deploymentName>
                     <publishingServerId>ossrh</publishingServerId> <!-- This ID must match your settings.xml server ID -->
                 </configuration>
             </plugin>
