@@ -4,7 +4,7 @@
 
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps-application-api</artifactId>
-    <version>0.114clea-SNAPSHOT</version>
+    <version>0.114-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -204,63 +204,63 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>license-handling</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>license-maven-plugin</artifactId>
-                        <version>2.7.0</version>
-                        <executions>
-                            <execution>
-                                <id>download-licenses</id>
-                                <goals>
-                                    <goal>download-licenses</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>update-project-license</id>
-                                <goals>
-                                    <goal>update-project-license</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>update-file-header</id>
-                                <phase>process-sources</phase>
-                                <goals>
-                                    <goal>update-file-header</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <projectName>TeamApps Application API</projectName>
-                            <organizationName>TeamApps.org</organizationName>
-                            <inceptionYear>2020</inceptionYear>
-                            <licenseName>apache_v2</licenseName>
-                            <processStartTag>========================LICENSE_START=================================</processStartTag>
-                            <processEndTag>=========================LICENSE_END==================================</processEndTag>
-                            <sectionDelimiter>---</sectionDelimiter>
-                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-                            <canUpdateCopyright>true</canUpdateCopyright>
-                            <canUpdateDescription>true</canUpdateDescription>
-                            <canUpdateLicense>true</canUpdateLicense>
-                            <roots>
-                                <root>src/main</root>
-                                <root>src/test</root>
-                                <root>target/generated-sources</root>
-                                <root>target/generated-resources</root>
-                            </roots>
-                            <excludes>
-                                <exclude>**/*.json</exclude>
-                                <exclude>**/*.svg</exclude>
-                                <exclude>**/*.txt</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+<!--        <profile>-->
+<!--            <id>license-handling</id>-->
+<!--            <build>-->
+<!--                <plugins>-->
+<!--                    <plugin>-->
+<!--                        <groupId>org.codehaus.mojo</groupId>-->
+<!--                        <artifactId>license-maven-plugin</artifactId>-->
+<!--                        <version>2.7.0</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>download-licenses</id>-->
+<!--                                <goals>-->
+<!--                                    <goal>download-licenses</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                            <execution>-->
+<!--                                <id>update-project-license</id>-->
+<!--                                <goals>-->
+<!--                                    <goal>update-project-license</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                            <execution>-->
+<!--                                <id>update-file-header</id>-->
+<!--                                <phase>process-sources</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>update-file-header</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                        <configuration>-->
+<!--                            <projectName>TeamApps Application API</projectName>-->
+<!--                            <organizationName>TeamApps.org</organizationName>-->
+<!--                            <inceptionYear>2020</inceptionYear>-->
+<!--                            <licenseName>apache_v2</licenseName>-->
+<!--                            <processStartTag>========================LICENSE_START=================================</processStartTag>-->
+<!--                            <processEndTag>=========================LICENSE_END==================================</processEndTag>-->
+<!--                            <sectionDelimiter>-&#45;&#45;</sectionDelimiter>-->
+<!--                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>-->
+<!--                            <canUpdateCopyright>true</canUpdateCopyright>-->
+<!--                            <canUpdateDescription>true</canUpdateDescription>-->
+<!--                            <canUpdateLicense>true</canUpdateLicense>-->
+<!--                            <roots>-->
+<!--                                <root>src/main</root>-->
+<!--                                <root>src/test</root>-->
+<!--                                <root>target/generated-sources</root>-->
+<!--                                <root>target/generated-resources</root>-->
+<!--                            </roots>-->
+<!--                            <excludes>-->
+<!--                                <exclude>**/*.json</exclude>-->
+<!--                                <exclude>**/*.svg</exclude>-->
+<!--                                <exclude>**/*.txt</exclude>-->
+<!--                            </excludes>-->
+<!--                        </configuration>-->
+<!--                    </plugin>-->
+<!--                </plugins>-->
+<!--            </build>-->
+<!--        </profile>-->
     </profiles>
 
 </project>
