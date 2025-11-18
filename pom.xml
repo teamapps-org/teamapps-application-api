@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.teamapps</groupId>
     <artifactId>teamapps-application-api</artifactId>
-    <version>0.120-SNAPSHOT</version>
+    <version>0.120</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -49,7 +48,7 @@
         <url>https://github.com/teamapps-org/teamapps-application-api</url>
         <connection>scm:git:git@github.com:teamapps-org/teamapps-application-api.git</connection>
         <developerConnection>scm:git:git@github.com:teamapps-org/teamapps-application-api.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v0.120</tag>
     </scm>
 
 
