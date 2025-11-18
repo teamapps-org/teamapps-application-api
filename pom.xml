@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.teamapps</groupId>
@@ -120,46 +121,6 @@
         </plugins>
     </build>
 
-    <!--    <build>-->
-    <!--        <plugins>-->
-    <!--            <plugin>-->
-    <!--                <groupId>org.apache.maven.plugins</groupId>-->
-    <!--                <artifactId>maven-compiler-plugin</artifactId>-->
-    <!--                <version>3.14.1</version>-->
-    <!--                <configuration>-->
-    <!--                    <showWarnings>true</showWarnings>-->
-    <!--                    <showDeprecation>true</showDeprecation>-->
-    <!--                    <compilerArgument>-Xlint:-options</compilerArgument>-->
-    <!--                </configuration>-->
-    <!--            </plugin>-->
-    <!--            <plugin>-->
-    <!--                <groupId>org.apache.maven.plugins</groupId>-->
-    <!--                <artifactId>maven-release-plugin</artifactId>-->
-    <!--                <version>3.2.0</version>-->
-    <!--                <configuration>-->
-    <!--                    <mavenExecutorId>forked-path</mavenExecutorId>-->
-    <!--                    <useReleaseProfile>false</useReleaseProfile>-->
-    <!--                    <autoVersionSubmodules>true</autoVersionSubmodules>-->
-    <!--                    <tagNameFormat>v@{version}</tagNameFormat>-->
-    <!--&lt;!&ndash;                    <releaseProfiles>javadoc-jar,sources-jar,license-handling,release</releaseProfiles>&ndash;&gt;-->
-    <!--                    <releaseProfiles>javadoc-jar,sources-jar,release</releaseProfiles>-->
-    <!--                    <pushChanges>true</pushChanges>-->
-    <!--                </configuration>-->
-    <!--            </plugin>-->
-    <!--            <plugin>-->
-    <!--                <groupId>org.sonatype.central</groupId>-->
-    <!--                <artifactId>central-publishing-maven-plugin</artifactId>-->
-    <!--                <version>0.9.0</version>-->
-    <!--                <extensions>true</extensions>-->
-    <!--                <configuration>-->
-    <!--&lt;!&ndash;                    <deploymentName>TeamApps App Api ${project.version}</deploymentName>&ndash;&gt;-->
-    <!--                    <publishingServerId>central</publishingServerId>-->
-    <!--                    <autoPublish>true</autoPublish>-->
-    <!--                </configuration>-->
-    <!--            </plugin>-->
-    <!--        </plugins>-->
-    <!--    </build>-->
-
     <profiles>
         <profile>
             <id>release</id>
@@ -171,6 +132,7 @@
                         <version>0.9.0</version>
                         <extensions>true</extensions>
                         <configuration>
+                            <deploymentName>${project.name}</deploymentName>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
                             <waitUntil>published</waitUntil>
@@ -228,126 +190,65 @@
             </build>
         </profile>
 
-
-        <!--        <profile>-->
-        <!--            <id>release</id>-->
-        <!--            <build>-->
-        <!--                <plugins>-->
-        <!--                    <plugin>-->
-        <!--                        <groupId>org.apache.maven.plugins</groupId>-->
-        <!--                        <artifactId>maven-gpg-plugin</artifactId>-->
-        <!--                        <version>3.2.8</version>-->
-        <!--                        <executions>-->
-        <!--                            <execution>-->
-        <!--                                <id>sign-artifacts</id>-->
-        <!--                                <phase>verify</phase>-->
-        <!--                                <goals>-->
-        <!--                                    <goal>sign</goal>-->
-        <!--                                </goals>-->
-        <!--                            </execution>-->
-        <!--                        </executions>-->
-        <!--                    </plugin>-->
-        <!--                </plugins>-->
-        <!--            </build>-->
-        <!--        </profile>-->
-
-        <!--        <profile>-->
-        <!--            <id>javadoc-jar</id>-->
-        <!--            <build>-->
-        <!--                <plugins>-->
-        <!--                    <plugin>-->
-        <!--                        <groupId>org.apache.maven.plugins</groupId>-->
-        <!--                        <artifactId>maven-javadoc-plugin</artifactId>-->
-        <!--                        <version>3.12.0</version>-->
-        <!--                        <executions>-->
-        <!--                            <execution>-->
-        <!--                                <id>generate-javadoc-jar</id>-->
-        <!--                                <goals>-->
-        <!--                                    <goal>jar</goal>-->
-        <!--                                </goals>-->
-        <!--                            </execution>-->
-        <!--                        </executions>-->
-        <!--                    </plugin>-->
-        <!--                </plugins>-->
-        <!--            </build>-->
-        <!--        </profile>-->
-        <!--        <profile>-->
-        <!--            <id>sources-jar</id>-->
-        <!--            <build>-->
-        <!--                <plugins>-->
-        <!--                    <plugin>-->
-        <!--                        <groupId>org.apache.maven.plugins</groupId>-->
-        <!--                        <artifactId>maven-source-plugin</artifactId>-->
-        <!--                        <version>3.3.1</version>-->
-        <!--                        <executions>-->
-        <!--                            <execution>-->
-        <!--                                <id>generate-sources-jar</id>-->
-        <!--                                <goals>-->
-        <!--                                    <goal>jar</goal>-->
-        <!--                                </goals>-->
-        <!--                            </execution>-->
-        <!--                        </executions>-->
-        <!--                    </plugin>-->
-        <!--                </plugins>-->
-        <!--            </build>-->
-        <!--        </profile>-->
-        <!--        <profile>-->
-        <!--            <id>license-handling</id>-->
-        <!--            <build>-->
-        <!--                <plugins>-->
-        <!--                    <plugin>-->
-        <!--                        <groupId>org.codehaus.mojo</groupId>-->
-        <!--                        <artifactId>license-maven-plugin</artifactId>-->
-        <!--                        <version>2.7.0</version>-->
-        <!--                        <executions>-->
-        <!--                            <execution>-->
-        <!--                                <id>download-licenses</id>-->
-        <!--                                <goals>-->
-        <!--                                    <goal>download-licenses</goal>-->
-        <!--                                </goals>-->
-        <!--                            </execution>-->
-        <!--                            <execution>-->
-        <!--                                <id>update-project-license</id>-->
-        <!--                                <goals>-->
-        <!--                                    <goal>update-project-license</goal>-->
-        <!--                                </goals>-->
-        <!--                            </execution>-->
-        <!--                            <execution>-->
-        <!--                                <id>update-file-header</id>-->
-        <!--                                <phase>process-sources</phase>-->
-        <!--                                <goals>-->
-        <!--                                    <goal>update-file-header</goal>-->
-        <!--                                </goals>-->
-        <!--                            </execution>-->
-        <!--                        </executions>-->
-        <!--                        <configuration>-->
-        <!--                            <projectName>TeamApps Application API</projectName>-->
-        <!--                            <organizationName>TeamApps.org</organizationName>-->
-        <!--                            <inceptionYear>2020</inceptionYear>-->
-        <!--                            <licenseName>apache_v2</licenseName>-->
-        <!--                            <processStartTag>========================LICENSE_START=================================</processStartTag>-->
-        <!--                            <processEndTag>=========================LICENSE_END==================================</processEndTag>-->
-        <!--                            <sectionDelimiter>-&#45;&#45;</sectionDelimiter>-->
-        <!--                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>-->
-        <!--                            <canUpdateCopyright>true</canUpdateCopyright>-->
-        <!--                            <canUpdateDescription>true</canUpdateDescription>-->
-        <!--                            <canUpdateLicense>true</canUpdateLicense>-->
-        <!--                            <roots>-->
-        <!--                                <root>src/main</root>-->
-        <!--                                <root>src/test</root>-->
-        <!--                                <root>target/generated-sources</root>-->
-        <!--                                <root>target/generated-resources</root>-->
-        <!--                            </roots>-->
-        <!--                            <excludes>-->
-        <!--                                <exclude>**/*.json</exclude>-->
-        <!--                                <exclude>**/*.svg</exclude>-->
-        <!--                                <exclude>**/*.txt</exclude>-->
-        <!--                            </excludes>-->
-        <!--                        </configuration>-->
-        <!--                    </plugin>-->
-        <!--                </plugins>-->
-        <!--            </build>-->
-        <!--        </profile>-->
+        <profile>
+            <id>license-handling</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>2.7.0</version>
+                        <executions>
+                            <execution>
+                                <id>download-licenses</id>
+                                <goals>
+                                    <goal>download-licenses</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>update-project-license</id>
+                                <goals>
+                                    <goal>update-project-license</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>update-file-header</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <projectName>TeamApps Application API</projectName>
+                            <organizationName>TeamApps.org</organizationName>
+                            <inceptionYear>2020</inceptionYear>
+                            <licenseName>apache_v2</licenseName>
+                            <processStartTag>========================LICENSE_START=================================
+                            </processStartTag>
+                            <processEndTag>=========================LICENSE_END==================================
+                            </processEndTag>
+                            <sectionDelimiter>---</sectionDelimiter>
+                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                            <canUpdateCopyright>true</canUpdateCopyright>
+                            <canUpdateDescription>true</canUpdateDescription>
+                            <canUpdateLicense>true</canUpdateLicense>
+                            <roots>
+                                <root>src/main</root>
+                                <root>src/test</root>
+                                <root>target/generated-sources</root>
+                                <root>target/generated-resources</root>
+                            </roots>
+                            <excludes>
+                                <exclude>**/*.json</exclude>
+                                <exclude>**/*.svg</exclude>
+                                <exclude>**/*.txt</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
