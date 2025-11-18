@@ -7,10 +7,8 @@
     <version>0.121-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>23</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
     </properties>
 
     <name>TeamApps Application API</name>
@@ -31,18 +29,6 @@
             <id>matthias-bernstein</id>
         </developer>
     </developers>
-
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
     <scm>
         <url>https://github.com/teamapps-org/teamapps-application-api</url>
@@ -68,13 +54,13 @@
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-application-server</artifactId>
-            <version>0.64</version>
+            <version>0.66</version>
         </dependency>
 
         <dependency>
             <groupId>org.teamapps</groupId>
             <artifactId>teamapps-cluster</artifactId>
-            <version>0.13</version>
+            <version>0.14</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-simple</artifactId>
