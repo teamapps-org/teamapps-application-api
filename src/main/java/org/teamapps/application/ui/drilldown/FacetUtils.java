@@ -19,6 +19,9 @@
  */
 package org.teamapps.application.ui.drilldown;
 
+import org.teamapps.application.api.application.ApplicationInstanceData;
+import org.teamapps.application.api.user.LocalizedFormatter;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -153,6 +156,15 @@ public class FacetUtils {
 
 	public static String getMonth(LocalDate localDate, Locale locale) {
 		return localDate.getMonth().getDisplayName(TextStyle.FULL, locale);
+	}
+
+	public static String getLogarithmicGroup(long value, ApplicationInstanceData applicationInstanceData) {
+		if (value == 0) return "0";
+		int digits = (int) Math.log10(value);
+		String v1 = 1 + ("0".repeat(digits));
+		String v2 = 1 + ("0".repeat(digits + 1));
+		LocalizedFormatter formatter = applicationInstanceData.getLocalizedFormatter();
+		return formatter.formatDecimalNumber(Long.parseLong(v1)) + " - " + formatter.formatDecimalNumber(Long.parseLong(v2));
 	}
 
 	public static String getLongGroup(long value, int division) {

@@ -334,6 +334,26 @@ public class DrillDownView<ENTITY> extends AbstractLazyRenderingApplicationView 
 		);
 	}
 
+	public DrillDownFacet<String, ENTITY> addIntLogarithmicGrouper(Icon<?,?> icon, String title, Function<ENTITY, Integer> numberFunction, ApplicationInstanceData applicationInstanceData) {
+		return addFacetSimple(
+				icon,
+				title,
+				entity -> FacetUtils.getLogarithmicGroup(numberFunction.apply(entity), applicationInstanceData),
+				(s, recordStream) -> recordStream.filter(entity -> s.equals(FacetUtils.getLogarithmicGroup(numberFunction.apply(entity), applicationInstanceData))),
+				s -> s
+		);
+	}
+
+	public DrillDownFacet<String, ENTITY> addLongLogarithmicGrouper(Icon<?,?> icon, String title, Function<ENTITY, Long> numberFunction, ApplicationInstanceData applicationInstanceData) {
+		return addFacetSimple(
+				icon,
+				title,
+				entity -> FacetUtils.getLogarithmicGroup(numberFunction.apply(entity), applicationInstanceData),
+				(s, recordStream) -> recordStream.filter(entity -> s.equals(FacetUtils.getLogarithmicGroup(numberFunction.apply(entity), applicationInstanceData))),
+				s -> s
+		);
+	}
+
 	public DrillDownFacet<String, ENTITY> addLongGrouper(Icon<?,?> icon, String title, Function<ENTITY, Long> numberFunction, int divisor) {
 		return addFacetSimple(
 				icon,
