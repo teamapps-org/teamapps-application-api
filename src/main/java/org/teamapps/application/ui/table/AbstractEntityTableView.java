@@ -47,7 +47,6 @@ public abstract class AbstractEntityTableView<ENTITY extends Entity<ENTITY>> ext
 		onViewRedrawRequired.addListener(() -> {
 			if (!initialised) {
 				initialised = true;
-
 			}
 		});
 	}
@@ -80,6 +79,7 @@ public abstract class AbstractEntityTableView<ENTITY extends Entity<ENTITY>> ext
 		table.onSortingChanged.addListener(event -> {
 			perspectiveModel.handleSortRequest(event.getSortField(), event.getSortDirection() == SortDirection.ASC);
 		});
+		table.setPropertyExtractor((entity, s) -> entity);
 		createTable(table);
 	}
 

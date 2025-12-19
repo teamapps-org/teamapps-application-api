@@ -71,8 +71,6 @@ public abstract class AbstractEntityPerspective<ENTITY extends Entity<ENTITY>> e
 		tableView.setPeerViewsToShowWhenVisible(formView);
 		tableView.setTargetView(formView);
 
-		tableView.createUi();
-		tableView.getTable().setPropertyExtractor((entity, s) -> entity);
 		tableView.show();
 		formView.addStandardFormButtons();
 		createUi();
