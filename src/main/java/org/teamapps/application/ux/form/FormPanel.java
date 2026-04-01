@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -115,27 +115,27 @@ public class FormPanel {
 	public void setAutoDisplayEditButtons(Table<?> table) {
 		table.onSingleRowSelected.addListener(record -> {
 			if (editButton != null) {
-				editButton.setVisible(true);
+				editButton.setVisible(table.getSelectedRecord() != null);
 			}
 			if (deleteButton != null) {
-				deleteButton.setVisible(true);
+				deleteButton.setVisible(table.getSelectedRecord() != null);
 			}
 		});
 		table.getModel().onAllDataChanged().addListener(() -> {
 			if (editButton != null) {
-				editButton.setVisible(false);
+				editButton.setVisible(table.getSelectedRecord() != null);
 			}
 			if (deleteButton != null) {
-				deleteButton.setVisible(false);
+				deleteButton.setVisible(table.getSelectedRecord() != null);
 			}
 		});
 		table.getCount().onChanged().addListener(count -> {
 			if (count == 0) {
 				if (editButton != null) {
-					editButton.setVisible(false);
+					editButton.setVisible(table.getSelectedRecord() != null);
 				}
 				if (deleteButton != null) {
-					deleteButton.setVisible(false);
+					deleteButton.setVisible(table.getSelectedRecord() != null);
 				}
 			}
 		});
