@@ -24,7 +24,6 @@ import org.teamapps.application.api.application.ApplicationInstanceData;
 import org.teamapps.application.api.localization.Dictionary;
 import org.teamapps.application.api.theme.ApplicationIcons;
 import org.teamapps.application.ux.PropertyData;
-import org.teamapps.common.format.Color;
 import org.teamapps.data.extract.PropertyProvider;
 import org.teamapps.event.Event;
 import org.teamapps.icons.Icon;
@@ -255,11 +254,18 @@ public class DrillDownView<ENTITY> extends AbstractLazyRenderingApplicationView 
 	}
 
 	private Template createFacetHeaderTemplate() {
-		String htmlTemplate = "<div style=\"display: flex;align-items: center;border-top: 1px solid " + Color.WHITE.toHtmlColorString() + ";border-bottom: 1px solid " + Color.MATERIAL_BLUE_700.withAlpha(0.2f).toHtmlColorString() + ";background-color:" + Color.MATERIAL_BLUE_700.withAlpha(0.05f).toHtmlColorString() + "\">\n" +
-				"        <div class=\"icon img img-24\" style=\"background-image: url('{{icon}}');\"></div>\n" +
-				"        <div>{{caption}}</div>\n" +
-				"    </div>";
-		return new MustacheTemplate(htmlTemplate);
+		// Keep the raised edge subtle in both modes. Translucent fills preserve the
+		// Tree's native hover/selection feedback and follow live theme changes.
+		return new MustacheTemplate("""
+				<div class="ta-drilldown-facet-header" style="display:flex;align-items:center;gap:4px;min-width:0;padding:2px 4px;
+				        color:var(--ta-text-color);font-weight:500;
+				        border-top:1px solid color-mix(in srgb,var(--ta-bg-color) 90%,white);
+				        border-bottom:1px solid color-mix(in srgb,var(--ta-bg-color-solid) 78%,black);
+				        background:linear-gradient(to bottom,color-mix(in srgb,var(--ta-link-color) 6%,transparent),color-mix(in srgb,var(--ta-link-color) 2%,transparent));">
+				    <div class="icon img img-24" style="flex-shrink:0;background-image:url('{{icon}}');"></div>
+				    <div title="{{caption}}" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{caption}}</div>
+				</div>
+				""");
 	}
 
 	public <FACET_RECORD> DrillDownFacet<FACET_RECORD, ENTITY> addFacetSimple(Icon icon, String title, Function<ENTITY, FACET_RECORD> grouperFunction, BiFunction<FACET_RECORD, Stream<ENTITY>, Stream<ENTITY>> filterHandler, Function<FACET_RECORD, String> captionFunction) {
