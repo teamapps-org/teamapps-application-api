@@ -253,7 +253,7 @@ public class DrillDownView<ENTITY> extends AbstractLazyRenderingApplicationView 
 		return filteredRecords;
 	}
 
-	private Template createFacetHeaderTemplate() {
+	public static Template createFacetHeaderTemplate() {
 		// Keep the raised edge subtle in both modes. Translucent fills preserve the
 		// Tree's native hover/selection feedback and follow live theme changes.
 		return new MustacheTemplate("""
